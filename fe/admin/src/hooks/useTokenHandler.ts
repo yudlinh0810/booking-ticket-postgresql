@@ -7,25 +7,22 @@ const useTokenHandler = () => {
 
   useEffect(() => {
     const expirationTime = localStorage.getItem("expirationTime");
+    const currentTime = Date.now();
+    const isLoginPage = location.pathname === "/login";
 
-    if (!expirationTime && location.pathname !== "/login") {
-      navigate("/login");
+    if (!expirationTime) {
+      if (!isLoginPage) navigate("/login");
       return;
-    } else if (expirationTime) {
-      const currentTime = new Date().getTime();
-      console.log("Current Time:", currentTime);
-      const expirationTimeInMs = new Date(expirationTime).getTime();
+    }
 
-      if (currentTime >= expirationTimeInMs) {
-        localStorage.removeItem("expirationTime");
-        navigate("/login");
-        return;
-      } else {
-        if (location.pathname === "/login") {
-          navigate("/");
-          return;
-        }
-      }
+    if (currentTime >= Number(expirationTime)) {
+      localStorage.removeItem("expirationTime");
+      if (!isLoginPage) navigate("/login");
+      return;
+    }
+
+    if (isLoginPage) {
+      navigate("/");
     }
   }, [location.pathname, navigate]);
 };
