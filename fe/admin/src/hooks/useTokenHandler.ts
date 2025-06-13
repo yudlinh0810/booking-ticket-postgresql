@@ -13,6 +13,7 @@ const useTokenHandler = () => {
       return;
     } else if (expirationTime) {
       const currentTime = new Date().getTime();
+      console.log("Current Time:", currentTime);
       const expirationTimeInMs = new Date(expirationTime).getTime();
 
       if (currentTime >= expirationTimeInMs) {

@@ -1,9 +1,0 @@
-.icon {
-  font-size: 1.2rem;
-  color: var(--dark);
-  transition: color 0.3s;
-}
-
-.icon.active {
-  color: #1890ff;
-}/*# sourceMappingURL=icon.module.css.map */
