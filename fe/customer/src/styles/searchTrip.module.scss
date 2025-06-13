@@ -1,0 +1,83 @@
+@use "./mixin" as mix;
+
+.search-trip {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  max-width: 51.05rem;
+  height: auto;
+  padding: 2rem;
+  border: 1px solid var(--primary-bd);
+  border-radius: 0.725rem;
+
+  background-color: #fff;
+
+  @include mix.responsive(tablet) {
+    flex-wrap: wrap;
+  }
+
+  @include mix.responsive(mobile) {
+    flex-direction: column;
+    flex-wrap: wrap;
+
+    border: none;
+  }
+
+  .search-trip-left {
+    position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2rem;
+
+    border-radius: 0.725rem;
+
+    @include mix.responsive(desktop) {
+      border: 1px solid var(--primary-bd);
+      flex-wrap: nowrap;
+    }
+    @include mix.responsive(tablet) {
+      border: 1px solid var(--primary-bd);
+      flex-wrap: nowrap;
+    }
+
+    @include mix.responsive(mobile) {
+      border: 1px solid var(--primary-bd);
+      flex-wrap: wrap !important;
+    }
+
+    .ic-swap {
+      position: unset;
+
+      padding: 0.4rem;
+      border-radius: 50%;
+      background-color: #ccc;
+      color: #484848;
+
+      font-size: 1.2rem;
+      cursor: pointer;
+
+      @include mix.responsive(mobile) {
+        position: absolute;
+        top: calc((50% - 2.5rem));
+        left: 018% !important;
+      }
+    }
+  }
+
+  .search-trip-right {
+    .btn-search-trip {
+      width: 9.25rem;
+      height: 2.75rem;
+      padding: 0 0.75rem;
+      border: none;
+      border-radius: 1.2rem /1.2rem;
+      background-color: #57f6ff;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+  }
+}

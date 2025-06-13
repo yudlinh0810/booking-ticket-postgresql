@@ -1,0 +1,35 @@
+@use "./mixin" as mix;
+
+.seat {
+  position: relative;
+  cursor: pointer;
+
+  &__img {
+    height: 2.4rem;
+    width: 2.4rem;
+
+    @include mix.responsive(mobile) {
+      height: 3rem;
+      width: 3rem;
+    }
+  }
+
+  &__position {
+    position: absolute;
+    top: 0.4rem;
+    left: 20%;
+
+    font-size: 0.8rem;
+
+    user-select: none;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+
+    @include mix.responsive(mobile) {
+      font-size: 0.8rem;
+      top: 0.6rem;
+      left: 25%;
+    }
+  }
+}

@@ -1,0 +1,46 @@
+.select-list-content .select-list {
+  min-height: 2rem;
+  max-height: 12.25rem;
+  padding: 0.6rem;
+  border: 1px solid var(--gray);
+  border-top: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--white);
+  font-size: 0.925rem;
+}
+.select-list-content .select-list .select-list-item {
+  display: flex;
+  gap: 0.5rem;
+  width: calc(100% - 0.8rem);
+  padding: 0.4rem;
+  border-radius: 0.2rem;
+  color: #000;
+  text-transform: capitalize;
+  cursor: pointer;
+}
+.select-list-content .select-list .select-list-item:hover {
+  background-color: #cde2f8;
+}
+.select-list-content .select-list .select-list-item .select-list-item-text {
+  flex: 1;
+}
+.select-list-content .select-list .select-list-item .select-list-item-delete {
+  background-color: var(--white);
+}
+.select-list-content .select-list::-webkit-scrollbar {
+  width: 0.8rem;
+}
+.select-list-content .select-list::-webkit-scrollbar-thumb {
+  background: #7295e2;
+}
+.select-list-content .container-input .control {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid var(--gray);
+  border-radius: 0.25rem;
+  outline: none;
+}
+.select-list-content .container-input .control:focus {
+  border-color: var(--primary);
+}/*# sourceMappingURL=dropDownListCD.module.css.map */

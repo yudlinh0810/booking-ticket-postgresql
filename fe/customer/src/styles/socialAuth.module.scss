@@ -1,0 +1,20 @@
+.btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+
+  .btn-item {
+    flex: 1;
+
+    border-color: var(--primary-bd);
+
+    transition: all 0.3s;
+
+    &:hover {
+      border-color: var(--white-bd);
+
+      background-color: var(--primary-bd);
+      color: var(--white-bd);
+    }
+  }
+}

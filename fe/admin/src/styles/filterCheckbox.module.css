@@ -1,0 +1,36 @@
+.filter-type {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+@media (max-width: 767px) {
+  .filter-type {
+    gap: 0.2rem;
+  }
+}
+.filter-type .filter-type {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+.filter-type .filter-type .filter-title {
+  font-size: 1.2rem;
+  text-transform: capitalize;
+}
+.filter-type .filter-type .type-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  outline: none;
+  min-width: 5rem;
+  max-width: 15rem;
+}
+.filter-type .filter-type .type-item .checkbox {
+  width: 1.2rem;
+  height: 1.2rem;
+  cursor: pointer;
+  accent-color: #0dcaf0;
+}/*# sourceMappingURL=filterCheckbox.module.css.map */

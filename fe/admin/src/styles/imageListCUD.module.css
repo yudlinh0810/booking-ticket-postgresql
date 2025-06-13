@@ -1,0 +1,13 @@
+.container {
+  width: 100%;
+}
+.container .add-btn {
+  margin-bottom: 1rem;
+  background-color: var(--primary);
+  color: var(--white);
+}
+.container .img-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}/*# sourceMappingURL=imageListCUD.module.css.map */

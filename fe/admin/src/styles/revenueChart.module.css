@@ -1,0 +1,40 @@
+.renevue-chart-container {
+  height: 25rem;
+}
+.renevue-chart-container .filterd-container {
+  display: flex;
+  justify-content: center;
+}
+.renevue-chart-container .filterd-container .filters {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.renevue-chart-container .filterd-container .filters .options {
+  padding: 0.25rem 0.5rem;
+  outline: none;
+}
+.renevue-chart-container .filterd-container .filters .filter-btn {
+  padding: 0.5rem;
+  border: 0.05rem solid var(--gray);
+  border-radius: 0.4rem;
+  transition: all 0.3s;
+  background-color: transparent;
+  color: var(--gray);
+  cursor: pointer;
+}
+.renevue-chart-container .filterd-container .filters .filter-btn:hover {
+  background-color: var(--primary);
+  color: var(--white);
+}
+.renevue-chart-container .filterd-container .filters .filter-btn.filter-btn__active {
+  background-color: var(--primary);
+  color: var(--white);
+}
+
+canvas {
+  width: 100% !important;
+  height: 100% !important;
+}/*# sourceMappingURL=revenueChart.module.css.map */

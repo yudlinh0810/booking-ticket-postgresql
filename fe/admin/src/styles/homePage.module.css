@@ -1,0 +1,18 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+.container {
+  font-family: "Inter", sans-serif !important;
+  padding: 40px;
+}
+.container .content h2 {
+  font-weight: 600;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+.container .content .data ul {
+  padding-left: 6px;
+}
+.container .content .data ul li {
+  line-height: 1.3;
+  font-size: 17px;
+  margin-bottom: 25px;
+}/*# sourceMappingURL=homePage.module.css.map */

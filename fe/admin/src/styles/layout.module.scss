@@ -1,0 +1,22 @@
+@use "./mixin" as mix;
+.wrapper-layout {
+  overflow-x: auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+}
+
+.header {
+  background-color: rgb(46, 180, 252);
+  color: #000;
+}
+
+.main {
+  overflow: auto;
+  width: 100%;
+}
+
+.footer {
+  background-color: var(--light);
+}

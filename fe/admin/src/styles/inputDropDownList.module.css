@@ -1,0 +1,53 @@
+.input-drop-list {
+  width: 100%;
+  position: relative;
+  cursor: pointer;
+}
+@media (max-width: 767px) {
+  .input-drop-list {
+    border-bottom: 1px solid #c3c3c3;
+  }
+}
+.input-drop-list .drop-down-list {
+  z-index: 10;
+  position: absolute;
+  top: calc(100% - 0.75rem);
+  left: 0;
+  width: 100%;
+  padding-top: 0.725rem;
+  border-radius: 0.825rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.275rem;
+  border: 1px solid var(--gray);
+  border-radius: 0.25rem;
+  font-size: 1rem;
+  outline: none;
+}
+.input:hover {
+  cursor: text;
+}
+.input:focus {
+  border-color: var(--bright-blue);
+}
+
+.btn {
+  padding: 0.375rem 0.65rem;
+  border: 1px solid var(--primary);
+}
+
+.btn-cancel {
+  transition: 0.3s color;
+}
+.btn-cancel:hover {
+  color: var(--danger);
+}
+
+.btn-confirm {
+  transition: 0.3s color;
+}
+.btn-confirm:hover {
+  color: var(--primary);
+}/*# sourceMappingURL=inputDropDownList.module.css.map */

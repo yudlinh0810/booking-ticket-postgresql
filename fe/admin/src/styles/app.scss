@@ -1,0 +1,13 @@
+#root {
+  width: var(--client-width);
+  box-sizing: border-box;
+}
+.custom-toast {
+  white-space: normal !important;
+  word-break: break-word;
+  max-width: 90%;
+}
+
+a {
+  text-decoration: none;
+}
