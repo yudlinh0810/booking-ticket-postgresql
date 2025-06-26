@@ -21,8 +21,6 @@ class RevenueService {
 
       const values = [startDate.toISOString().split("T")[0], endDate.toISOString().split("T")[0]];
 
-      console.log("values", values);
-
       const [rows] = await this.db.execute("CALL GetHourlyRevenue(?, ?)", values);
       const rawData = rows[0];
 
@@ -114,7 +112,7 @@ class RevenueService {
         data: fullData,
       };
     } catch (error) {
-      throw error;
+      throw error; 
     }
   };
 }

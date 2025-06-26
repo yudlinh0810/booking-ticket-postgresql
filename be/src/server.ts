@@ -8,7 +8,7 @@ import { createServer } from "http";
 import session from "express-session";
 import passport from "passport";
 import { connectRedis } from "./config/redis";
-import { initSocket } from "./sockets/socket";
+import { setupSocketServer } from "./sockets/socket";
 
 dotenv.config();
 
@@ -54,7 +54,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
 
 // Khởi động Websocket
-initSocket(server);
+setupSocketServer(server);
 
 // Test route
 app.get("/", (_, res) => {

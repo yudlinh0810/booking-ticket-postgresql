@@ -2,6 +2,8 @@ import dotenv from "dotenv";
 import nodemailer, { SentMessageInfo } from "nodemailer";
 import { DataPaymentSuccess } from "../@types/payment";
 import generateQRCodeBase64 from "../utils/generateQRCodeBase64";
+import { formatDate } from "../utils/formatDate";
+import formatCurrency from "../utils/formatCurrency";
 
 dotenv.config();
 
@@ -85,17 +87,14 @@ const sendTicketEmail = async (data: DataPaymentSuccess[]): Promise<SentMessageI
 };
 
 export const getBodyHTMLTicketEmail = async (data: DataPaymentSuccess[]): Promise<string> => {
-  const totalPrice = data
-    .reduce((sum, tk) => sum + Number(tk.price), 0)
-    .toLocaleString("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    });
+  const totalPrice = formatCurrency(data.reduce((sum, tk) => sum + Number(tk.price), 0));
 
-  const ticketHTMLList = await Promise.all(data.map(generateTicketItemHTML));
+  const ticketItems = await Promise.all(
+    data.map((ticket, index) => generateTicketItemHTML(ticket, index))
+  );
 
   return `
-  <div style="width: 100%; text-align: center; padding: 1rem 0; font-family: sans-serif;">
+  <div style="width: 100%; text-align: left; padding: 1rem 0; font-family: sans-serif;">
     <h2 style="font-size: 1.8rem; font-weight: 600; color: #003366;">
       Mua vé xe thành công
     </h2>
@@ -121,7 +120,7 @@ export const getBodyHTMLTicketEmail = async (data: DataPaymentSuccess[]): Promis
       </tr>
       <tr>
         <td colspan="2" style="padding: 1rem;">
-          ${ticketHTMLList.join("")}
+          ${ticketItems.join("")}
         </td>
       </tr>
       <tr>
@@ -135,47 +134,49 @@ export const getBodyHTMLTicketEmail = async (data: DataPaymentSuccess[]): Promis
   `;
 };
 
-export const generateTicketItemHTML = async (t: DataPaymentSuccess) => {
-  const qr = await generateQRCodeBase64(t.id + t.seatPosition);
-  const formattedPrice = Number(t.price).toLocaleString("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  });
-
-  return `
-    <table cellpadding="0" cellspacing="0" width="100%" style="border: 1px solid #007bff; border-radius: 6px; margin: 1rem 0; font-size: 14px;">
-      <tr>
-        <td colspan="2" style="padding: 0.5rem;">
-          <h3 style="margin: 0; color: #003366;">Mã vé ${t.id}${t.seatPosition}</h3>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2" style="text-align: center; padding: 1rem;">
-          <img src="${qr}" alt="QR Code" style="width: 150px; height: 150px;" />
-        </td>
-      </tr>
-      <tr>
-        <td style="padding: 0.5rem;">Tuyến xe:</td>
-        <td style="padding: 0.5rem; color: #003366;">${t.departure} - ${t.arrival}</td>
-      </tr>
-      <tr>
-        <td style="padding: 0.5rem;">Thời gian:</td>
-        <td style="padding: 0.5rem; color: #003366;">${t.startTime}</td>
-      </tr>
-      <tr>
-        <td style="padding: 0.5rem;">Số ghế:</td>
-        <td style="padding: 0.5rem; color: #003366;">${t.seatPosition}</td>
-      </tr>
-      <tr>
-        <td style="padding: 0.5rem;">Điểm lên xe:</td>
-        <td style="padding: 0.5rem; color: #003366;">Bến xe ${t.departure}</td>
-      </tr>
-      <tr>
-        <td style="padding: 0.5rem;">Giá vé:</td>
-        <td style="padding: 0.5rem; color: #003366;">${formattedPrice}</td>
-      </tr>
-    </table>
-  `;
+export const generateTicketItemHTML = async (t: DataPaymentSuccess, index: number) => {
+  try {
+    return `
+      <table cellpadding="0" cellspacing="0" width="100%" style="border: 1px solid #007bff; border-radius: 6px; margin: 1rem 0; font-size: 14px;">
+        <tr>
+          <td colspan="2" style="padding: 0.5rem;">
+            <h3 style="margin: 0; color: #003366;">Mã vé ${t.id}${t.seatPosition}</h3>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="2" style="text-align: center; padding: 1rem;">
+            <img src="cid:qr-code-${index}" alt="QR Code" style="width: 150px; height: 150px; display: block; margin: 0 auto;" />
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 0.5rem;">Tuyến xe:</td>
+          <td style="padding: 0.5rem; color: #003366;">${t.departure} - ${t.arrival}</td>
+        </tr>
+        <tr>
+          <td style="padding: 0.5rem;">Thời gian:</td>
+          <td style="padding: 0.5rem; color: #003366;">${formatDate(
+            t.startTime,
+            "DD-MM-YYYY-HH:mm"
+          )}</td>
+        </tr>
+        <tr>
+          <td style="padding: 0.5rem;">Số ghế:</td>
+          <td style="padding: 0.5rem; color: #003366;">${t.seatPosition}</td>
+        </tr>
+        <tr>
+          <td style="padding: 0.5rem;">Điểm lên xe:</td>
+          <td style="padding: 0.5rem; color: #003366;">Bến xe ${t.departure}</td>
+        </tr>
+        <tr>
+          <td style="padding: 0.5rem;">Giá vé:</td>
+          <td style="padding: 0.5rem; color: #003366;">${formatCurrency(t.price)}</td>
+        </tr>
+      </table>
+    `;
+  } catch (error) {
+    console.error("Error generating ticket HTML:", error);
+    return "<p>Lỗi tạo vé</p>";
+  }
 };
 
 export { sendOtpEmail, sendTicketEmail };

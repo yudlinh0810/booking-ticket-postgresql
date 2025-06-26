@@ -108,14 +108,34 @@ export class TicketService {
           });
           return;
         }
-        resolve({
-          status: "OK",
-          data: rows[0],
-        });
+        resolve(rows[0]);
       } catch (error) {
         console.log("Err Service.getDetail", error);
         reject(error);
       }
+    });
+  }
+
+  getDetailTicketById(id: number): Promise<object> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const sql = "CALL get_ticket_by_id(?)";
+
+        const [rows] = (await this.db.execute(sql, [id])) as [any[]];
+        console.log("rows", rows[0][0]);
+
+        if (!rows || rows[0].length === 0) {
+          resolve({
+            status: "ERR",
+            message: "Ticket not found",
+          });
+          return;
+        }
+        resolve(rows[0][0]);
+      } catch (error) {
+        console.log("Err Service.getDetail", error);
+        reject(error);
+      } 
     });
   }
 

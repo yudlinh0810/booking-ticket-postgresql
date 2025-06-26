@@ -1,11 +1,11 @@
 import { ResultSetHeader } from "mysql2";
 import { bookBusTicketsDB } from "../config/db";
-import { sendToUser } from "../sockets/socket";
 import { UserService } from "./user.service";
 import SeatService from "./seat.service";
 import { TicketType } from "../@types/ticket";
 import { sendTicketEmail } from "./email.service";
 import { DataPaymentSuccess } from "../@types/payment";
+import { sendToUser } from "../sockets/utils/sendToUser";
 
 export class WebhookService {
   private userService = new UserService(bookBusTicketsDB);
@@ -39,8 +39,7 @@ export class WebhookService {
         const userId = ticketInfo[0].customerId.toString();
 
         await sendTicketEmail(ticketInfo);
-
-        const socketSent = sendToUser(userId, "payment-status", {
+        const socketSent = sendToUser("/payment", userId, "payment-status", {
           status: "success",
           message: `Thanh toán thành công đơn ${orderCode}`,
           orderCode: orderCode,

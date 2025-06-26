@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { bookBusTicketsDB } from "../config/db";
-import { errorResponse, successResponse } from "../utils/response.util";
-import TicketService from "../services/ticket.service";
-import { ArrangeType } from "../@types/type";
 import { PaymentStatus, PaymentType } from "../@types/payment";
+import { ArrangeType } from "../@types/type";
+import { bookBusTicketsDB } from "../config/db";
+import TicketService from "../services/ticket.service";
+import { errorResponse, successResponse } from "../utils/response.util";
 import testPhone from "../utils/testPhone";
 
 export class TicketController {
@@ -37,6 +37,21 @@ export class TicketController {
       return successResponse(res, 200, result);
     } catch (error) {
       return errorResponse(res, "ERR Controller.getDetailTicket", 404);
+    }
+  };
+
+  getDetailTicketById = async (req: Request, res: Response): Promise<any> => {
+    const { id } = req.params;
+
+    if (!id) {
+      return errorResponse(res, "Id not invalid", 404);
+    }
+
+    try {
+      const result = await this.ticketService.getDetailTicketById(Number(id));
+      return successResponse(res, 200, result);
+    } catch (error) {
+      return errorResponse(res, "ERR Controller.getDetailTicketById", 404);
     }
   };
 
