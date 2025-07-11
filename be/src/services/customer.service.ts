@@ -6,7 +6,6 @@ import { sendOtpEmail } from "./email.service";
 import { CloudinaryAsset } from "../@types/cloudinary";
 import { ArrangeType, UserRegister } from "../@types/type";
 import { ModelCustomer } from "../models/user";
-import { convertToVietnamTime } from "../utils/convertTime";
 import deleteOldFile from "../utils/deleteOldFile.util";
 import { UserService } from "./user.service";
 import { generalAccessToken, generalRefreshToken } from "../services/auth.service";
@@ -39,7 +38,7 @@ export class CustomerService {
     return new Promise(async (resolve, reject) => {
       try {
         const { email, password, fullName, confirmPassword } = newCustomer;
-        
+
         if (password !== confirmPassword) {
           return resolve({
             status: "ERR",
@@ -97,7 +96,7 @@ export class CustomerService {
             status: "ERR",
             message: "Customer not found",
           });
-          return
+          return;
         }
 
         const otp = otpGenerator.generate(6, {
@@ -107,7 +106,7 @@ export class CustomerService {
           specialChars: false,
         });
 
-        const insertOtp = await otpService.insertOtpForgotPassword({otp,email });
+        const insertOtp = await otpService.insertOtpForgotPassword({ otp, email });
         if (insertOtp.data.status === "ERR") {
           return resolve({
             status: "ERR",
@@ -127,10 +126,9 @@ export class CustomerService {
     });
   }
 
-   sendOtp(email: string): Promise<any> {
+  sendOtp(email: string): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
-
         const otp = otpGenerator.generate(6, {
           digits: true,
           lowerCaseAlphabets: false,
@@ -138,7 +136,7 @@ export class CustomerService {
           specialChars: false,
         });
 
-        const insertOtp = await otpService.insertOtpForgotPassword({otp,email });
+        const insertOtp = await otpService.insertOtpForgotPassword({ otp, email });
         if (insertOtp.data.status === "ERR") {
           return resolve({
             status: "ERR",
@@ -232,11 +230,11 @@ export class CustomerService {
             message: "Error verifying email",
           });
         } else {
-            return resolve({
-              status: "OK",
-              message: "Verify email success",
-            });
-          }
+          return resolve({
+            status: "OK",
+            message: "Verify email success",
+          });
+        }
       } catch (error) {
         console.log("error", error);
         reject({
@@ -246,7 +244,6 @@ export class CustomerService {
       }
     });
   }
-
 
   fetch(id: number): Promise<object> {
     return new Promise(async (resolve, reject) => {
@@ -290,14 +287,21 @@ export class CustomerService {
     });
   }
 
-  updateUser(updateCustomer: ModelCustomer,publicId: string | null, fileCloudinary: CloudinaryAsset): Promise<any> {
+  updateUser(
+    updateCustomer: ModelCustomer,
+    publicId: string | null,
+    fileCloudinary: CloudinaryAsset
+  ): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
         const { secure_url, public_id } = fileCloudinary;
-        const [result] = await this.db.execute('select url_public_img as urlPublicImg from user where email = ?', [updateCustomer.email])
-        const publicUrlImg = result[0][0]
-        console.log('public-img', publicUrlImg)
-        
+        const [result] = await this.db.execute(
+          "select url_public_img as urlPublicImg from user where email = ?",
+          [updateCustomer.email]
+        );
+        const publicUrlImg = result[0][0];
+        console.log("public-img", publicUrlImg);
+
         const sql = "call updateDetailUser( ?, ?, ?, ?, ?, ?, ?, ?)";
         const values = [
           updateCustomer.email,
@@ -306,12 +310,11 @@ export class CustomerService {
           updateCustomer.phone,
           updateCustomer.dateBirth,
           updateCustomer.address,
-          secure_url, 
-          public_id
+          secure_url,
+          public_id,
         ];
 
-
-        if(publicId) {
+        if (publicId) {
           deleteOldFile(publicId, "image");
         }
 
@@ -320,7 +323,9 @@ export class CustomerService {
           return resolve({ status: "ERR", message: "User not found" });
         }
 
-        const [rowsDataUser] =( await this.db.execute("call fetchCustomerByEmail(?)", [updateCustomer.email]) as [ResultSetHeader]);
+        const [rowsDataUser] = (await this.db.execute("call fetchCustomerByEmail(?)", [
+          updateCustomer.email,
+        ])) as [ResultSetHeader];
         if (rowsDataUser.affectedRows <= 0) {
           resolve({
             status: "ERR",
@@ -330,7 +335,7 @@ export class CustomerService {
 
         resolve({
           status: "OK",
-          user: rowsDataUser[0][0]
+          user: rowsDataUser[0][0],
         });
       } catch (error) {
         reject(error);
@@ -338,7 +343,6 @@ export class CustomerService {
     });
   }
 
- 
   update(id: number, updateCustomer: ModelCustomer): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
@@ -384,21 +388,22 @@ export class CustomerService {
         if (rows.affectedRows === 0) {
           return resolve({ status: "ERR", message: "Customer not found" });
         }
-        
-        const [rowsDataUser] =( await this.db.execute("call fetchCustomerByEmail(?)", [updateCustomer.email]) as [ResultSetHeader]);
+
+        const [rowsDataUser] = (await this.db.execute("call fetchCustomerByEmail(?)", [
+          updateCustomer.email,
+        ])) as [ResultSetHeader];
         if (rowsDataUser.affectedRows <= 0) {
           resolve({
             status: "ERR",
             message: "Customer not found",
           });
-          return
+          return;
         }
 
         resolve({
           status: "OK",
-          user: rowsDataUser[0][0]
+          user: rowsDataUser[0][0],
         });
-
       } catch (error) {
         reject(error);
       }
@@ -466,12 +471,12 @@ export class CustomerService {
     });
   }
 
- updatePassword(dataUpdate: UpdatePassword): Promise<any> {
+  updatePassword(dataUpdate: UpdatePassword): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
-        const {email, passwordOld, passwordNew} = dataUpdate
-        
-      const [rows] = await this.db.execute("call getCustomer(?)", [email]);
+        const { email, passwordOld, passwordNew } = dataUpdate;
+
+        const [rows] = await this.db.execute("call getCustomer(?)", [email]);
         if (rows[0].length === 0) {
           resolve({
             status: "ERR",
@@ -479,38 +484,29 @@ export class CustomerService {
           });
         }
 
-        
-        const compareCurrentPassword = await bcrypt.compareSync(
-          passwordOld,
-          rows[0][0].password
-        );
+        const compareCurrentPassword = await bcrypt.compareSync(passwordOld, rows[0][0].password);
 
         if (!compareCurrentPassword) {
           resolve({
-            status: 'ERR',
-            message: 'Verify password current is false',
+            status: "ERR",
+            message: "Verify password current is false",
           });
         }
 
         const comparePassword = bcrypt.compareSync(passwordNew, rows[0][0].password);
 
-        const password= rows[0][0].password
+        const password = rows[0][0].password;
 
         if (comparePassword) {
           resolve({
-            status: 'ERR',
-            message: 'Nothing changes',
+            status: "ERR",
+            message: "Nothing changes",
           });
         } else {
           const hash = bcrypt.hashSync(passwordNew, 10);
 
           const sql = "call updatePassword( ?, ?, ?)";
-          const values = [
-            email,
-            password
-            ,
-            hash
-          ];
+          const values = [email, password, hash];
 
           const [rows] = (await this.db.execute(sql, values)) as [ResultSetHeader];
           if (rows.affectedRows === 0) {
@@ -520,8 +516,7 @@ export class CustomerService {
             status: "OK",
             message: "Update password success",
           });
-      }
-        
+        }
       } catch (error) {
         reject(error);
       }
@@ -531,32 +526,28 @@ export class CustomerService {
   updateNewPassword(dataUpdate: UpdatePassword): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
-        const {email, passwordNew} = dataUpdate
-        
-      const [rows] = await this.db.execute("call getCustomer(?)", [email]);
+        const { email, passwordNew } = dataUpdate;
+
+        const [rows] = await this.db.execute("call getCustomer(?)", [email]);
         if (rows[0].length === 0) {
           resolve({
             status: "ERR",
             message: "Customer not found",
           });
         }
-          const hash = bcrypt.hashSync(passwordNew, 10);
+        const hash = bcrypt.hashSync(passwordNew, 10);
 
-          const sql = "call updateForgotPassword( ?, ?)";
-          const values = [
-            email,
-            hash
-          ];
+        const sql = "call updateForgotPassword( ?, ?)";
+        const values = [email, hash];
 
-          const [rowsUpdate] = (await this.db.execute(sql, values)) as [ResultSetHeader];
-          if (rowsUpdate.affectedRows === 0) {
-            return resolve({ status: "ERR", message: "Customer not found" });
-          }
-          resolve({
-            status: "OK",
-            message: "Update password success",
-          });
-        
+        const [rowsUpdate] = (await this.db.execute(sql, values)) as [ResultSetHeader];
+        if (rowsUpdate.affectedRows === 0) {
+          return resolve({ status: "ERR", message: "Customer not found" });
+        }
+        resolve({
+          status: "OK",
+          message: "Update password success",
+        });
       } catch (error) {
         reject(error);
       }

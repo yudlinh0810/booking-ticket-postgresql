@@ -1,13 +1,14 @@
-import express from "express";
+import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
-import routes from "./routes/routes.routes";
-import { config } from "./config/config";
-import { createServer } from "http";
+import express from "express";
 import session from "express-session";
+import { createServer } from "http";
 import passport from "passport";
+import { config } from "./config/config";
+import "./config/passport";
 import { connectRedis } from "./config/redis";
+import routes from "./routes/routes.routes";
 import { setupSocketServer } from "./sockets/socket";
 
 dotenv.config();
@@ -15,7 +16,7 @@ dotenv.config();
 const app = express();
 const server = createServer(app);
 
-// Middleware cấu hình CORS
+// 1. CORS phải đến trước session
 app.use(
   cors({
     origin: [
@@ -25,33 +26,45 @@ app.use(
       process.env.URL_FRONTEND_CLIENT,
       process.env.URL_FRONTEND_ADMIN,
     ],
-    // origin: "*",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
 );
 
-// Cấu hình session
+// 2. Body parsers trước session
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
+app.use(cookieParser());
+
+// 3. Session configuration
 app.use(
   session({
-    secret: "your_secret_key",
+    secret: process.env.SESSION_SECRET || "yudlinh",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 24 * 60 * 60 * 1000,
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    },
+    name: "sessionId",
   })
 );
 
-// Middleware Passport
+// 4. Passport middleware - say session
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Xử lý request body với dữ liệu JSON
-app.use(express.json({ limit: "50mb" }));
-
-// Xử lý request body với dữ liệu form
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
-
-// Xử lý cookies
-app.use(cookieParser());
+// 5. Debug middleware - để kiểm tra request
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.path}`, {
+    query: req.query,
+    session: req.session?.id ? "exists" : "none",
+    user: req.user ? "authenticated" : "anonymous",
+  });
+  next();
+});
 
 // Khởi động Websocket
 setupSocketServer(server);
@@ -61,7 +74,7 @@ app.get("/", (_, res) => {
   res.send("Server running ...");
 });
 
-// Gọi routes
+// Gọi routes - sau khi setup xong các middleware
 routes(app);
 
 // Start server
@@ -76,7 +89,7 @@ async function startServer() {
     });
   } catch (error) {
     console.error("Failed to connect Redis", error);
-    process.exit(1); // dừng server nếu Redis không kết nối được
+    process.exit(1);
   }
 }
 

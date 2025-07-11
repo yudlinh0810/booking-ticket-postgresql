@@ -119,7 +119,7 @@ export const getBodyHTMLTicketEmail = async (data: DataPaymentSuccess[]): Promis
         </td>
       </tr>
       <tr>
-        <td colspan="2" style="padding: 1rem;">
+        <td colspan="2" style="padding: 1rem; text-align: center;">
           ${ticketItems.join("")}
         </td>
       </tr>
