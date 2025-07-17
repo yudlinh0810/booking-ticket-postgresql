@@ -9,6 +9,8 @@ import { ArrangeType } from "../../types/type";
 import DefaultImage from "../../components/DefaultImage";
 import { debounce } from "../../utils/debounce";
 import { getBusList } from "../../services/bus.service";
+import { faEye, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -161,15 +163,17 @@ const BusManage: React.FC = () => {
                         to={`${urlMain}/detail/${car.licensePlate}`}
                         className={`${styles["btn-detail"]} ${styles.btn}`}
                       >
-                        Chi tiết
+                        <FontAwesomeIcon icon={faEye} />
                       </Link>
                       <Link
                         to={`${urlMain}/update/${car.licensePlate}`}
                         className={`${styles["btn-edit"]} ${styles.btn}`}
                       >
-                        Cập nhật
+                        <FontAwesomeIcon icon={faPenToSquare} />
                       </Link>
-                      <button className={`${styles["btn-delete"]} ${styles.btn}`}>Xóa</button>
+                      <button className={`${styles["btn-delete"]} ${styles.btn}`}>
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
                     </div>
                   </td>
                 </tr>

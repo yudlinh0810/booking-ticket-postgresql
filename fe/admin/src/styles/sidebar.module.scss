@@ -1,12 +1,12 @@
 @use "./mixin" as mix;
 
 .side-bar {
+  position: sticky;
   display: none !important;
   min-height: 100%;
   width: 15.625rem;
   padding: 1.25rem 1rem;
 
-  background-color: #0973b9;
   box-shadow: 0.125rem 0 0.5rem rgba(0, 0, 0, 0.05);
 
   flex-direction: column;
@@ -19,12 +19,8 @@
 
 .collapsed {
   @extend .side-bar;
-  width: 5rem;
+  width: 4.75rem;
   min-height: 100%;
-
-  .side-bar__section-title {
-    display: none;
-  }
 }
 
 .side-bar__menu {
@@ -46,7 +42,8 @@
 .side-bar__menu-link {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  justify-content: space-between;
+  gap: 2rem;
 
   padding: 0.625rem;
   border-radius: 0.375rem;
@@ -56,8 +53,17 @@
   transition: background 0.3s, color 0.3s;
 
   svg {
+    width: 1.5rem;
     color: #fff;
   }
+
+  .side-bar__section-title {
+    flex: 1;
+
+    font-size: 0.875rem;
+    overflow: hidden;
+  }
+
   &:hover {
     background-color: rgb(248, 174, 37);
     color: #fff;

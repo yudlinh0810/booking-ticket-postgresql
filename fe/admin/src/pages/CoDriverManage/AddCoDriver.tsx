@@ -123,7 +123,7 @@ const AddCoDriver = () => {
         className={styles.form}
       >
         <div className={styles.title}>
-          <h2 className={styles["content-title"]}>Thêm mới nhân viên</h2>
+          <h2 className={styles["content-title"]}>Thêm mới phụ xe</h2>
         </div>
         <ul className={styles["form-group-list"]}>
           <li className={styles["form-group-item"]}>

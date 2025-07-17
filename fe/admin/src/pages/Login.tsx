@@ -62,7 +62,7 @@ const Login = () => {
             <input
               type="text"
               className={styled.input}
-              placeholder="Nhập email"
+              placeholder="Nhập email: admin222@gmail.com"
               name="email"
               value={form.email}
               onChange={(e) => handleChangeValue(e)}
@@ -70,7 +70,7 @@ const Login = () => {
           </div>
           <div className={styled.password}>
             <input
-              placeholder="Nhập mật khẩu"
+              placeholder="Nhập mật khẩu: yudlinh"
               className={styled.input}
               type={showPassword ? "text" : "password"}
               name="password"

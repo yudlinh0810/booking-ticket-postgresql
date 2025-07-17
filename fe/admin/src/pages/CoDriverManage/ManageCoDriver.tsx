@@ -9,6 +9,8 @@ import styles from "../../styles/coDriverManage.module.scss";
 import { ArrangeType } from "../../types/type";
 import DefaultImage from "../../components/DefaultImage";
 import { dateTimeTransform } from "../../utils/transform";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -79,7 +81,7 @@ const ManageCoDriver: React.FC = () => {
         </div>
 
         <Link to={"/co-driver-manage/add"} className={styles["btn-add"]}>
-          Thêm nhân viên
+          Thêm phụ xe
         </Link>
       </div>
       <div className={styles["table-wrapper"]}>
@@ -114,12 +116,12 @@ const ManageCoDriver: React.FC = () => {
                 >
                   {index + 1 + currentPage * ITEMS_PER_PAGE}
                 </td>
-                <td>{coDriver.email}</td>
+                <td className={styles.left}>{coDriver.email}</td>
                 <td>
                   <DefaultImage src={coDriver.urlImg} />
                 </td>
-                <td>{coDriver.fullName}</td>
-                <td>{coDriver.phone}</td>
+                <td className={styles.left}>{coDriver.fullName}</td>
+                <td className={styles.left}>{coDriver.phone}</td>
                 <td>{dateTimeTransform(coDriver.dateBirth, "DD/MM/YYYY", false)}</td>
                 <td>
                   <div className={styles["btn-list"]}>
@@ -127,14 +129,17 @@ const ManageCoDriver: React.FC = () => {
                       to={`${urlMain}/detail/${coDriver.id}`}
                       className={`${styles["btn-detail"]} ${styles.btn}`}
                     >
-                      Chi tiết
+                      <FontAwesomeIcon icon={faEye} />
                     </Link>
                     <Link
                       to={`${urlMain}/update/${coDriver.id}`}
                       className={`${styles["btn-edit"]} ${styles.btn}`}
                     >
-                      Cập nhật
+                      <FontAwesomeIcon icon={faPenToSquare} />
                     </Link>
+                    <button className={`${styles["btn-delete"]} ${styles.btn}`}>
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
                   </div>
                 </td>
               </tr>

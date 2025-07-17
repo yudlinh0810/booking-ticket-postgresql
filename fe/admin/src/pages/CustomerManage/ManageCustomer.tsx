@@ -10,6 +10,8 @@ import styles from "../../styles/manageCustomer.module.scss";
 import { ArrangeType } from "../../types/type";
 import { debounce } from "../../utils/debounce";
 import { dateTimeTransform } from "../../utils/transform";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -127,12 +129,12 @@ const ManageCustomer: React.FC = () => {
                 >
                   {index + 1 + currentPage * ITEMS_PER_PAGE}
                 </td>
-                <td>{customer.email}</td>
+                <td className={styles.left}>{customer.email}</td>
                 <td>
                   <DefaultImage src={customer.urlImg} />
                 </td>
-                <td>{customer.fullName}</td>
-                <td>{customer.phone}</td>
+                <td className={styles.left}>{customer.fullName}</td>
+                <td className={styles.left}>{customer.phone}</td>
                 <td>{dateTimeTransform(customer.dateBirth, "DD/MM/YYYY", false)}</td>
                 <td>
                   <div className={styles["btn-list"]}>
@@ -140,15 +142,17 @@ const ManageCustomer: React.FC = () => {
                       to={`${urlMain}/detail/${customer.id}`}
                       className={`${styles["btn-detail"]} ${styles.btn}`}
                     >
-                      Chi tiết
+                      <FontAwesomeIcon icon={faEye} />
                     </Link>
                     <Link
                       to={`${urlMain}/update/${customer.id}`}
                       className={`${styles["btn-edit"]} ${styles.btn}`}
                     >
-                      Cập nhật
+                      <FontAwesomeIcon icon={faPenToSquare} />
                     </Link>
-                    <button className={`${styles["btn-delete"]} ${styles.btn}`}>Xóa</button>
+                    <button className={`${styles["btn-delete"]} ${styles.btn}`}>
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
                   </div>
                 </td>
               </tr>

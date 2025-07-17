@@ -46,7 +46,7 @@ const Header = () => {
   };
 
   const handleClickOutSideDropList = (e: MouseEvent) => {
-    if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+    if (showDropDown && wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
       setShowDropDown(false);
     }
   };
@@ -62,6 +62,11 @@ const Header = () => {
     }
   };
 
+  const handleOnclickInfoAdmin = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowDropDown((prev) => !prev);
+  };
+
   return (
     <div
       className={`${styled["container-header"]} ${
@@ -70,22 +75,15 @@ const Header = () => {
     >
       <div className={styled.actions}>
         <div className={styled["action__show-side-bar"]}>
-          <FaBars
-            className={styled.ic}
-            onMouseDown={(e) => {
-              e.stopPropagation();
-              handleToggleSideBar();
-            }}
-            onClick={toggleSidebar}
-          />
+          <FaBars className={styled.ic} onClick={toggleSidebar} />
           <img className={styled.logo} src={logo} alt="logo" loading="lazy" />
         </div>
-        <div
-          className={styled["info-admin"]}
-          onMouseEnter={() => setShowDropDown(true)}
-          onClick={() => setShowDropDown((prev) => !prev)}
-        >
-          <FontAwesomeIcon className={styled["ic-admin"]} icon={faUserCircle} />
+        <div className={styled["info-admin"]}>
+          <FontAwesomeIcon
+            className={styled["ic-admin"]}
+            icon={faUserCircle}
+            onClick={(e) => handleOnclickInfoAdmin(e)}
+          />
           {showDropDown ? (
             <div
               ref={wrapperRef}
@@ -93,12 +91,12 @@ const Header = () => {
             >
               <ul className={styled["user-actions__list"]}>
                 <li className={styled["item"]}>
-                  <NavLink className={styled.text} to={`/profile`}>
+                  <NavLink className={styled.text} to={`/`} onClick={handleOnclickInfoAdmin}>
                     Cập nhật thông tin
                   </NavLink>
                 </li>
                 <li className={styled["item"]}>
-                  <NavLink className={styled.text} to={`/settings`}>
+                  <NavLink className={styled.text} to={`/`} onClick={handleOnclickInfoAdmin}>
                     Cài đặt
                   </NavLink>
                 </li>
@@ -146,9 +144,7 @@ const Header = () => {
               <li className={styled["side-bar-mobile__menu-item"]}>
                 <NavLink to="/co-driver-manage" className={styled["side-bar-mobile__menu-link"]}>
                   <RiAdminFill className={styled.icon} />
-                  <span className={styled["side-bar-mobile__section-title"]}>
-                    Quản lý Nhân viên
-                  </span>
+                  <span className={styled["side-bar-mobile__section-title"]}>Quản lý Phụ Xe</span>
                 </NavLink>
               </li>
               <li className={styled["side-bar-mobile__menu-item"]}>

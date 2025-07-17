@@ -21,7 +21,7 @@ const DetailCoDriver = () => {
 
   if (isLoading) return <Loading />;
   if (error) return <p className={styles.error}>Lỗi khi tải dữ liệu</p>;
-  if (!coDriver) return <p className={styles.error}>Không tìm thấy thông tin khách hàng</p>;
+  if (!coDriver) return <p className={styles.error}>Không tìm thấy thông tin phụ xe</p>;
 
   return (
     <div className={styles.container}>

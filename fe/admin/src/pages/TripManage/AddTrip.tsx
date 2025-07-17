@@ -299,7 +299,7 @@ const AddTrip = () => {
             </li>
 
             <li className={styles["form-group-item"]}>
-              <label className={styles.title}>Nhân viên</label>
+              <label className={styles.title}>Phụ xe</label>
               <DynamicCoDriverSelect
                 coDrivers={formAddTripData?.coDrivers}
                 onFieldsChange={handleChangeFieldCoDriver}

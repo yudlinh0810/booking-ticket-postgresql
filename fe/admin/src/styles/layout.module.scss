@@ -8,6 +8,11 @@
 }
 
 .header {
+  position: fixed;
+  z-index: 2;
+
+  width: 100%;
+
   background-color: rgb(46, 180, 252);
   color: #000;
 }
@@ -15,6 +20,7 @@
 .main {
   overflow: auto;
   width: 100%;
+  margin-top: 3rem;
 }
 
 .footer {

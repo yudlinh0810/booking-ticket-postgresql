@@ -34,11 +34,11 @@ const DynamicCoDriverSelect: React.FC<Props> = ({ idHTML, coDrivers = [], onFiel
 
   const handleAddField = () => {
     if (selectedCoDrivers.some((cd) => !cd)) {
-      toast.warning("Vui lòng chọn nhân viên trước khi thêm nhân viên khác");
+      toast.warning("Vui lòng chọn phụ xe trước khi thêm phụ xe khác");
       return;
     }
     if (selectedCoDrivers.length >= 3) {
-      toast.warning("Nhân viên không quá 3 người");
+      toast.warning("Phụ xe không quá 3 người");
       return;
     }
     setSelectedCoDrivers([...selectedCoDrivers, null]);
@@ -65,7 +65,7 @@ const DynamicCoDriverSelect: React.FC<Props> = ({ idHTML, coDrivers = [], onFiel
                   idHTML={idHTML}
                   list={availableCoDrivers.map((cd) => `${cd.fullName} - ${cd.phone}`)}
                   valueIn={coDriver?.fullName || ""}
-                  contentPlaceholder="Chọn nhân viên..."
+                  contentPlaceholder="Chọn phụ xe..."
                   onSelected={(value) => handleSelectedDriver(index, value)}
                 />
               </div>
@@ -85,7 +85,7 @@ const DynamicCoDriverSelect: React.FC<Props> = ({ idHTML, coDrivers = [], onFiel
 
       <div className={styles.action}>
         <button type="button" onClick={handleAddField} className={styles["btn-add"]}>
-          + Thêm nhân viên
+          + Thêm phụ xe
         </button>
       </div>
     </div>

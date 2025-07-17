@@ -12,6 +12,8 @@ import styles from "../../styles/promotionManage.module.scss";
 import { ArrangeType } from "../../types/type";
 import { debounce } from "../../utils/debounce";
 import formatCurrency from "../../utils/formatCurrency";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const ITEMS_PER_PAGE = 2;
 
@@ -105,28 +107,6 @@ const PromotionManage: React.FC = () => {
       </div>
 
       <div className={styles["filter-wrapper"]}>
-        {/* <div className={styles["filter-type"]}>
-          <p className={styles["type-title"]}>Kiểu khuyến mãi</p>
-          {["all", "percentage", "fixed"].map((type) => (
-            <div key={type} className={styles["type-item"]}>
-              <div className={styles.radio}>
-                <input
-                  type="radio"
-                  name="promotion_type"
-                  id={type}
-                  value={type}
-                  onChange={handleSelectedTypeChange}
-                  checked={selectedType === type}
-                />
-              </div>
-              <div className={styles.label}>
-                <label htmlFor={type}>
-                  {type === "all" ? "Tất cả" : type === "percentage" ? "Phần trăm" : "Giá cố định"}
-                </label>
-              </div>
-            </div>
-          ))}
-        </div> */}
         <SelectType selectedType={selectedType} onChange={handleSelectedTypeChange} />
         <FilterCheckbox
           title="Loại xe"
@@ -178,15 +158,17 @@ const PromotionManage: React.FC = () => {
                       to={`${urlMain}/detail/${promo.id}`}
                       className={`${styles["btn-detail"]} ${styles.btn}`}
                     >
-                      Chi tiết
+                      <FontAwesomeIcon icon={faEye} />
                     </Link>
                     <Link
                       to={`${urlMain}/update/${promo.id}`}
                       className={`${styles["btn-edit"]} ${styles.btn}`}
                     >
-                      Cập nhật
+                      <FontAwesomeIcon icon={faPenToSquare} />
                     </Link>
-                    <button className={`${styles["btn-delete"]} ${styles.btn}`}>Xóa</button>
+                    <button className={`${styles["btn-delete"]} ${styles.btn}`}>
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
                   </div>
                 </td>
               </tr>

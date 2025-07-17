@@ -10,6 +10,8 @@ import { dateTimeTransform } from "../../utils/transform";
 import { getAllTrip } from "../../services/trip.service";
 import formatCurrency from "../../utils/formatCurrency";
 import { debounce } from "../../utils/debounce";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const ITEMS_PER_PAGE = 5;
 
@@ -142,18 +144,20 @@ const TripManage: React.FC = () => {
                       to={`${urlMain}/detail/${trip.id}`}
                       className={`${styles["btn-detail"]} ${styles.btn}`}
                     >
-                      Chi tiết
+                      <FontAwesomeIcon icon={faEye} />
                     </Link>
                     {trip.totalSeatBooked > 0 ? null : (
                       <Link
                         to={`${urlMain}/update/${trip.id}`}
                         className={`${styles["btn-edit"]} ${styles.btn}`}
                       >
-                        Cập nhật
+                        <FontAwesomeIcon icon={faPenToSquare} />
                       </Link>
                     )}
                     {trip.totalSeatBooked > 0 ? null : (
-                      <button className={`${styles["btn-delete"]} ${styles.btn}`}>Xóa</button>
+                      <button className={`${styles["btn-delete"]} ${styles.btn}`}>
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
                     )}
                   </div>
                 </td>

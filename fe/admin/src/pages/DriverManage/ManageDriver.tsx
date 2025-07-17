@@ -9,6 +9,8 @@ import { ArrangeType } from "../../types/type";
 import DefaultImage from "../../components/DefaultImage";
 import { dateTimeTransform } from "../../utils/transform";
 import { getDriverList } from "../../services/driver.service";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -129,14 +131,17 @@ const ManageDriver: React.FC = () => {
                       to={`${urlMain}/detail/${driver.id}`}
                       className={`${styles["btn-detail"]} ${styles.btn}`}
                     >
-                      Chi tiết
+                      <FontAwesomeIcon icon={faEye} />
                     </Link>
                     <Link
                       to={`${urlMain}/update/${driver.id}`}
                       className={`${styles["btn-edit"]} ${styles.btn}`}
                     >
-                      Cập nhật
+                      <FontAwesomeIcon icon={faPenToSquare} />
                     </Link>
+                    <button className={`${styles["btn-delete"]} ${styles.btn}`}>
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
                   </div>
                 </td>
               </tr>

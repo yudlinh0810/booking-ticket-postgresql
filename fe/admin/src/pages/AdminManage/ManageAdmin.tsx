@@ -7,6 +7,8 @@ import Pagination from "../../components/Pagination";
 import styles from "../../styles/adminManage.module.scss";
 import { ArrangeType } from "../../types/type";
 import { getAdminList } from "../../services/admin.service";
+import { faEye, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -77,7 +79,7 @@ const ManageAdmin: React.FC = () => {
         </div>
 
         <Link to={"/admin-manage/add"} className={styles["btn-add"]}>
-          Thêm nhân viên
+          Thêm phụ xe
         </Link>
       </div>
       <div className={styles["table-wrapper"]}>
@@ -115,15 +117,17 @@ const ManageAdmin: React.FC = () => {
                       to={`${urlMain}/detail/${admin.id}`}
                       className={`${styles["btn-detail"]} ${styles.btn}`}
                     >
-                      Chi tiết
+                      <FontAwesomeIcon icon={faEye} />
                     </Link>
                     <Link
                       to={`${urlMain}/update/${admin.id}`}
                       className={`${styles["btn-edit"]} ${styles.btn}`}
                     >
-                      Cập nhật
+                      <FontAwesomeIcon icon={faPenToSquare} />
                     </Link>
-                    <button className={`${styles["btn-delete"]} ${styles.btn}`}>Xóa</button>
+                    <button className={`${styles["btn-delete"]} ${styles.btn}`}>
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
                   </div>
                 </td>
               </tr>

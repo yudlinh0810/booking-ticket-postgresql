@@ -26,9 +26,9 @@ export const getTickets = async ({
     .then((res) => res.data);
 };
 
-export const fetchPromotionById = async (id: number) => {
+export const fetchTicketById = async (id: string) => {
   return await bookTicketAPI
-    .get<TicketInfo>(`/promotion/get-detail-by-code/${id}`)
+    .get<TicketInfo>(`/ticket/get-detail-ticket-by-id/${id}`)
     .then((res) => res.data);
 };
 
@@ -39,7 +39,7 @@ export const updatePaymentStatusTicket = async ({
   id: number;
   paymentStatus: PaymentStatus;
 }) => {
-  return await bookTicketAPI.put(`/promotion/update/${id}`, paymentStatus).then((res) => res.data);
+  return await bookTicketAPI.put(`/ticket/update/${id}`, paymentStatus).then((res) => res.data);
 };
 
 export const deleteTicket = async (id: number) => {

@@ -37,7 +37,7 @@ const DefaultImage: React.FunctionComponent<DefaultImageProps> = ({
       ? "Cập nhật ảnh đại diện"
       : updateType === "driver"
       ? "Cập nhật ảnh tài xế"
-      : "Cập nhật ảnh nhân viên";
+      : "Cập nhật ảnh phụ xe";
 
   const mutateUpdate = useCustomNavMutation(
     updateFunc,

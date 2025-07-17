@@ -57,7 +57,7 @@ const DetailTrip = () => {
           ))}
 
           <li className={styles.group}>
-            <p className={styles.title}>Nhân viên</p>
+            <p className={styles.title}>Phụ xe</p>
             {trip.coDrivers.map((cdr, index) => (
               <input
                 key={index}

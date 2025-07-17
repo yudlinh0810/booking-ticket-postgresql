@@ -4,33 +4,24 @@ export interface TicketInfo {
   trip: {
     id: number;
     name: string;
-    departure: string;
-    startTime: string;
-    arrival: string;
-    endTime: string;
-    status: string;
   };
-  customer: {
+  buyer: {
     id: number;
+    email: string;
     fullName: string;
+    phone: string;
   };
-  driver: {
-    id: number;
+  receiver: {
+    email: string;
     fullName: string;
+    phone: string;
   };
-  coDriver: {
-    id: number;
-    fullName: string;
-  }[];
-  email: string;
-  fullName: string;
-  phone: string;
   seats: string;
   price: number;
   paymentType: PaymentType;
   paymentStatus: PaymentStatus;
-  createdAt: string;
-  updatedAt: string;
+  createAt: string;
+  updateAt: string;
 }
 
 export interface TicketBase {
@@ -42,6 +33,7 @@ export interface TicketBase {
   };
   customer: {
     id: number;
+    email: string;
     fullName: string;
   };
   email: string;
@@ -54,3 +46,15 @@ export interface TicketBase {
 
 export type PaymentType = "all" | "cash" | "banking";
 export type PaymentStatus = "paid" | "pending" | "failed" | "refunded";
+
+export const paymentStatusMap: Record<PaymentStatus, string> = {
+  paid: "Đã thanh toán",
+  pending: "chưa giải quyết",
+  failed: "thất bại",
+  refunded: "đã hoàn tiền",
+};
+export const paymentTypeMap: Record<PaymentType, string> = {
+  all: "Tất cả",
+  cash: "Tiền mặt",
+  banking: "Ngân hàng",
+};

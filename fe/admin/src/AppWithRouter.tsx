@@ -48,9 +48,12 @@ import DetailPromotion from "./pages/PromotionManage/DetailPromotion";
 import ManagePromotion from "./pages/PromotionManage/ManagePromotion";
 import UpdatePromotion from "./pages/PromotionManage/UpdatePromotion";
 import TicketManage from "./pages/TicketManage/ManageTicket";
+import DetailTicket from "./pages/TicketManage/DetailTicket";
+import useForceLogout from "./hooks/useForceLogout";
 
 function AppWithRouter() {
   TokenHandler();
+  useForceLogout();
 
   return (
     <>
@@ -127,8 +130,8 @@ function AppWithRouter() {
           {/* Ticket Manage */}
           <Route path="/ticket-manage" element={<ManageLayout />}>
             <Route index element={<TicketManage />} />
-            {/* <Route path="page/:page" element={<ManageTicket />} />
             <Route path="detail/:id" element={<DetailTicket />} />
+            {/* <Route path="page/:page" element={<ManageTicket />} />
             <Route path="add" element={<AddTicket />} />
             <Route path="update/:id" element={<UpdateTicket />} /> */}
           </Route>

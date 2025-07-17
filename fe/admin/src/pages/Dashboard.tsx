@@ -29,7 +29,7 @@ const Dashboard = () => {
         </div>
         <div className={styles["dashboard-summary__item"]}>
           <div className={styles["dashboard-summary__item-title"]}>
-            <p>Nhân viên</p>
+            <p>Phụ xe</p>
           </div>
           <div className={styles["dashboard-summary__item-info-wrapper"]}>
             <div className={styles["info"]}>
@@ -42,7 +42,7 @@ const Dashboard = () => {
                 <p>{statsData?.totalDrivers}</p>
               </div>
               <div className={styles["content"]}>
-                <p className={styles.title}>Nhân viên </p>
+                <p className={styles.title}>Phụ xe </p>
                 <p>{statsData?.totalCoDrivers}</p>
               </div>
             </div>

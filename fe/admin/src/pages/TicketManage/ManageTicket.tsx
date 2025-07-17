@@ -12,6 +12,8 @@ import formatCurrency from "../../utils/formatCurrency";
 import { PaymentType } from "../../types/ticket";
 import SelectTypeTicket from "../../components/SelectedTypeTicket";
 import { getTickets } from "../../services/ticket.service";
+import { faEye, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const ITEMS_PER_PAGE = 2;
 
@@ -46,6 +48,7 @@ const TicketManage: React.FC = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.title = `Quản lý vé xe`;
   }, [data]);
 
   useEffect(() => {
@@ -117,9 +120,7 @@ const TicketManage: React.FC = () => {
               <th rowSpan={3} className={styles["rowspan-center"]}>
                 Tuyến xe
               </th>
-              <th rowSpan={3} className={styles["rowspan-center"]}>
-                Người mua
-              </th>
+              <th colSpan={2}>Người mua</th>
               <th colSpan={3}>Người nhận</th>
               <th rowSpan={3} className={styles["rowspan-center"]}>
                 Loại thanh toán
@@ -128,13 +129,17 @@ const TicketManage: React.FC = () => {
                 Trạng thái
               </th>
               <th rowSpan={3} className={styles["rowspan-center"]}>
-                Giá thành
+                Giá tiền
               </th>
               <th rowSpan={3} className={styles["rowspan-center"]}>
                 Thao Tác
               </th>
             </tr>
             <tr className={styles["sub-header"]}>
+              {/* người mua */}
+              <th className={styles["sub-header-col"]}>Họ và tên</th>
+              <th className={styles["sub-header-col"]}>Email</th>
+              {/* Người nhận */}
               <th className={styles["sub-header-col"]}>Họ và tên</th>
               <th className={styles["sub-header-col"]}>Email</th>
               <th className={styles["sub-header-col"]}>Số điện thoại</th>
@@ -149,6 +154,7 @@ const TicketManage: React.FC = () => {
                 <td>{ticket.transactionId}</td>
                 <td>{ticket.trip.name}</td>
                 <td>{ticket.customer.fullName}</td>
+                <td>{ticket.customer.email}</td>
                 <td>{ticket.fullName}</td>
                 <td>{ticket.email}</td>
                 <td>{ticket.phone}</td>
@@ -161,15 +167,17 @@ const TicketManage: React.FC = () => {
                       to={`${urlMain}/detail/${ticket.id}`}
                       className={`${styles["btn-detail"]} ${styles.btn}`}
                     >
-                      Chi tiết
+                      <FontAwesomeIcon icon={faEye} />
                     </Link>
                     <Link
                       to={`${urlMain}/update/${ticket.id}`}
                       className={`${styles["btn-edit"]} ${styles.btn}`}
                     >
-                      Cập nhật
+                      <FontAwesomeIcon icon={faPenToSquare} />
                     </Link>
-                    <button className={`${styles["btn-delete"]} ${styles.btn}`}>Xóa</button>
+                    <button className={`${styles["btn-delete"]} ${styles.btn}`}>
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
                   </div>
                 </td>
               </tr>

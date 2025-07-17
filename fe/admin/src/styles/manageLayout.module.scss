@@ -2,7 +2,13 @@
   display: flex;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  .sidebar-wrapper {
+    background-color: #0973b9;
+    overflow-y: auto;
+  }
 
   .children {
     flex: 1;
