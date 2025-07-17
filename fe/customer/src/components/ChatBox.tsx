@@ -48,7 +48,7 @@ const ChatBox = () => {
   useEffect(() => {
     if (!userId || !open) return;
 
-    socket.current = io(`https://${import.meta.env.VITE_API_URL}.ngrok-free.app`, {
+    socket.current = io(`https://${import.meta.env.VITE_API_URL}.ngrok-free.app/chatbox-ai`, {
       transports: ["websocket", "polling"],
       withCredentials: true,
       autoConnect: true,

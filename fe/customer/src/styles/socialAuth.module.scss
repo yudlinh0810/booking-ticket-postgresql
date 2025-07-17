@@ -6,7 +6,12 @@
   .btn-item {
     flex: 1;
 
-    border-color: var(--primary-bd);
+    padding: 0.5rem;
+    border: 1px solid var(--primary-bd);
+    border-radius: 1rem;
+
+    color: var(--black);
+    text-align: center;
 
     transition: all 0.3s;
 

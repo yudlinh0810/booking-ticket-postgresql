@@ -10,6 +10,7 @@ import { io, Socket } from "socket.io-client";
 import CustomModal from "./CustomModal";
 import PaymentSuccess from "./PaymentSuccess";
 import { DataPaymentSuccess } from "../types/payment";
+import { useNavigate } from "react-router";
 
 interface QRPaymentProps {
   valueIn: PayOSPaymentResponseData;
@@ -17,6 +18,7 @@ interface QRPaymentProps {
 }
 
 const QRPayment: React.FC<QRPaymentProps> = ({ valueIn, onPaymentSuccess }) => {
+  const navigate = useNavigate();
   const userId = useUserStore((state) => state.user?.id);
   const [statusPayment, setStatusPayment] = useState<boolean>(false);
   const [dataPaymentSuccess, setDataPaymentSuccess] = useState<DataPaymentSuccess[]>([]);
@@ -25,7 +27,7 @@ const QRPayment: React.FC<QRPaymentProps> = ({ valueIn, onPaymentSuccess }) => {
   useEffect(() => {
     if (!userId) return;
 
-    socket.current = io(`https://${import.meta.env.VITE_API_URL}.ngrok-free.app`, {
+    socket.current = io(`https://${import.meta.env.VITE_API_URL}.ngrok-free.app/payment`, {
       transports: ["websocket"],
       withCredentials: true,
     });
@@ -61,6 +63,7 @@ const QRPayment: React.FC<QRPaymentProps> = ({ valueIn, onPaymentSuccess }) => {
   }, [userId]);
 
   const handleClosePaymentSuccess = () => {
+    navigate("/");
     setStatusPayment(false);
     onPaymentSuccess(false);
   };
