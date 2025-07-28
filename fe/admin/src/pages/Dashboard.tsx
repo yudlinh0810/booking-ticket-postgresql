@@ -6,6 +6,7 @@ import { getDashboardStats } from "../services/statistical.service";
 import RevenueChartByHours from "../components/RevenueChartByHours";
 import RevenueChartByMonth from "../components/RevenueChartByMonth";
 import RevenueChartByYear from "../components/RevenueChartByYear";
+import { useEffect } from "react";
 
 const Dashboard = () => {
   const { data: statsData } = useQuery({
@@ -15,66 +16,72 @@ const Dashboard = () => {
     refetchOnWindowFocus: false,
   });
 
+  useEffect(() => {
+    document.title = "Dashboard";
+  }, []);
+
   return (
-    <div className={styles["dashboard"]}>
-      <div className={styles["dashboard-summary"]}>
-        <div className={styles["dashboard-summary__item"]}>
-          <div className={styles["dashboard-summary__item-title"]}>
-            <p>Người dùng</p>
-          </div>
-          <div className={styles["dashboard-summary__item-info"]}>
-            <FontAwesomeIcon icon={faUser} />
-            <h6>{statsData?.totalCustomers}</h6>
-          </div>
-        </div>
-        <div className={styles["dashboard-summary__item"]}>
-          <div className={styles["dashboard-summary__item-title"]}>
-            <p>Phụ xe</p>
-          </div>
-          <div className={styles["dashboard-summary__item-info-wrapper"]}>
-            <div className={styles["info"]}>
-              <FontAwesomeIcon icon={faUsers} />
-              <h6>{statsData?.totalStaffs}</h6>
+    <>
+      <div className={styles["dashboard"]}>
+        <div className={styles["dashboard-summary"]}>
+          <div className={styles["dashboard-summary__item"]}>
+            <div className={styles["dashboard-summary__item-title"]}>
+              <p>Người dùng</p>
             </div>
-            <div className={styles["info"]}>
-              <div className={styles["content"]}>
-                <p className={styles.title}>Tài xế </p>
-                <p>{statsData?.totalDrivers}</p>
-              </div>
-              <div className={styles["content"]}>
-                <p className={styles.title}>Phụ xe </p>
-                <p>{statsData?.totalCoDrivers}</p>
-              </div>
+            <div className={styles["dashboard-summary__item-info"]}>
+              <FontAwesomeIcon icon={faUser} />
+              <h6>{statsData?.totalCustomers}</h6>
             </div>
           </div>
-        </div>
+          <div className={styles["dashboard-summary__item"]}>
+            <div className={styles["dashboard-summary__item-title"]}>
+              <p>Phụ xe</p>
+            </div>
+            <div className={styles["dashboard-summary__item-info-wrapper"]}>
+              <div className={styles["info"]}>
+                <FontAwesomeIcon icon={faUsers} />
+                <h6>{statsData?.totalStaffs}</h6>
+              </div>
+              <div className={styles["info"]}>
+                <div className={styles["content"]}>
+                  <p className={styles.title}>Tài xế </p>
+                  <p>{statsData?.totalDrivers}</p>
+                </div>
+                <div className={styles["content"]}>
+                  <p className={styles.title}>Phụ xe </p>
+                  <p>{statsData?.totalCoDrivers}</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
-        <div className={styles["dashboard-summary__item"]}>
-          <div className={styles["dashboard-summary__item-title"]}>
-            <p>Xe khách</p>
+          <div className={styles["dashboard-summary__item"]}>
+            <div className={styles["dashboard-summary__item-title"]}>
+              <p>Xe khách</p>
+            </div>
+            <div className={styles["dashboard-summary__item-info"]}>
+              <FontAwesomeIcon icon={faBus} />
+              <h6>{statsData?.totalCars}</h6>
+            </div>
           </div>
-          <div className={styles["dashboard-summary__item-info"]}>
-            <FontAwesomeIcon icon={faBus} />
-            <h6>{statsData?.totalCars}</h6>
+
+          <div className={styles["dashboard-summary__item"]}>
+            <div className={styles["dashboard-summary__item-title"]}>
+              <p>Vé xe</p>
+            </div>
+            <div className={styles["dashboard-summary__item-info"]}>
+              <FontAwesomeIcon icon={faTicket} />
+              <h6>{statsData?.totalTickets}</h6>
+            </div>
           </div>
         </div>
-
-        <div className={styles["dashboard-summary__item"]}>
-          <div className={styles["dashboard-summary__item-title"]}>
-            <p>Vé xe</p>
-          </div>
-          <div className={styles["dashboard-summary__item-info"]}>
-            <FontAwesomeIcon icon={faTicket} />
-            <h6>{statsData?.totalTickets}</h6>
-          </div>
+        <div className={styles["revenue-chart"]}>
+          <RevenueChartByHours />
+          <RevenueChartByMonth />
+          <RevenueChartByYear />
         </div>
       </div>
-      <div className={styles["revenue-chart"]}>
-        <RevenueChartByHours />
-        <RevenueChartByMonth />
-        <RevenueChartByYear />
-      </div>
-    </div>
+    </>
   );
 };
 

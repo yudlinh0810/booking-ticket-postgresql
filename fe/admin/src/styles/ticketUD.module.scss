@@ -78,6 +78,53 @@
         display: flex;
         flex-direction: column;
         gap: 0.6rem;
+
+        .info-ctm-container {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 1.2rem;
+
+          .info-ctm {
+            flex: 1;
+
+            &-title {
+              text-align: center;
+              text-transform: capitalize;
+              font-size: 1.15rem;
+              font-weight: 500;
+            }
+
+            &-wrapper {
+              display: flex;
+              flex-direction: column;
+              gap: 0.5rem;
+
+              .info-detail {
+                display: flex;
+                flex-direction: column;
+                gap: 0.2rem;
+
+                .info-label {
+                  font-size: 1.1rem;
+                }
+
+                .info-value {
+                  padding: 0.2rem 0.4rem;
+                  border: 1px solid var(--gray);
+                  border-radius: 0.25rem;
+
+                  font-size: 1.1rem;
+                  outline: none;
+
+                  &:focus {
+                    border-color: var(--bright-blue);
+                  }
+                }
+              }
+            }
+          }
+        }
+
         .title {
           text-transform: capitalize;
           font-size: 1.15rem;
@@ -102,15 +149,47 @@
           max-height: 5rem;
           resize: vertical;
         }
-      }
-      .item-password {
-        position: relative;
 
-        .pass-status {
-          position: absolute;
-          top: 2rem;
-          right: 0.5rem;
-          font-size: 1.2rem;
+        .payment-list {
+          display: flex;
+          gap: 1.2em;
+
+          .item {
+            .value {
+              padding: 0.4rem 0.4rem;
+              border: 1px solid var(--gray);
+              border-radius: 0.25rem;
+
+              font-size: 1.1rem;
+              outline: none;
+              font-size: 1.1rem;
+            }
+
+            & > .banking,
+            .cash {
+              border-color: var(--bright-blue);
+            }
+
+            & > .paid {
+              background-color: rgba($color: var(--success-ra), $alpha: 0.8);
+            }
+
+            & > .failed {
+              background-color: rgba($color: var(--danger-ra), $alpha: 0.8);
+            }
+
+            & > .pending {
+              background-color: rgba($color: var(--warning-ra), $alpha: 0.8);
+            }
+
+            & > .refunded {
+              background-color: rgba($color: var(--info-ra), $alpha: 0.8);
+            }
+
+            .white {
+              color: var(--white);
+            }
+          }
         }
       }
     }

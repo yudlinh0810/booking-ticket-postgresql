@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { WebhookService } from "../services/webhook.service";
-import { log } from "../utils/logger";
 import { errorResponse, successResponse } from "../utils/response.util";
 
 const webhookService = new WebhookService();
@@ -19,7 +18,6 @@ export const handleWebhook = async (req: Request, res: Response): Promise<any> =
     const response = await webhookService.processWebhookEvent(data.orderCode, data.reference);
     return successResponse(res, 200, response);
   } catch (error) {
-    log(`Error processing webhook: ${error}`);
     return errorResponse(res, "Internal Server Error", 500);
   }
 };

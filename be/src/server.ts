@@ -10,6 +10,7 @@ import "./config/passport";
 import { connectRedis } from "./config/redis";
 import routes from "./routes/routes.routes";
 import { setupSocketServer } from "./sockets/socket";
+import { logger } from "./middlewares/logger";
 
 dotenv.config();
 
@@ -36,6 +37,8 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
 
+app.use(logger); // Use logger middleware
+
 // 3. Session configuration
 app.use(
   session({
@@ -55,16 +58,6 @@ app.use(
 // 4. Passport middleware - say session
 app.use(passport.initialize());
 app.use(passport.session());
-
-// 5. Debug middleware - để kiểm tra request
-app.use((req, res, next) => {
-  console.log(`${req.method} ${req.path}`, {
-    query: req.query,
-    session: req.session?.id ? "exists" : "none",
-    user: req.user ? "authenticated" : "anonymous",
-  });
-  next();
-});
 
 // Khởi động Websocket
 setupSocketServer(server);

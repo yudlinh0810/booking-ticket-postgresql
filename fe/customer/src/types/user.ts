@@ -1,5 +1,5 @@
 export interface User extends UserInfo {
-  id: number;
+  id?: number;
   email: string;
   fullName: string;
   dateBirth?: string;

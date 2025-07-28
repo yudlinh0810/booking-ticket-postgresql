@@ -1,6 +1,7 @@
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import Loading from "../../components/Loading";
@@ -9,7 +10,6 @@ import styles from "../../styles/ticketUD.module.scss";
 import { paymentStatusMap, paymentTypeMap } from "../../types/ticket";
 import formatCurrency from "../../utils/formatCurrency";
 import { formatDate } from "../../utils/formatDate";
-import { useEffect } from "react";
 
 const DetailTicket = () => {
   const { id } = useParams<{ id: string }>();
@@ -50,49 +50,49 @@ const DetailTicket = () => {
         </div>
         <ul className={styles["data-list"]}>
           <li className={styles.item}>
-            <p className={styles.title}>Mã giao dịch</p>
+            <p className={styles.title}>Mã giao dịch:</p>
             <p className={styles.data}>{data.transactionId ?? "N/A"}</p>
           </li>
           <li className={styles.item}>
-            <p className={styles.title}>Thông tin khách hàng</p>
+            <p className={styles.title}>Thông tin khách hàng:</p>
             <div className={styles["info-ctm-container"]}>
-              <div className={styles.buyer}>
-                <h5>
+              <div className={`${styles.buyer} ${styles["info-ctm"]}`}>
+                <h5 className={`${styles["info-ctm-title"]}`}>
                   Người mua{" "}
                   <Link to={`/customer-manage/detail/${data.buyer.id}`}>
                     <FontAwesomeIcon icon={faEye} />
                   </Link>{" "}
                 </h5>
-                <div className={styles["info-wrapper"]}>
-                  <div className={styles["info"]}>
-                    <p className={styles.title}>Email</p>
-                    <p className={styles.data}>{data.buyer.email}</p>
+                <div className={styles["info-ctm-wrapper"]}>
+                  <div className={styles["info-detail"]}>
+                    <p className={styles["info-label"]}>Email:</p>
+                    <p className={styles["info-value"]}>{data.buyer.email}</p>
                   </div>
-                  <div className={styles["info"]}>
-                    <p className={styles.title}>Họ và tên</p>
-                    <p className={styles.data}>{data.buyer.fullName}</p>
+                  <div className={styles["info-detail"]}>
+                    <p className={styles["info-label"]}>Họ và tên:</p>
+                    <p className={styles["info-value"]}>{data.buyer.fullName}</p>
                   </div>
-                  <div className={styles["info"]}>
-                    <p className={styles.title}>Số điện thoại</p>
-                    <p className={styles.data}>{data.buyer.phone}</p>
+                  <div className={styles["info-detail"]}>
+                    <p className={styles["info-label"]}>Số điện thoại:</p>
+                    <p className={styles["info-value"]}>{data.buyer.phone}</p>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className={styles.receiver}>
-              <h5 className={styles["title-receiver"]}>Người nhận</h5>
-              <div className={styles["info-wrapper"]}>
-                <div className={styles["info"]}>
-                  <p className={styles.title}>Email</p>
-                  <p className={styles.data}>{data.receiver.email}</p>
-                </div>
-                <div className={styles["info"]}>
-                  <p className={styles.title}>Họ và tên</p>
-                  <p className={styles.data}>{data.receiver.fullName}</p>
-                </div>
-                <div className={styles["info"]}>
-                  <p className={styles.title}>SĐT</p>
-                  <p className={styles.data}>{data.receiver.phone}</p>
+              <div className={`${styles.receiver} ${styles["info-ctm"]}`}>
+                <h5 className={`${styles["info-ctm-title"]}`}>Người nhận</h5>
+                <div className={styles["info-ctm-wrapper"]}>
+                  <div className={styles["info-detail"]}>
+                    <p className={styles["info-label"]}>Email:</p>
+                    <p className={styles["info-value"]}>{data.receiver.email}</p>
+                  </div>
+                  <div className={styles["info-detail"]}>
+                    <p className={styles["info-label"]}>Họ và tên:</p>
+                    <p className={styles["info-value"]}>{data.receiver.fullName}</p>
+                  </div>
+                  <div className={styles["info-detail"]}>
+                    <p className={styles["info-label"]}>Số điện thoại:</p>
+                    <p className={styles["info-value"]}>{data.receiver.phone}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -107,7 +107,7 @@ const DetailTicket = () => {
             <p className={styles.data}> {data.trip.name} </p>
           </li>
           <li className={styles.item}>
-            <p className={styles.title}>Số Ghế</p>
+            <p className={styles.title}>Số Ghế:</p>
             <p className={styles.data}>
               {data.seats
                 .split("-")
@@ -116,24 +116,28 @@ const DetailTicket = () => {
             </p>
           </li>
           <li className={styles.item}>
-            <p className={styles.title}>Giá tiền</p>
+            <p className={styles.title}>Giá tiền:</p>
             <p className={styles.data}>{formatCurrency(data.price)}</p>
           </li>
           <li className={styles.item}>
-            <p className={styles.title}>Thanh toán</p>
-            <ul className="list">
-              <li>
-                <p>Loại thanh toán</p>
-                <p>{paymentTypeMap?.[data.paymentType] || "Không xác định"}</p>
+            <p className={styles.title}>Thanh toán:</p>
+            <ul className={styles["payment-list"]}>
+              <li className={styles.item}>
+                {/* <label className={styles.label}>Loại:</label> */}
+                <p className={`${styles[data.paymentType]} ${styles.value}`}>
+                  {paymentTypeMap?.[data.paymentType] || "Không xác định"}
+                </p>
               </li>
-              <li>
-                <p>Trạng thái thanh toán</p>
-                <p>{paymentStatusMap?.[data.paymentStatus] || "Không xác định"}</p>
+              <li className={styles.item}>
+                {/* <label className={styles.label}>Trạng thái:</label> */}
+                <p className={`${styles[data.paymentStatus]} ${styles.value} ${styles.white}`}>
+                  {paymentStatusMap?.[data.paymentStatus] || "Không xác định"}
+                </p>
               </li>
             </ul>
           </li>
           <li className={styles.item}>
-            <p className={styles.title}>Thời gian đặt vé</p>
+            <p className={styles.title}>Thời gian đặt vé:</p>
             <p className={styles.data}>{formatDate(data.updateAt, "DD-MM-YYYY-HH:mm")}</p>
           </li>
         </ul>

@@ -14,7 +14,11 @@ const Otp = ({ email, onCloseModal }: { email: string; onCloseModal: () => void 
     const response = await veriFyEmail(otpValue);
     if ((response.status === "OK", onCloseModal)) {
       const data = response.data;
-      setUser({ email: data.email, fullName: data.fullName });
+      setUser({
+        id: data.id,
+        email: data.email,
+        fullName: data.fullName,
+      });
       setOtpValue({});
       onCloseModal();
       toast.success("Đăng ký thành công");

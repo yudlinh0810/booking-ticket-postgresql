@@ -30,7 +30,7 @@ export class UserController {
       ) {
         const { status, data, access_token, refresh_token, expirationTime } = response;
         res.cookie("access_token", access_token, {
-          httpOnly: false,
+          httpOnly: true,
           secure: true,
           sameSite: "none",
           maxAge: 60 * 60 * 1000,
@@ -80,7 +80,7 @@ export class UserController {
         const { access_token, data, refresh_token, status, expirationTime } = response;
 
         res.cookie("access_token", access_token, {
-          httpOnly: false,
+          httpOnly: true,
           secure: true,
           sameSite: "none",
           maxAge: 60 * 60 * 1000,
@@ -129,18 +129,18 @@ export class UserController {
       ) {
         const { access_token, refresh_token, status, expirationTime } = response;
         res.cookie("access_token", access_token, {
-          httpOnly: false,
+          httpOnly: true,
           secure: true,
           sameSite: "none",
           maxAge: 60 * 60 * 1000,
           path: "/",
         });
 
-        res.cookie("refresh_token", refresh_token, {
+        res.cookie("access_token", access_token, {
           httpOnly: true,
           secure: true,
           sameSite: "none",
-          maxAge: 7 * 24 * 60 * 60 * 1000,
+          maxAge: 60 * 60 * 1000,
           path: "/",
         });
         return successResponse(res, 200, { status, expirationTime: expirationTime });
@@ -178,7 +178,7 @@ export class UserController {
       ) {
         const { access_token, refresh_token, status, expirationTime } = response;
         res.cookie("access_token", access_token, {
-          httpOnly: false,
+          httpOnly: true,
           secure: true,
           sameSite: "none",
           maxAge: 60 * 60 * 1000,
@@ -217,7 +217,7 @@ export class UserController {
         const { access_token, expirationTime } = response;
 
         res.cookie("access_token", access_token, {
-          httpOnly: false,
+          httpOnly: true,
           secure: true,
           sameSite: "none",
           maxAge: 60 * 60 * 1000,
@@ -245,7 +245,7 @@ export class UserController {
   logout = async (req: Request, res: Response): Promise<any> => {
     try {
       res.clearCookie("access_token", {
-        httpOnly: false,
+        httpOnly: true,
         secure: true,
         sameSite: "none",
         path: "/",
