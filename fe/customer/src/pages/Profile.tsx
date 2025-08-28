@@ -12,7 +12,7 @@ const Profile = () => {
   const { user, setUser } = useUserStore();
   const [avatar, setAvatar] = useState<string>(user?.avatar || "");
   const [fileAvatar, setFileAvatar] = useState<File | null>(null);
-  const [dataUser, setDataUser] = useState<User>({
+  const [dataUser, setDataUser] = useState<Partial<User>>({
     fullName: "",
     email: "",
     phone: "",

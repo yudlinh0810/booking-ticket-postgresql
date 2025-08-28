@@ -1,11 +1,11 @@
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { register } from "../services/auth.service";
+import { useAuthModalStore } from "../store/authModalStore";
 import styled from "../styles/registerForm.module.scss";
 import { RegisterPayLoad } from "../types";
-import { register } from "../services/auth.service";
 import CustomModal from "./CustomModal";
-import { toast } from "react-toastify";
 import Otp from "./Otp";
-import { useAuthModalStore } from "../store/authModalStore";
 import SocialAuth from "./SocialAuth";
 
 const RegisterForm = () => {

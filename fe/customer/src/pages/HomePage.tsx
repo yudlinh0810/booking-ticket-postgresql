@@ -1,5 +1,7 @@
 import SearchTrip from "../components/SearchTrip";
+import Slider from "../components/Slider";
 import styles from "../styles/homePage.module.scss";
+import { sliderData } from "../data/SliderData";
 
 const HomePage = () => {
   return (
@@ -14,6 +16,9 @@ const HomePage = () => {
           <SearchTrip />
         </div>
       </div>
+      <Slider sliderArray={sliderData} delay={4000} />
+      <Slider sliderArray={sliderData} delay={3000} swiperWidth={20} />
+      <Slider sliderArray={sliderData} delay={1000} />
     </div>
   );
 };

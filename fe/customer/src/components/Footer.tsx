@@ -27,7 +27,7 @@ const Footer = () => {
             <h3>TRUNG TÂM TỔNG ĐÀI & CSKH</h3>
             <p className={`${styled["font-bold"]} ${styled["fs-2"]}`}>1900 0770</p>
             <div className={styled["footer-contact-info"]}>
-              <h3>Công ty cổ phần xe khách Sylph Bus Lines</h3>
+              <h3>Công ty cổ phần xe khách Vexetienich</h3>
               <p className={styled["info-address"]}>
                 Địa chỉ:
                 <span> 254 Đ. Nguyễn Văn Linh, Thạc Gián, Thanh Khê, Đà Nẵng.</span>
@@ -75,7 +75,7 @@ const Footer = () => {
         <div className={styled["footer-t-left"]}>
           <ul className={styled["footer-links"]}>
             <li>
-              <h4>Sylph Bus Lines</h4>
+              <h4>Vexetienich</h4>
               <LinkList linkList={linksAbout} />
             </li>
             <li>

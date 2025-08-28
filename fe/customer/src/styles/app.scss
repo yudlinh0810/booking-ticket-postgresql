@@ -1,11 +1,11 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 #root {
   width: var(--client-width);
-  box-sizing: border-box;
 
   line-height: 1.3rem;
-}
-.custom-toast {
-  white-space: normal !important;
-  word-break: break-word;
-  max-width: 90%;
 }

@@ -1,7 +1,5 @@
 import axios from "axios";
 import { toast } from "react-toastify";
-import { useAuthModalStore } from "../store/authModalStore";
-import { useUserStore } from "../store/userStore";
 
 type FailedRequest = {
   resolve: (value?: unknown) => void;
@@ -13,32 +11,28 @@ let failedQueue: FailedRequest[] = [];
 
 const processQueue = (error: unknown) => {
   failedQueue.forEach((prom) => {
-    if (error) {
-      prom.reject(error);
-    } else {
-      prom.resolve();
-    }
+    if (error) prom.reject(error);
+    else prom.resolve();
   });
   failedQueue = [];
 };
 
-export const bookTicketAPI = axios.create({
+// Tạo instance riêng cho refresh token (không có interceptor)
+const refreshAPI = axios.create({
   baseURL: `https://${import.meta.env.VITE_API_URL}.ngrok-free.app/api`,
-  withCredentials: true, // Gửi kèm cookie
+  withCredentials: true,
   headers: { "ngrok-skip-browser-warning": "true" },
 });
 
-// Request Interceptor
-bookTicketAPI.interceptors.request.use((config) => {
-  return config; // Không cần thêm Authorization nữa
+export const bookTicketAPI = axios.create({
+  baseURL: `https://${import.meta.env.VITE_API_URL}.ngrok-free.app/api`,
+  withCredentials: true,
+  headers: { "ngrok-skip-browser-warning": "true" },
 });
 
-// Response Interceptor
 bookTicketAPI.interceptors.response.use(
   (response) => response.data || [],
   async (error) => {
-    const { openModal } = useAuthModalStore();
-    const { logout } = useUserStore();
     const originalRequest = error.config;
 
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -52,22 +46,23 @@ bookTicketAPI.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        // Gọi refresh token - BE sẽ đặt lại access_token vào HttpOnly cookie
-        await bookTicketAPI.get("/user/auth/refresh-token");
+        const response = await refreshAPI.get("/user/auth/refresh-token");
+
+        if (response.data.success !== true) throw new Error("Failed to refresh token");
+
+        const newExpirationTime = response.data.data.expirationTime;
+
+        localStorage.setItem("expirationTime", newExpirationTime);
 
         processQueue(null);
-        isRefreshing = false;
-
         return bookTicketAPI(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError);
-        isRefreshing = false;
-
         toast.warning("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại!");
-        logout();
-        openModal("login");
-
+        localStorage.removeItem("expirationTime");
         return Promise.reject(refreshError);
+      } finally {
+        isRefreshing = false;
       }
     }
 
