@@ -3,6 +3,7 @@ import seatSelecting from "../assets/images/seat_selecting.svg";
 import seatDisable from "../assets/images/seat_disabled.svg";
 import styles from "../styles/seat.module.scss";
 import React from "react";
+import { message } from "antd";
 
 export type SeatType = {
   id?: number;
@@ -13,14 +14,20 @@ export type SeatType = {
 };
 interface SeatProps {
   seatValue: SeatType;
+  date: string; // Note: 'date < date.now()' is not selectable
   onSelected: (item: SeatType) => void;
 }
 
-const Seat: React.FC<SeatProps> = React.memo(({ seatValue, onSelected }) => {
+const Seat: React.FC<SeatProps> = React.memo(({ seatValue, date, onSelected }) => {
   const { position, status } = seatValue;
 
   const handleToggleStatus = () => {
     let newStatus;
+    if (date < new Date().toISOString()) {
+      message.warning("Chuyến đã khởi hành, không thể chọn ghế");
+      return;
+    }
+
     if (status === "available") {
       newStatus = "selecting";
     } else {
@@ -41,7 +48,12 @@ const Seat: React.FC<SeatProps> = React.memo(({ seatValue, onSelected }) => {
     );
   } else {
     return (
-      <div className={styles.seat} onClick={handleToggleStatus}>
+      <div
+        className={`${styles.seat} ${
+          date < new Date().toISOString() ? styles["cancel"] : styles[""]
+        }`}
+        onClick={handleToggleStatus}
+      >
         <span className={styles["seat__position"]}>{position}</span>
         <img
           src={`${status === "available" ? seatActive : seatSelecting}`}

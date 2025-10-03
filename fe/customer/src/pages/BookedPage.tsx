@@ -153,7 +153,6 @@ const BookedPage = () => {
         if (!prev || !tripData) return prev;
 
         const newPrice = seatsSelected.length * Number(tripData.price);
-        console.log("new price:", newPrice);
 
         return {
           ...prev,
@@ -236,9 +235,17 @@ const BookedPage = () => {
             <div className={styles["booked-seats"]}>
               <div className={styles["booked-seats__info"]}>
                 {tripData.car.type === "xe thường" ? (
-                  <SeatMapNormal initialSeats={tripData.seats} onSelected={handleSelectedSeats} />
+                  <SeatMapNormal
+                    initialSeats={tripData.seats}
+                    date={tripData.startTime}
+                    onSelected={handleSelectedSeats}
+                  />
                 ) : (
-                  <SeatMapSleeper initialSeats={tripData.seats} onSelected={handleSelectedSeats} />
+                  <SeatMapSleeper
+                    initialSeats={tripData.seats}
+                    date={tripData.startTime}
+                    onSelected={handleSelectedSeats}
+                  />
                 )}
               </div>
               <div className={styles["booked-seats__description"]}>

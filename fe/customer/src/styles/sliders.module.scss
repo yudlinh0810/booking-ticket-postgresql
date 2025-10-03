@@ -91,11 +91,14 @@
 
 .card-link {
   display: block;
+  overflow: hidden;
+
   width: 100%;
   height: auto;
   padding: 0.75rem;
   border-radius: 0.7rem;
   border: 2px solid transparent;
+
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.05);
 
   background: var(--white-bd);

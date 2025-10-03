@@ -1,6 +1,6 @@
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import IconDeparture from "../components/IconDeparture";
@@ -9,16 +9,17 @@ import SearchTrip from "../components/SearchTrip";
 import SortTrip from "../components/SortTrip";
 import { getLocations, searchTrips } from "../services/trip.service";
 import styles from "../styles/searchTripPage.module.scss";
-import { ParamsSearchTrips, TripInfoBase } from "../types/trip";
+import { ParamsSearchTrips, SearchTripResponse, TripInfoBase } from "../types/trip";
 import { formatCurrency } from "../utils/formatCurrency";
 import { formatDate } from "../utils/formatDate";
 
-const ITEMS_PER_PAGE = 10;
+const ITEMS_PER_PAGE = 1;
 
 const SearchTripPage = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [isSearchTrip, setIsSearchTrip] = useState<boolean>(false);
+  const [tripDataSeeMore, setTripDataSeeMore] = useState<SearchTripResponse | null>(null);
   const [searchParamsValue, setSearchParamsValue] = useState<ParamsSearchTrips>({
     from: { id: 0, name: "" },
     to: { id: 0, name: "" },
@@ -33,24 +34,51 @@ const SearchTripPage = () => {
     refetchOnWindowFocus: false,
   });
 
+  // const {
+  //   data: tripsData,
+  //   isLoading: isTripLoading,
+  //   isError: isTripError,
+  // } = useQuery({
+  //   queryKey: ["search-trips", searchParamsValue],
+  //   queryFn: () =>
+  //     searchTrips({
+  //       from: searchParamsValue.from.id,
+  //       to: searchParamsValue.to.id,
+  //       start_time: searchParamsValue.start_time,
+  //       sort: searchParamsValue.sort || "",
+  //       limit: ITEMS_PER_PAGE,
+  //       offset: 0,
+  //     }),
+  //   staleTime: 60 * 60 * 1000,
+  //   enabled: isSearchTrip,
+  //   refetchOnWindowFocus: false,
+  // });
+
   const {
-    data: tripsData,
-    isLoading: isTripLoading,
-    isError: isTripError,
-  } = useQuery({
-    queryKey: ["search-trips", searchParamsValue],
-    queryFn: () =>
+    data: searchTripsData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isError: isErrSearchTrip,
+    error: errSearchTrip,
+    isLoading: isSearchTripsLoading,
+  } = useInfiniteQuery({
+    queryKey: ["search-trip-infinite", searchParamsValue],
+    queryFn: ({ pageParam = 0 }) =>
       searchTrips({
         from: searchParamsValue.from.id,
         to: searchParamsValue.to.id,
         start_time: searchParamsValue.start_time,
         sort: searchParamsValue.sort || "",
         limit: ITEMS_PER_PAGE,
-        offset: 0,
+        offset: pageParam,
       }),
-    staleTime: 60 * 60 * 1000,
+    getNextPageParam: (lastPage, allPages) => {
+      if (!lastPage || lastPage.data.length < ITEMS_PER_PAGE) return undefined;
+      return allPages.length * ITEMS_PER_PAGE;
+    },
+    initialPageParam: 0,
     enabled: isSearchTrip,
-    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
@@ -77,6 +105,20 @@ const SearchTripPage = () => {
       setIsSearchTrip(true);
     }
   }, [locationData, searchParams]);
+
+  useEffect(() => {
+    if (searchTripsData?.pages) {
+      const mergedData = searchTripsData.pages.flatMap((page) => page?.data || []);
+      const lastPage = searchTripsData.pages[searchTripsData.pages.length - 1];
+
+      setTripDataSeeMore({
+        status: lastPage?.status ?? "success",
+        total: mergedData.length,
+        totalPage: Math.ceil(mergedData.length / ITEMS_PER_PAGE),
+        data: mergedData,
+      });
+    }
+  }, [searchTripsData]);
 
   const handleChangeSortValue = (sortValue: string) => {
     setSearchParamsValue((prev) => ({ ...prev, sort: sortValue }));
@@ -105,6 +147,12 @@ const SearchTripPage = () => {
     );
   };
 
+  const handleSeeMore = () => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
   return (
     <div className={styles["search-trip-page-wrapper"]}>
       <div className={styles["search-trip-cpn-wrapper"]}>
@@ -123,16 +171,18 @@ const SearchTripPage = () => {
           </div>
         </div>
 
-        {isTripError && <p>Lỗi tìm kiếm chuyến đi</p>}
-        {tripsData && !isTripLoading ? (
+        {isErrSearchTrip && (
+          <p>{errSearchTrip ? errSearchTrip.message : `Lỗi tìm kiếm chuyến đi`}</p>
+        )}
+        {tripDataSeeMore && !isSearchTripsLoading ? (
           <div className={styles["result-search-trip-info"]}>
             <div className={styles["result-total-trips"]}>
               <p className={styles["label"]}>Kết quả:</p>
-              <p className={styles["result"]}>{tripsData?.total}</p>
+              <p className={styles["result"]}>{tripDataSeeMore?.total}</p>
             </div>
             <div className={styles["result-search-trips"]}>
-              {tripsData.data &&
-                tripsData.data.map((t, index) => (
+              {tripDataSeeMore.data &&
+                tripDataSeeMore.data.map((t, index) => (
                   <div key={`${t.id}-${index}`} className={styles["result-search-trip__item"]}>
                     <div className={styles["result-search-container"]}>
                       <div className={styles["img-trip"]}>
@@ -196,6 +246,11 @@ const SearchTripPage = () => {
                     </div>
                   </div>
                 ))}
+              {tripDataSeeMore.total >= tripDataSeeMore.data.length && (
+                <button onClick={handleSeeMore} disabled={!hasNextPage || isFetchingNextPage}>
+                  Xem thêm
+                </button>
+              )}
             </div>
           </div>
         ) : (

@@ -4,10 +4,12 @@ import Seat, { SeatType } from "./Seat";
 import { message } from "antd";
 
 const SeatMapNormal = ({
-  onSelected,
   initialSeats,
+  date, // Note: 'date < date.now()' is not selectable
+  onSelected,
 }: {
   onSelected: (seats: SeatType[]) => void;
+  date: string;
   initialSeats: SeatType[];
 }) => {
   const [seats, setSeats] = useState<SeatType[]>(initialSeats);
@@ -66,7 +68,12 @@ const SeatMapNormal = ({
           {rows.map((row, rowIndex) => (
             <div className={styles["seat-row"]} key={rowIndex}>
               {row.map((seat) => (
-                <Seat key={seat.position} seatValue={seat} onSelected={handleSelectedSeat} />
+                <Seat
+                  key={seat.position}
+                  seatValue={seat}
+                  date={date}
+                  onSelected={handleSelectedSeat}
+                />
               ))}
             </div>
           ))}
