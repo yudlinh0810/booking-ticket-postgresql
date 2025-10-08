@@ -3,12 +3,12 @@ import InputDropDownList from "./InputDropDownList";
 import styles from "../styles/searchTrip.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
-import DateInput from "./DateInput";
 import { getLocations } from "../services/trip.service";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "./Loading";
 import { useNavigate } from "react-router";
 import { ParamsSearchTrips } from "../types/trip";
+import DateInputForSearchTrip from "./DateInputForSearchTrip";
 
 interface SearchTripType {
   from: string;
@@ -184,7 +184,7 @@ const SearchTrip: React.FC<SearchTripProps> = ({ valueSearchIn }) => {
           )}
         </div>
         <div className={styles.item}>
-          <DateInput
+          <DateInputForSearchTrip
             title="Ngày đi"
             valueIn={searchValue.start_time}
             onChange={handleChangeValueDate}

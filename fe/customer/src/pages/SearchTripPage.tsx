@@ -1,7 +1,7 @@
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import IconDeparture from "../components/IconDeparture";
 import Loading from "../components/Loading";
@@ -13,7 +13,7 @@ import { ParamsSearchTrips, SearchTripResponse, TripInfoBase } from "../types/tr
 import { formatCurrency } from "../utils/formatCurrency";
 import { formatDate } from "../utils/formatDate";
 
-const ITEMS_PER_PAGE = 1;
+const ITEMS_PER_PAGE = 2;
 
 const SearchTripPage = () => {
   const navigate = useNavigate();
@@ -33,26 +33,6 @@ const SearchTripPage = () => {
     staleTime: 60 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
-
-  // const {
-  //   data: tripsData,
-  //   isLoading: isTripLoading,
-  //   isError: isTripError,
-  // } = useQuery({
-  //   queryKey: ["search-trips", searchParamsValue],
-  //   queryFn: () =>
-  //     searchTrips({
-  //       from: searchParamsValue.from.id,
-  //       to: searchParamsValue.to.id,
-  //       start_time: searchParamsValue.start_time,
-  //       sort: searchParamsValue.sort || "",
-  //       limit: ITEMS_PER_PAGE,
-  //       offset: 0,
-  //     }),
-  //   staleTime: 60 * 60 * 1000,
-  //   enabled: isSearchTrip,
-  //   refetchOnWindowFocus: false,
-  // });
 
   const {
     data: searchTripsData,
@@ -79,6 +59,7 @@ const SearchTripPage = () => {
     },
     initialPageParam: 0,
     enabled: isSearchTrip,
+    refetchOnWindowFocus: false,
   });
 
   useEffect(() => {
@@ -107,13 +88,17 @@ const SearchTripPage = () => {
   }, [locationData, searchParams]);
 
   useEffect(() => {
+    document.addEventListener("scroll", handleSeeMore);
+  }, []);
+
+  useEffect(() => {
     if (searchTripsData?.pages) {
       const mergedData = searchTripsData.pages.flatMap((page) => page?.data || []);
       const lastPage = searchTripsData.pages[searchTripsData.pages.length - 1];
 
       setTripDataSeeMore({
         status: lastPage?.status ?? "success",
-        total: mergedData.length,
+        total: searchTripsData.pages[0]?.total || 0,
         totalPage: Math.ceil(mergedData.length / ITEMS_PER_PAGE),
         data: mergedData,
       });
@@ -147,12 +132,14 @@ const SearchTripPage = () => {
     );
   };
 
-  const handleSeeMore = () => {
-    if (hasNextPage && !isFetchingNextPage) {
+  const handleSeeMore = useCallback(() => {
+    if (
+      (hasNextPage && !isFetchingNextPage) ||
+      window.innerHeight + window.scrollY >= document.body.offsetHeight
+    ) {
       fetchNextPage();
     }
-  };
-
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
   return (
     <div className={styles["search-trip-page-wrapper"]}>
       <div className={styles["search-trip-cpn-wrapper"]}>
@@ -204,7 +191,7 @@ const SearchTripPage = () => {
                           <div className={styles["info-trip__detail-ic-from-to"]}>
                             <IconDeparture />
                             <div className={styles.dash}>
-                              <span className={styles["no-select"]}>.........</span>
+                              <span className={styles["no-select"]}>{`.......`}</span>
                             </div>
                             <FontAwesomeIcon
                               className={`${styles.ic} ${styles["ic-departure"]}`}
@@ -246,11 +233,16 @@ const SearchTripPage = () => {
                     </div>
                   </div>
                 ))}
-              {tripDataSeeMore.total >= tripDataSeeMore.data.length && (
+              {tripDataSeeMore.total > 0 ? (
+                <div className="quantity-trips-current">
+                  <p>{`${tripDataSeeMore.data.length} trên ${tripDataSeeMore.total}`}</p>
+                </div>
+              ) : null}
+              {tripDataSeeMore.total > 0 && tripDataSeeMore.total >= tripDataSeeMore.data.length ? (
                 <button onClick={handleSeeMore} disabled={!hasNextPage || isFetchingNextPage}>
                   Xem thêm
                 </button>
-              )}
+              ) : null}
             </div>
           </div>
         ) : (

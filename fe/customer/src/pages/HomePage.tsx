@@ -2,8 +2,48 @@ import SearchTrip from "../components/SearchTrip";
 import Slider from "../components/Slider";
 import styles from "../styles/homePage.module.scss";
 import { sliderData } from "../data/SliderData";
+import { message } from "antd";
+import { useSearchParams } from "react-router";
+import { useEffect } from "react";
+import { useAuthModalStore } from "../store/authModalStore";
+import { useUserStore } from "../store/userStore";
+import { fetchUser } from "../services/userServices.service";
 
 const HomePage = () => {
+  const [params, setParams] = useSearchParams();
+  const { openModal } = useAuthModalStore();
+  const { setUser } = useUserStore();
+
+  useEffect(() => {
+    const fetchAndSetUser = async () => {
+      const status = params.get("login");
+      if (status === "failed") {
+        openModal("login");
+        message.error("Đăng nhập thất bại, vui lòng thử lại");
+        params.delete("login");
+        params.delete("reason");
+        setParams(params, { replace: true });
+      } else if (status === "success") {
+        message.success("Đăng nhập thành công");
+        params.delete("login");
+        const getUser = await fetchUser();
+        setUser({
+          id: getUser?.id,
+          email: getUser?.email,
+          fullName: getUser?.fullName,
+          dateBirth: getUser?.dateBirth,
+          phone: getUser?.phone,
+          address: getUser?.address,
+          avatar: getUser?.urlImg,
+        });
+        setParams(params, { replace: true });
+      } else {
+        return;
+      }
+    };
+    fetchAndSetUser();
+  }, []);
+
   return (
     <div className={styles["homepage-container"]}>
       <div className={styles["banner-wrapper"]}>

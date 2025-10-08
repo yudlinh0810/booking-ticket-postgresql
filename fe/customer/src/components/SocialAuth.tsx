@@ -9,7 +9,7 @@ const SocialAuth = () => {
     if (url) {
       setBackendUrl(url);
     } else {
-      console.error("❌ VITE_API_URL is not defined in .env");
+      console.error("VITE_API_URL is not defined in .env");
     }
   }, []);
 

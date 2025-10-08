@@ -1,52 +1,14 @@
-.date-input-container {
-  position: relative;
+.datePicker {
+  width: 100%;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.275rem;
-
-  width: 12rem;
-  height: auto;
-  padding: 0.6rem;
-  border-radius: 1.2rem /1.2rem;
-
-  // background-color: #f0f7fd;
-
-  cursor: pointer;
-
-  .ic-date {
-    .ic {
-      width: 1.4rem;
-      height: 1.4rem;
-      color: #74c0fc;
-    }
+  :global(.ant-picker) {
+    border: none !important;
+    box-shadow: none !important;
+    background-color: transparent; // tùy bạn muốn ẩn nền luôn không
   }
 
-  .date-input {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-    .title {
-      font-size: 0.8rem;
-      color: var(--gray);
-    }
-
-    .date-departure {
-      border: none;
-      font-size: 1.05rem;
-      // background-color: #f0f7fd;
-
-      &:focus {
-        outline: none;
-      }
-    }
+  :global(.ant-picker-input > input) {
+    border: none !important;
+    box-shadow: none !important;
   }
-}
-
-.date-input-container,
-.title,
-.date-departure {
-  cursor: pointer;
 }

@@ -6,6 +6,8 @@ import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { updateDetailUser, updateUserNoImage } from "../services/auth.service";
 import moment from "moment";
+import dayjs from "dayjs";
+import DateInput from "../components/DateInput";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -17,7 +19,7 @@ const Profile = () => {
     email: "",
     phone: "",
     avatar: "",
-    dateBirth: "",
+    dateBirth: new Date().toISOString().split("T")[0],
     sex: "male",
     address: "",
   });
@@ -30,7 +32,7 @@ const Profile = () => {
         email: user?.email || "",
         phone: user?.phone || "",
         avatar: user?.avatar || "",
-        dateBirth: formattedDate || "",
+        dateBirth: formattedDate || dayjs().format("YYYY-MM-DD"),
         sex: user?.sex || "male",
         address: user?.address || "",
       });
@@ -53,6 +55,10 @@ const Profile = () => {
     setFileAvatar(file);
     console.log("file", URL.createObjectURL(file));
     setAvatar(URL.createObjectURL(file));
+  };
+
+  const handleChangeDate = (date: string) => {
+    setDataUser((prev) => ({ ...prev, dateBirth: date }));
   };
 
   const handleUpdateUser = async () => {
@@ -176,12 +182,10 @@ const Profile = () => {
               </div>
               <div className={styles.info__item}>
                 <label className={styles.label}>Ngày sinh:</label>
-                <input
-                  className={styles["input"]}
-                  type="date"
-                  name="dateBirth"
-                  value={dataUser?.dateBirth}
-                  onChange={handleChangeValue}
+                <DateInput
+                  valueIn={dataUser?.dateBirth}
+                  className={styles.input}
+                  onChange={handleChangeDate}
                 />
               </div>
               <div className={styles.info__item}>
