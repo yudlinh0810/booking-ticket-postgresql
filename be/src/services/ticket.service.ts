@@ -1,6 +1,6 @@
 import { ResultSetHeader } from "mysql2";
 import { FormDataTicket } from "../models/ticket";
-import { searchTicket } from "../@types/ticket";
+import { DataUpdateTicket, searchTicket } from "../@types/ticket";
 import { ArrangeType } from "../@types/type";
 import { PaymentStatus, PaymentType } from "../@types/payment";
 
@@ -135,7 +135,7 @@ export class TicketService {
       } catch (error) {
         console.log("Err Service.getDetail", error);
         reject(error);
-      } 
+      }
     });
   }
 
@@ -200,6 +200,36 @@ export class TicketService {
       }
     } catch (error) {}
   };
+
+  updateById(
+    id: number,
+    valueUpdate: DataUpdateTicket
+  ): Promise<{ status: "ERR" | "OK"; message?: string }> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const sql = "call update_ticket(?, ?, ?)";
+
+        const [rows] = (await this.db.execute(sql, [
+          id,
+          valueUpdate.paymentType,
+          valueUpdate.paymentStatus,
+        ])) as [ResultSetHeader];
+
+        if (rows.affectedRows <= 0) {
+          resolve({
+            status: "ERR",
+            message: "Update ticket failed or ticket not found",
+          });
+        }
+        resolve({
+          status: "OK",
+        });
+      } catch (error) {
+        console.log("Err Service.updateById", error);
+        reject(error);
+      }
+    });
+  }
 }
 
 export default TicketService;

@@ -3,7 +3,7 @@ import { applyBaseSocketEvents } from "../utils/socketBaseHandler";
 
 import { TripData } from "../../@types/trip";
 import { processQuestion } from "../../chatGPT/handleChatGPTForChatbox";
-import { registerUserSocket } from "../userSocketStore";
+import { userSocketStore } from "../userSocketStore";
 import { sendToUser } from "../utils/sendToUser";
 
 interface QuestionData {
@@ -28,7 +28,7 @@ export const createChatboxNamespace = (io: Server) => {
         return;
       }
       const userIdStr = userId.toString();
-      registerUserSocket(userIdStr, socket.id);
+      userSocketStore.registerUserSocket(userIdStr, socket.id);
 
       socket.emit("user_registered", {
         userId: userIdStr,

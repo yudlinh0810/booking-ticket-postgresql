@@ -19,42 +19,29 @@ export const verifyAccessToken = async (
   res: Response,
   next: NextFunction
 ): Promise<any> => {
-  const accessToken = req.cookies.access_token;
+  // lấy từ cookies trước
+  let accessToken = req.cookies.access_token;
+
+  // Nếu không có trong cookies, thử lấy từ Authorization header
+  if (!accessToken) {
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      accessToken = authHeader.split(" ")[1];
+    }
+  }
 
   if (!accessToken) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
-  }
-
-  try {
-    const decode = jwt.verify(accessToken, process.env.ACCESS_TOKEN);
-    req.user = decode;
-    next();
-  } catch (error) {
-    res.status(401).json({ message: "Unauthorized" });
-    return;
-  }
-};
-
-export const verifyAccessTokenOfClient = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<any> => {
-  const authHeader = req.headers.authorization;
-
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
-  const token = authHeader.split(" ")[1];
-
   try {
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN as string);
-    req.user = decoded;
+    const decode = jwt.verify(accessToken, process.env.ACCESS_TOKEN as string);
+    if (typeof decode !== "string") {
+      req.user = decode as Express.User;
+    }
     next();
   } catch (error) {
-    return res.status(401).json({ message: "Unauthorized" });
+    return res.status(401).json({ message: "Invalid or expired token" });
   }
 };
 

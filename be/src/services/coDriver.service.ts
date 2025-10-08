@@ -177,7 +177,7 @@ export class CoDriverService {
           newCoDriver.dateBirth,
           newCoDriver.address,
         ];
-        
+
         const [rows] = (await this.db.execute(sql, values)) as [ResultSetHeader];
         if (rows.affectedRows === 0) {
           deleteOldFile(fileCloudinary.public_id, "image");

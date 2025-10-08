@@ -41,7 +41,7 @@ export class UserController {
           httpOnly: true,
           secure: true,
           sameSite: "none",
-          maxAge: 7 * 24 * 60 * 60 * 1000,
+          maxAge: 12 * 60 * 60 * 1000,
           path: "/",
         });
         return successResponse(res, 200, { status, data, expirationTime: expirationTime });
@@ -260,6 +260,19 @@ export class UserController {
     } catch (error) {
       console.log("Controller", error);
       return errorResponse(res, "ERR Controller.logout", 500);
+    }
+  };
+  getUserDetail = async (req: Request, res: Response): Promise<any> => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return errorResponse(res, "User ID not found in request", 400);
+      }
+      const response = await this.userService.getCustomerByEmail(userId);
+      return successResponse(res, 200, response);
+    } catch (error) {
+      console.log("Controller", error);
+      return errorResponse(res, "ERR Controller.getUserDetail", 500);
     }
   };
 }

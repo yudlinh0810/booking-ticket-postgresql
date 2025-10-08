@@ -11,5 +11,6 @@ router.post("/get-detail-ticket-by-email/", ticketController.getDetailTicketByEm
 router.get("/get-detail-ticket-by-id/:id", ticketController.getDetailTicketById);
 router.delete("/delete/:id", ticketController.deleteById);
 router.get("/get-all", verifyAccessToken, authorizeRoles("admin"), ticketController.getAllTicket);
+router.put("/update/:id", verifyAccessToken, authorizeRoles("admin"), ticketController.updateById);
 
 export default router;

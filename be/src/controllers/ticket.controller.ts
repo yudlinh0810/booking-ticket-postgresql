@@ -66,7 +66,7 @@ export class TicketController {
         return successResponse(res, 200, response);
       }
     } catch (error) {
-      return errorResponse(res, "ERR Controller.getDetailTicket", 404);
+      return errorResponse(res, "ERR Controller.deleteById", 404);
     }
   };
 
@@ -79,11 +79,11 @@ export class TicketController {
       if (phone && testPhone(phone) === false) {
         return errorResponse(res, "Invalid phone number format", 400);
       }
-      const paymentStatus = (req.query.payment_status as string)?.toLowerCase() || "";
-      const paymentType = (req.query.payment_type as string)?.toLowerCase() || "";
+      const paymentStatus = (req.query.payment_status as string)?.toLowerCase() || null;
+      const paymentType = (req.query.payment_type as string)?.toLowerCase() || null;
       if (
         paymentStatus &&
-        !["pending", "paid", "failed", "refunded"].includes(paymentStatus.toLowerCase())
+        !["pending", "paid", "failed", "refunded", "all"].includes(paymentStatus.toLowerCase())
       ) {
         return errorResponse(res, "Invalid payment status", 400);
       }
@@ -105,6 +105,25 @@ export class TicketController {
       return successResponse(res, 200, result);
     } catch (error) {
       return errorResponse(res, "ERR Controller.getAll", 404);
+    }
+  };
+
+  updateById = async (req: Request, res: Response): Promise<any> => {
+    try {
+      const { id } = req.params;
+      const valueUpdate = req.body;
+
+      if (!valueUpdate) return errorResponse(res, "Value update not invalid", 404);
+      if (!id) return errorResponse(res, "Id not invalid", 404);
+
+      const response = await this.ticketService.updateById(Number(id), valueUpdate);
+      if (response.status === "ERR") {
+        return errorResponse(res, response.message);
+      } else {
+        return successResponse(res, 200, response);
+      }
+    } catch (error) {
+      return errorResponse(res, "ERR Controller.updateById", 404);
     }
   };
 }

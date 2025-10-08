@@ -1,5 +1,5 @@
 import { Server } from "socket.io";
-import { getSocketIdByUserId } from "../userSocketStore";
+import { userSocketStore } from "../userSocketStore";
 
 let io: Server;
 
@@ -14,7 +14,7 @@ export const sendToUser = (
   payload: any
 ) => {
   const userIdStr = userId.toString();
-  const socketId = getSocketIdByUserId(userIdStr);
+  const socketId = userSocketStore.getSocketIdByUserId(userIdStr);
 
   if (socketId && io) {
     io.of(namespace).to(socketId).emit(event, payload);

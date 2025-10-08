@@ -1,11 +1,13 @@
 {
+  "ts-node": {
+    "files": true
+  },
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
     "esModuleInterop": true,
-    "typeRoots": ["./node_modules/@types", "./@types"],
-    "types": ["node", "express"]
+    "typeRoots": ["./node_modules/@types", "./src/@types"]
   },
-  "include": ["src/**/*.ts", "@types/express.d.ts"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

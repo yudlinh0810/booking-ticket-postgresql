@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import { generalAccessToken, generalRefreshToken } from "../services/auth.service";
+import { redisClient } from "../config/redis";
 
 interface TokenData {
   id: string;
@@ -68,7 +69,7 @@ export class UserService {
     try {
       const [rows] = await this.db.execute(
         `select id, email, full_name as fullName, phone, date_birth as dateBirth, url_img as urlImg,
-         url_public_img as urlPublicImg, password, role from user where email = ? and role = 'customer'`,
+         url_public_img as urlPublicImg, password, provider, role from user where email = ? and role = 'customer'`,
         [email]
       );
       return rows[0];
@@ -154,6 +155,10 @@ export class UserService {
 
             const expirationTime = Date.now() + 60 * 60 * 1000;
 
+            // Note: save session in redis
+            const sessionKey = `session_${checkPerson?.email}`;
+            await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
+
             const refresh_token = generalRefreshToken({
               id: checkPerson?.email,
               role: checkPerson?.role,
@@ -195,7 +200,7 @@ export class UserService {
             status: "ERR",
             message: "Đăng nhập thất bại",
           });
-          return
+          return;
         } else {
           const comparePass = await bcrypt.compareSync(userLogin.password, checkPerson.password);
           if (!comparePass) {
@@ -222,6 +227,10 @@ export class UserService {
             });
 
             const expirationTime = Date.now() + 60 * 60 * 1000;
+
+            // Note: save session in redis
+            const sessionKey = `session_${checkPerson?.email}`;
+            await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
 
             const refresh_token = generalRefreshToken({
               id: checkPerson?.email,
@@ -278,6 +287,10 @@ export class UserService {
 
             const expirationTime = Date.now() + 60 * 60 * 1000;
 
+            // Note: save session in redis
+            const sessionKey = `session_${checkPerson?.email}`;
+            await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
+
             const refresh_token = generalRefreshToken({
               id: checkPerson?.email,
               role: checkPerson?.role,
@@ -330,12 +343,17 @@ export class UserService {
               role: checkPerson?.role,
             });
 
-            const expirationTime = Date.now() + 60 * 60 * 1000;
-
             const refresh_token = generalRefreshToken({
               id: checkPerson?.email,
               role: checkPerson?.role,
             });
+
+            const expirationTime = Date.now() + 60 * 60 * 1000;
+
+            // Note: save session in redis
+            const sessionKey = `session_${checkPerson?.email}`;
+            await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
+            await redisClient.set(sessionKey, refresh_token, { EX: 60 * 60 * 24 * 7 });
 
             resolve({
               status: "OK",

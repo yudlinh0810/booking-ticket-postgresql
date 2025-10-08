@@ -30,3 +30,12 @@ export interface TicketType {
   paymentMethod: string;
   price: number;
 }
+
+export type PaymentType = "all" | "cash" | "banking";
+export type PaymentStatus = "paid" | "pending" | "failed" | "refunded" | "all";
+export interface DataUpdateTicket {
+  id: number;
+  transactionId?: string;
+  paymentType?: PaymentType;
+  paymentStatus?: PaymentStatus;
+}

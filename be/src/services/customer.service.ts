@@ -13,6 +13,7 @@ import { OtpService } from "./otp.service";
 import testEmail from "../utils/testEmail";
 import { formatDate } from "../utils/formatDate";
 import { UpdatePassword } from "../@types/user.type";
+import { redisClient } from "../config/redis";
 
 const userService = new UserService(bookBusTicketsDB);
 const otpService = new OtpService();
@@ -595,17 +596,48 @@ export class CustomerService {
     });
   }
 
-  save(profile: any, provider: string): Promise<any> {
+  loginOAuthWithGoogle(profile: any, provider: string): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
-        const { id, email, displayName, photos } = profile;
-        const sql = "call saveCustomer(?, ?, ?, ?, ?)";
-        const values = [email, id, provider, displayName, photos];
-        await this.db.execute(sql, values);
-        resolve({
-          status: "OK",
-          message: "Save customer success",
-        });
+        const { id, emails, displayName, photos } = profile;
+        console.log("profile", { id, emails, displayName, photos });
+        const sql = "call loginOAuthWithGoogle(?, ?, ?, ?, ?)";
+        const values = [emails[0].value, id, provider, displayName, photos[0].value];
+        const [rows] = await this.db.execute(sql, values);
+        const result = rows[0][0];
+
+        if (result.action === "conflict") {
+          resolve({
+            status: "ERR",
+            action: "conflict",
+            message: "Email already in use with a different login method",
+          });
+        } else {
+          const detailCustomer = await this.getDetailUserByEmail(emails[0].value);
+          const access_token = generalAccessToken({ id: emails[0].value, role: "customer" });
+          const refresh_token = generalRefreshToken({ id: emails[0].value, role: "customer" });
+          const expirationTime = Date.now() + 60 * 60 * 1000;
+
+          const sessionKey = `session_${emails[0].value}`;
+          await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
+          await redisClient.set(sessionKey, refresh_token, { EX: 60 * 60 * 24 * 7 });
+
+          if (result.action === "existing") {
+            resolve({
+              status: "OK",
+              access_token: access_token,
+              refresh_token: refresh_token,
+              expirationTime,
+              message: "Login success",
+              data: detailCustomer,
+            });
+          }
+
+          resolve({
+            status: "OK",
+            message: "Login success",
+          });
+        }
       } catch (error) {
         reject(error);
       }

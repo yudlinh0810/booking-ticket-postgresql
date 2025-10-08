@@ -112,7 +112,7 @@ class RevenueService {
         data: fullData,
       };
     } catch (error) {
-      throw error; 
+      throw error;
     }
   };
 }

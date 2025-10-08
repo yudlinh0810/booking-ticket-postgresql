@@ -21,9 +21,19 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        console.log("Google profile:", profile);
-        const customer = await customerService.save(profile, "google");
-        return done(null, customer);
+        const customer = await customerService.loginOAuthWithGoogle(profile, "google");
+
+        if (customer.status !== "OK") {
+          done(null, false, { message: "User not found" });
+        } else {
+          const userData = {
+            email: customer.data.email,
+            access_token: customer.access_token,
+            refresh_token: customer.refresh_token,
+            provider_id: profile.id,
+          };
+          return done(null, userData);
+        }
       } catch (error) {
         console.error("Error saving customer:", error);
         return done(error);
@@ -32,16 +42,10 @@ passport.use(
   )
 );
 
-passport.serializeUser((user: any, done) => done(null, user.id));
-passport.deserializeUser(async (id, done) => {
-  try {
-    const [rows] = await bookBusTicketsDB.execute("select * from customer where provider_id = ?", [
-      id,
-    ]);
-    const customer = (rows as any)[0];
-    if (!customer) return done(null, false);
-    done(null, customer);
-  } catch (error) {
-    done(error, null);
-  }
+passport.serializeUser((user: any, done) => {
+  done(null, user);
+});
+
+passport.deserializeUser(async (user: any, done) => {
+  done(null, user);
 });
