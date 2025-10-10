@@ -8,6 +8,7 @@ import { updateDetailUser, updateUserNoImage } from "../services/auth.service";
 import moment from "moment";
 import dayjs from "dayjs";
 import DateInput from "../components/DateInput";
+import { fetchUser } from "../services/userServices.service";
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -25,21 +26,27 @@ const Profile = () => {
   });
 
   useEffect(() => {
+    document.title = "Trang cá nhân";
     if (user) {
-      const formattedDate = moment(user?.dateBirth).format("YYYY-MM-DD");
-      setDataUser({
-        fullName: user?.fullName || "",
-        email: user?.email || "",
-        phone: user?.phone || "",
-        avatar: user?.avatar || "",
-        dateBirth: formattedDate || dayjs().format("YYYY-MM-DD"),
-        sex: user?.sex || "male",
-        address: user?.address || "",
-      });
+      handleProfile();
     } else {
       navigate("/login");
     }
   }, []);
+
+  const handleProfile = async () => {
+    const detailUser = await fetchUser();
+    const formattedDate = moment(user?.dateBirth).format("YYYY-MM-DD");
+    setDataUser({
+      fullName: detailUser?.fullName || "",
+      email: user?.email || "",
+      phone: detailUser?.phone || "",
+      avatar: detailUser?.urlImg || "",
+      dateBirth: formattedDate || dayjs().format("YYYY-MM-DD"),
+      sex: detailUser?.sex || "male",
+      address: detailUser?.address || "",
+    });
+  };
 
   const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;

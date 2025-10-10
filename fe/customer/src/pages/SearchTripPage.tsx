@@ -63,6 +63,7 @@ const SearchTripPage = () => {
   });
 
   useEffect(() => {
+    document.title = "Tìm kiếm chuyến đi";
     if (!locationData) {
       return;
     } else {

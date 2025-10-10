@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { message } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { FaBars } from "react-icons/fa";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import logo from "../assets/images/logo-booking-bus.png";
 import { logoutCustomer } from "../services/auth.service";
 import { useAuthModalStore } from "../store/authModalStore";
@@ -97,9 +97,9 @@ const Header = () => {
           </div>
         </div>
 
-        <div className={styled["logo-banner"]}>
+        <Link to={"/"} className={styled["logo-banner"]}>
           <img src={logo} alt="logo" className={styled["logo-banner__img"]} />
-        </div>
+        </Link>
 
         {!user ? (
           <div className={styled["login-register"]}>

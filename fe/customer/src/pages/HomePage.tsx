@@ -15,6 +15,10 @@ const HomePage = () => {
   const { setUser } = useUserStore();
 
   useEffect(() => {
+    document.title = "Trang chủ";
+  }, []);
+
+  useEffect(() => {
     const fetchAndSetUser = async () => {
       const status = params.get("login");
       if (status === "failed") {
@@ -31,10 +35,6 @@ const HomePage = () => {
           id: getUser?.id,
           email: getUser?.email,
           fullName: getUser?.fullName,
-          dateBirth: getUser?.dateBirth,
-          phone: getUser?.phone,
-          address: getUser?.address,
-          avatar: getUser?.urlImg,
         });
         setParams(params, { replace: true });
       } else {

@@ -250,28 +250,37 @@
     padding: 1rem;
     background-color: var(--white-bd);
 
-    transform: translateX(-100%-bd);
+    transform: translateX(-100%);
     visibility: hidden;
-    transition: transform 0.3s ease-in-out, visibility 0.3s;
+    transition: transform 0.3s ease-in-out, visibility 0.3s ease-in-out;
   }
 
   .side-bar-mobile {
-    transform: translateX(1-bd);
-    visibility: visible;
-    transition: transform 0.3s ease-in-out, visibility 0.3s;
-
     // giữ lại những thuộc tính có sẵn
+    overflow-y: scroll;
     z-index: 100;
     position: fixed;
+
     top: 0;
     left: 0;
     width: 60%;
-    min-height: 100vh;
+    height: 100%;
     padding: 1rem;
+    border-right: 1px solid #ddd;
+
     background-color: var(--white-bd);
+
     display: flex;
     flex-direction: column;
-    border-right: 1px solid #ddd;
+
+    transform: translateX(1);
+    visibility: visible;
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    transition: transform 0.3s ease-in-out, visibility 0.3s ease-in-out;
 
     &.dark {
       background-color: #181818;

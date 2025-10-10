@@ -1,13 +1,13 @@
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
+import { NavigationOptions, PaginationOptions } from "swiper/types";
+import { SliderObj } from "../data/SliderData";
 import { useEqualHeightWithCSSModules } from "../hooks/useEqualHeight";
 import styled from "../styles/sliders.module.scss";
-import { SliderObj } from "../data/SliderData";
-import { useEffect, useRef, useState } from "react";
-import { NavigationOptions, PaginationOptions } from "swiper/types";
 
 interface SliderProps {
   sliderArray: SliderObj[];
