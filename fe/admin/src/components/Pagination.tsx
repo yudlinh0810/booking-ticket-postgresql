@@ -21,7 +21,7 @@ const Pagination: React.FC<PaginationProps> = ({ pageCount, onPageChange, curren
       renderOnZeroPageCount={null}
       activeClassName={styles.selected}
       disabledClassName={styles.disabled}
-      forcePage={currentPage} // Giữ đồng bộ currentPage
+      forcePage={currentPage} // Giữ đồng bộ
     />
   );
 };

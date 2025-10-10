@@ -18,8 +18,10 @@
 }
 
 .main {
+  flex: 1;
   overflow: auto;
   width: 100%;
+  min-height: 100vh;
   margin-top: 3rem;
 }
 

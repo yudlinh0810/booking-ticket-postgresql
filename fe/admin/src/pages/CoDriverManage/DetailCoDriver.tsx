@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 import { dateTimeTransform } from "../../utils/transform";
 import { fetchCoDriver } from "../../services/coDriver.service";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Loading from "../../components/Loading";
 import DefaultImage from "../../components/DefaultImage";
 
 const DetailCoDriver = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const idFetch = id ?? "0";
 
@@ -19,6 +20,10 @@ const DetailCoDriver = () => {
 
   const coDriver = data ?? null;
 
+  const handlePageBack = () => {
+    navigate(-1);
+  };
+
   if (isLoading) return <Loading />;
   if (error) return <p className={styles.error}>Lỗi khi tải dữ liệu</p>;
   if (!coDriver) return <p className={styles.error}>Không tìm thấy thông tin phụ xe</p>;
@@ -26,9 +31,9 @@ const DetailCoDriver = () => {
   return (
     <div className={styles.container}>
       <div className={styles["feat-back"]}>
-        <Link to={`/co-driver-manage`} className={styles["btn-back"]}>
+        <button onClick={handlePageBack} className={styles["btn-back"]}>
           Quay lại
-        </Link>
+        </button>
       </div>
       <div className={styles["detail"]}>
         <div className={styles.title}>

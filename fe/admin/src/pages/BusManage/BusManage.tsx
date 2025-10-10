@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { GoTriangleDown } from "react-icons/go";
 import { Link, useSearchParams } from "react-router-dom";
 import Loading from "../../components/Loading";
@@ -11,12 +11,14 @@ import { debounce } from "../../utils/debounce";
 import { getBusList } from "../../services/bus.service";
 import { faEye, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useParams } from "react-router";
 
 const ITEMS_PER_PAGE = 5;
 
 const BusManage: React.FC = () => {
+  const { page } = useParams<{ page?: string }>();
   const [searchParams, setSearchParams] = useSearchParams();
-  const [arrangeType, setArrangeType] = React.useState<ArrangeType>("desc");
+  const [arrangeType, setArrangeType] = useState<ArrangeType>("desc");
 
   const licensePlate = searchParams.get("license_plate") ?? "";
   const selectedType = (
@@ -25,13 +27,15 @@ const BusManage: React.FC = () => {
       : "all"
   ) as "all" | "xe-thuong" | "xe-giuong-nam";
 
-  const currentPage = parseInt(searchParams.get("page") || "1", 10);
+  const [currentPage, setCurrentPage] = useState<number>(
+    page ? Math.max(1, parseInt(page, 10)) - 1 : 0
+  );
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["busList", currentPage, arrangeType, licensePlate, selectedType],
     queryFn: () =>
       getBusList({
-        offset: (currentPage - 1) * ITEMS_PER_PAGE,
+        offset: currentPage * ITEMS_PER_PAGE,
         limit: ITEMS_PER_PAGE,
         arrangeType,
         licensePlateSearch: licensePlate,
@@ -43,7 +47,13 @@ const BusManage: React.FC = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.title = `Quản lý xe`;
   }, [data]);
+
+  useEffect(() => {
+    const pageNum = page ? Math.max(1, parseInt(page, 10)) - 1 : 0;
+    setCurrentPage(pageNum);
+  }, [location.pathname]);
 
   const total = data?.total ?? 0;
   const carsData = data?.data || [];
@@ -150,7 +160,7 @@ const BusManage: React.FC = () => {
             <tbody>
               {carsData.map((car, index) => (
                 <tr key={index}>
-                  <td>{index + 1 + (currentPage - 1) * ITEMS_PER_PAGE}</td>
+                  <td>{index + 1 + currentPage * ITEMS_PER_PAGE}</td>
                   <td>
                     <DefaultImage src={car?.image?.urlImg} />
                   </td>
@@ -187,7 +197,7 @@ const BusManage: React.FC = () => {
         <Pagination
           pageCount={Math.ceil(total / ITEMS_PER_PAGE)}
           onPageChange={handlePageClick}
-          currentPage={currentPage - 1}
+          currentPage={currentPage}
         />
       </div>
     </div>

@@ -44,14 +44,22 @@ export interface TicketBase {
   paymentStatus: PaymentStatus;
 }
 
+export interface DataUpdateTicket {
+  id: number;
+  transactionId?: string;
+  paymentType?: PaymentType;
+  paymentStatus?: PaymentStatus;
+}
+
 export type PaymentType = "all" | "cash" | "banking";
-export type PaymentStatus = "paid" | "pending" | "failed" | "refunded";
+export type PaymentStatus = "paid" | "pending" | "failed" | "refunded" | "all";
 
 export const paymentStatusMap: Record<PaymentStatus, string> = {
+  all: "Tất cả",
   paid: "Đã thanh toán",
-  pending: "chưa giải quyết",
-  failed: "thất bại",
-  refunded: "đã hoàn tiền",
+  pending: "Đang xử lý",
+  failed: "Thất bại",
+  refunded: "Đã hoàn tiền",
 };
 export const paymentTypeMap: Record<PaymentType, string> = {
   all: "Tất cả",

@@ -1,4 +1,4 @@
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import styles from "../../styles/detailBus.module.scss";
 import { useQuery } from "@tanstack/react-query";
 import { getDetailBus } from "../../services/bus.service";
@@ -9,15 +9,20 @@ import ImageList from "../../components/ImageList";
 
 const DetailBus = () => {
   const { licensePlate } = useParams();
+  const navigate = useNavigate();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["bus", licensePlate],
-    queryFn: () => getDetailBus(licensePlate || ''),
+    queryFn: () => getDetailBus(licensePlate || ""),
     staleTime: 5 * 60 * 1000,
   });
 
   const bus = data ?? null;
   const imageList = bus?.images ?? null;
+
+  const handlePageBack = () => {
+    navigate(-1);
+  };
 
   if (isLoading) return <Loading />;
   if (error) return <p className={styles.error}>Lỗi khi tải dữ liệu</p>;
@@ -25,9 +30,9 @@ const DetailBus = () => {
   return (
     <div className={styles.container}>
       <div className={styles["feat-back"]}>
-        <Link to={`/bus-manage`} className={styles["btn-back"]}>
+        <button onClick={handlePageBack} className={styles["btn-back"]}>
           Quay lại
-        </Link>
+        </button>
       </div>
       <div className={styles["detail-bus"]}>
         <div className={styles.title}>

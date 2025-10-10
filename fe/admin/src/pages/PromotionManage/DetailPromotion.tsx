@@ -1,12 +1,14 @@
 import styles from "../../styles/updateCD.module.scss";
 import { Link } from "react-router-dom";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { fetchPromotionById } from "../../services/promotion.service";
 import Loading from "../../components/Loading";
 import formatCurrency from "../../utils/formatCurrency";
+import { useEffect } from "react";
 
 const DetailPromotion = () => {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const idFetch = id ?? "0";
 
@@ -16,7 +18,15 @@ const DetailPromotion = () => {
     staleTime: 5 * 60 * 1000,
   });
 
+  useEffect(() => {
+    document.title = `Chi tiết khuyến mãi`;
+  }, []);
+
   const promotion = data ?? null;
+
+  const handlePageBack = () => {
+    navigate(-1);
+  };
 
   if (isLoading) return <Loading />;
   if (error) return <p className={styles.error}>Lỗi khi tải dữ liệu</p>;
@@ -25,9 +35,9 @@ const DetailPromotion = () => {
   return (
     <div className={styles.container}>
       <div className={styles.feats}>
-        <Link to={`/promotion-manage`} className={`${styles["btn-back"]} ${styles.btn}`}>
+        <button onClick={handlePageBack} className={`${styles["btn-back"]} ${styles.btn}`}>
           Quay lại
-        </Link>
+        </button>
         <Link
           to={`/promotion-manage/update/${promotion.id}`}
           className={`${styles["btn-update"]} ${styles.btn}`}

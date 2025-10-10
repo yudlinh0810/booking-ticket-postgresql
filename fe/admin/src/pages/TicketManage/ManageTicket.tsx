@@ -1,3 +1,5 @@
+import { faEye, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import { GoTriangleDown } from "react-icons/go";
@@ -5,17 +7,15 @@ import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import Loading from "../../components/Loading";
 import Pagination from "../../components/Pagination";
 import SearchInput from "../../components/SearchInput";
+import SelectTypeTicket from "../../components/SelectedTypeTicket";
+import { getTickets } from "../../services/ticket.service";
 import styles from "../../styles/ticketManage.module.scss";
+import { PaymentType } from "../../types/ticket";
 import { ArrangeType } from "../../types/type";
 import { debounce } from "../../utils/debounce";
 import formatCurrency from "../../utils/formatCurrency";
-import { PaymentType } from "../../types/ticket";
-import SelectTypeTicket from "../../components/SelectedTypeTicket";
-import { getTickets } from "../../services/ticket.service";
-import { faEye, faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const ITEMS_PER_PAGE = 2;
+const ITEMS_PER_PAGE = 10;
 
 const TicketManage: React.FC = () => {
   const navigate = useNavigate();
@@ -39,7 +39,7 @@ const TicketManage: React.FC = () => {
         arrangeType,
         transaction: searchTransactionValue,
         paymentType: selectedType.trim() as PaymentType,
-        paymentStatus: "paid",
+        paymentStatus: "all",
         phone: "",
       }),
     staleTime: 5 * 60 * 1000,
@@ -47,6 +47,7 @@ const TicketManage: React.FC = () => {
   });
 
   useEffect(() => {
+    if (!data) navigate(urlMain, { replace: true });
     window.scrollTo(0, 0);
     document.title = `Quản lý vé xe`;
   }, [data]);
@@ -91,7 +92,7 @@ const TicketManage: React.FC = () => {
       <div className={styles.header}>
         <SearchInput placeholder="Tìm kiếm theo mã" onChange={handleChangeValueSearch} />
         <Link to={`${urlMain}/add`} className={styles["btn-add"]}>
-          Thêm khuyến mãi
+          Thêm Vé
         </Link>
       </div>
 
@@ -149,7 +150,7 @@ const TicketManage: React.FC = () => {
             {tickets.map((ticket, index) => (
               <tr key={ticket.id}>
                 <td onClick={() => handleRedirectDetail(ticket?.id || 0)}>
-                  {index + 1 + currentPage * ITEMS_PER_PAGE}
+                  <p className={styles["id-ticket"]}>{index + 1 + currentPage * ITEMS_PER_PAGE}</p>
                 </td>
                 <td>{ticket.transactionId}</td>
                 <td>{ticket.trip.name}</td>
@@ -158,8 +159,16 @@ const TicketManage: React.FC = () => {
                 <td>{ticket.fullName}</td>
                 <td>{ticket.email}</td>
                 <td>{ticket.phone}</td>
-                <td>{ticket.paymentType}</td>
-                <td>{ticket.paymentStatus}</td>
+                <td className={styles["payment-type"]}>
+                  <p className={`${styles[ticket.paymentType]} ${styles.type}`}>
+                    {ticket.paymentType}
+                  </p>
+                </td>
+                <td className={styles["payment-status"]}>
+                  <p className={`${styles[ticket.paymentStatus]} ${styles.status}`}>
+                    {ticket.paymentStatus}
+                  </p>
+                </td>
                 <td>{formatCurrency(ticket.price)}</td>
                 <td>
                   <div className={styles["actions"]}>

@@ -18,6 +18,13 @@ const processQueue = (error: unknown) => {
   failedQueue = [];
 };
 
+// Tạo instance riêng cho refresh token (không có interceptor)
+const refreshAPI = axios.create({
+  baseURL: `https://${import.meta.env.VITE_API_URL}.ngrok-free.app/api`,
+  withCredentials: true,
+  headers: { "ngrok-skip-browser-warning": "true" },
+});
+
 export const bookTicketAPI = axios.create({
   baseURL: `https://${import.meta.env.VITE_API_URL}.ngrok-free.app/api`,
   withCredentials: true,
@@ -40,13 +47,11 @@ bookTicketAPI.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        const response = await bookTicketAPI
-          .get("/user/auth/refresh-token")
-          .then((res) => res.data);
+        const response = await refreshAPI.get("/user/auth/refresh-token");
 
-        if (response.success !== true) throw new Error("Failed to refresh token");
+        if (response.data.success !== true) throw new Error("Failed to refresh token");
 
-        const newExpirationTime = response.data.expirationTime;
+        const newExpirationTime = response.data.data.expirationTime;
 
         localStorage.setItem("expirationTime", newExpirationTime);
 

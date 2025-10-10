@@ -1,6 +1,12 @@
 import { ArrangeType } from "../types/type";
 import { bookTicketAPI } from "./customize.service";
-import { PaymentStatus, PaymentType, TicketBase, TicketInfo } from "../types/ticket";
+import {
+  DataUpdateTicket,
+  PaymentStatus,
+  PaymentType,
+  TicketBase,
+  TicketInfo,
+} from "../types/ticket";
 
 export const getTickets = async ({
   offset,
@@ -32,14 +38,10 @@ export const fetchTicketById = async (id: string) => {
     .then((res) => res.data);
 };
 
-export const updatePaymentStatusTicket = async ({
-  id,
-  paymentStatus,
-}: {
-  id: number;
-  paymentStatus: PaymentStatus;
-}) => {
-  return await bookTicketAPI.put(`/ticket/update/${id}`, paymentStatus).then((res) => res.data);
+export const updateTicket = async (dataUpdate: DataUpdateTicket) => {
+  return await bookTicketAPI
+    .put(`/ticket/update/${dataUpdate.id}`, dataUpdate)
+    .then((res) => res.data);
 };
 
 export const deleteTicket = async (id: number) => {

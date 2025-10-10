@@ -14,8 +14,7 @@ import styled from "../styles/header.module.scss";
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { toggleSidebar } = useSidebarModal();
-  const [collapsed, setCollapsed] = useState<boolean>(true);
+  const { toggleSidebar, sidebarStatus } = useSidebarModal();
   const [showDropDown, setShowDropDown] = useState<boolean>(false);
   const sideBarRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -28,20 +27,16 @@ const Header = () => {
   }, [showDropDown]);
 
   useEffect(() => {
-    if (!collapsed) {
+    if (!sidebarStatus) {
       document.addEventListener("mousedown", handleClickOutSide);
       return () => document.removeEventListener("mousedown", handleClickOutSide);
     }
-  }, [collapsed]);
-
-  const handleToggleSideBar = () => {
-    setCollapsed(!collapsed);
-  };
+  }, [sidebarStatus]);
 
   const handleClickOutSide = (e: MouseEvent) => {
     e.stopPropagation();
-    if (!collapsed && sideBarRef.current && !sideBarRef.current.contains(e.target as Node)) {
-      setCollapsed(true);
+    if (!sidebarStatus && sideBarRef.current && !sideBarRef.current.contains(e.target as Node)) {
+      toggleSidebar();
     }
   };
 
@@ -49,6 +44,11 @@ const Header = () => {
     if (showDropDown && wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
       setShowDropDown(false);
     }
+  };
+
+  const handleRedireact = () => {
+    sideBarRef.current?.scrollTo(0, 0);
+    toggleSidebar();
   };
 
   const handleLogout = async () => {
@@ -110,16 +110,16 @@ const Header = () => {
         </div>
       </div>
       {/*  */}
-      {!collapsed && <div className={styled["overlay"]} />}
+      {!sidebarStatus && <div className={styled["overlay"]} />}
       {/*  */}
       <div className={styled["side-bar-menu-wrapper"]}>
         <div
           ref={sideBarRef}
-          className={`${collapsed ? styled["collapsed"] : styled["side-bar-mobile"]}`}
-          onClick={(e) => e.stopPropagation()}
+          className={`${sidebarStatus ? styled["collapsed"] : styled["side-bar-mobile"]}`}
+          onClick={handleRedireact}
         >
           <div className={styled["side-bar-mobile__top-section"]}>
-            <button className={styled["side-bar-mobile__closed-btn"]} onClick={handleToggleSideBar}>
+            <button className={styled["side-bar-mobile__closed-btn"]} onClick={toggleSidebar}>
               X
             </button>
             <span className={styled["side-bar-mobile__logo"]}>VeXeTienIch</span>

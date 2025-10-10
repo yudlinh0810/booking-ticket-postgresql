@@ -1,32 +1,70 @@
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import Loading from "../../components/Loading";
-import { fetchTicketById } from "../../services/ticket.service";
+import { fetchTicketById, updateTicket } from "../../services/ticket.service";
 import styles from "../../styles/ticketUD.module.scss";
-import { paymentStatusMap, paymentTypeMap } from "../../types/ticket";
+import { paymentStatusMap, paymentTypeMap, DataUpdateTicket } from "../../types/ticket";
 import formatCurrency from "../../utils/formatCurrency";
 import { formatDate } from "../../utils/formatDate";
 
-const DetailTicket = () => {
-  const navigate = useNavigate();
+const UpdateTicket = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["ticket", id],
     queryFn: () => fetchTicketById(id ?? "0"),
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     staleTime: 5 * 60 * 1000,
   });
 
+  const [valueUpdateTicet, setValueUpdateTicket] = useState<DataUpdateTicket>({
+    id: data?.id ?? 0,
+    paymentStatus: data?.paymentStatus,
+    paymentType: data?.paymentType,
+  });
+
   useEffect(() => {
-    document.title = `Chi tiết vé xe`;
+    document.title = `Cập nhật vé xe`;
   });
 
   const handlePageBack = () => {
     navigate(-1);
+  };
+
+  const handleChangeValueTicet = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setValueUpdateTicket((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  };
+
+  const handleUpdateTicket = async () => {
+    if (
+      !valueUpdateTicet.id ||
+      valueUpdateTicet.id === 0 ||
+      (valueUpdateTicet.paymentStatus === data?.paymentStatus &&
+        valueUpdateTicet.paymentType === data?.paymentType)
+    )
+      return;
+
+    try {
+      const response = await updateTicket(valueUpdateTicet);
+      if (response.status === "OK") {
+        navigate("/ticket-manage");
+      }
+    } catch (error) {
+      console.error("Error updating ticket:", error);
+    }
   };
 
   if (isLoading) return <Loading />;
@@ -43,13 +81,13 @@ const DetailTicket = () => {
           to={`/ticket-manage/update/${data.id}`}
           className={`${styles["btn-back"]} ${styles.btn}`}
         >
-          Chỉnh sửa
+          Xóa
         </Link>
       </div>
 
       <div className={styles.update}>
         <div className={styles.title}>
-          <h2 className={styles["content-title"]}>Chi tiết Vé xe</h2>
+          <h2 className={styles["content-title"]}>Cập nhật Vé xe</h2>
         </div>
         <ul className={styles["data-list"]}>
           <li className={styles.item}>
@@ -126,16 +164,38 @@ const DetailTicket = () => {
             <p className={styles.title}>Thanh toán:</p>
             <ul className={styles["payment-list"]}>
               <li className={styles.item}>
-                {/* <label className={styles.label}>Loại:</label> */}
-                <p className={`${styles[data.paymentType]} ${styles.value}`}>
-                  {paymentTypeMap?.[data.paymentType] || "Không xác định"}
-                </p>
+                <select
+                  name="paymentType"
+                  id="payment-type"
+                  className={`${styles.value}`}
+                  value={valueUpdateTicet.paymentType}
+                  onChange={handleChangeValueTicet}
+                >
+                  {Object.entries(paymentTypeMap)
+                    .filter((status) => status[0] != "all")
+                    .map(([key, value]) => (
+                      <option key={key} value={key} className={`${styles[data.paymentType]}`}>
+                        {value}
+                      </option>
+                    ))}
+                </select>
               </li>
               <li className={styles.item}>
-                {/* <label className={styles.label}>Trạng thái:</label> */}
-                <p className={`${styles[data.paymentStatus]} ${styles.value} ${styles.white}`}>
-                  {paymentStatusMap?.[data.paymentStatus] || "Không xác định"}
-                </p>
+                <select
+                  name="paymentStatus"
+                  id="payment-status"
+                  className={`${styles.value}`}
+                  value={valueUpdateTicet.paymentStatus}
+                  onChange={handleChangeValueTicet}
+                >
+                  {Object.entries(paymentStatusMap)
+                    .filter((status) => status[0] != "all")
+                    .map(([key, value]) => (
+                      <option key={key} value={key} className={`${styles[data.paymentStatus]}`}>
+                        {value}
+                      </option>
+                    ))}
+                </select>
               </li>
             </ul>
           </li>
@@ -143,10 +203,19 @@ const DetailTicket = () => {
             <p className={styles.title}>Thời gian đặt vé:</p>
             <p className={styles.data}>{formatDate(data.updateAt, "DD-MM-YYYY-HH:mm")}</p>
           </li>
+          <li className={styles["feat-update"]}>
+            <button
+              className={`${styles["btn-update"]} ${styles.btn}`}
+              onClick={handleUpdateTicket}
+              disabled={!valueUpdateTicet.id || valueUpdateTicet.id === 0}
+            >
+              Cập nhật
+            </button>
+          </li>
         </ul>
       </div>
     </div>
   );
 };
 
-export default DetailTicket;
+export default UpdateTicket;

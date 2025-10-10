@@ -43,13 +43,14 @@ import TripManage from "./pages/TripManage/TripManage";
 import UpdateTrip from "./pages/TripManage/UpdateTrip";
 
 // Promotion
+import useForceLogout from "./hooks/useForceLogout";
 import AddPromotion from "./pages/PromotionManage/AddPromotion";
 import DetailPromotion from "./pages/PromotionManage/DetailPromotion";
 import ManagePromotion from "./pages/PromotionManage/ManagePromotion";
 import UpdatePromotion from "./pages/PromotionManage/UpdatePromotion";
-import TicketManage from "./pages/TicketManage/ManageTicket";
 import DetailTicket from "./pages/TicketManage/DetailTicket";
-import useForceLogout from "./hooks/useForceLogout";
+import TicketManage from "./pages/TicketManage/ManageTicket";
+import UpdateTicket from "./pages/TicketManage/UpdateTicket";
 
 function AppWithRouter() {
   TokenHandler();
@@ -131,9 +132,10 @@ function AppWithRouter() {
           <Route path="/ticket-manage" element={<ManageLayout />}>
             <Route index element={<TicketManage />} />
             <Route path="detail/:id" element={<DetailTicket />} />
-            {/* <Route path="page/:page" element={<ManageTicket />} />
-            <Route path="add" element={<AddTicket />} />
-            <Route path="update/:id" element={<UpdateTicket />} /> */}
+            <Route path="page/:page" element={<TicketManage />} />
+
+            {/* <Route path="add" element={<AddTicket />} /> */}
+            <Route path="update/:id" element={<UpdateTicket />} />
           </Route>
         </Routes>
       </Layout>

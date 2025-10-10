@@ -201,7 +201,11 @@
       .btn-update {
         background-color: var(--bright-blue);
         color: var(--white);
-        padding: 8px 12px;
+
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+
+        font-size: 1.2rem;
       }
     }
   }

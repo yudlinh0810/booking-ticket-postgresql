@@ -1,7 +1,7 @@
 import styles from "../../styles/detailCD.module.scss";
 import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import Loading from "../../components/Loading";
 import { fetchTrip } from "../../services/trip.service";
 import SeatMapNormal from "../../components/SeatMapNormal";
@@ -11,6 +11,7 @@ import { dateTimeTransform } from "../../utils/transform";
 
 const DetailTrip = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const idFetch = id ?? "0";
 
   const { data, isLoading, error } = useQuery({
@@ -21,6 +22,10 @@ const DetailTrip = () => {
 
   const trip = data?.detailTrip ?? null;
 
+  const handlePageBack = () => {
+    navigate(-1);
+  };
+
   if (isLoading) return <Loading />;
   if (error) return <p className={styles.error}>Lỗi khi tải dữ liệu</p>;
   if (!trip) return <p className={styles.error}>Không tìm thấy thông tin chuyến đi</p>;
@@ -28,9 +33,9 @@ const DetailTrip = () => {
   return (
     <div className={styles.container}>
       <div className={styles["feat-back"]}>
-        <Link to={`/trip-manage`} className={styles["btn-back"]}>
+        <button onClick={handlePageBack} className={styles["btn-back"]}>
           Quay lại
-        </Link>
+        </button>
       </div>
       <div className={styles["detail"]}>
         <div className={styles.title}>

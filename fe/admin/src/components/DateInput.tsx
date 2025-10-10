@@ -1,42 +1,45 @@
-import { faCalendarDay } from "@fortawesome/free-solid-svg-icons";
-import styled from "../styles/dateInput.module.scss";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { DatePicker } from "antd";
+import dayjs, { Dayjs } from "dayjs";
 import { memo, useEffect, useState } from "react";
+import styled from "../styles/dateInput.module.scss";
 
-const DateInput = ({ title }: { title: string }) => {
-  const [currentDate, setCurrentDate] = useState<string>("");
+interface DateInputProps {
+  valueIn?: string | Date;
+  className?: string;
+  onChange: (time: string) => void;
+}
 
-  const handleChangeDate = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setCurrentDate(event.target.value);
-  };
-
-  const handleFocusDateDeparture = (event: React.FocusEvent<HTMLInputElement>) => {
-    event.target.showPicker?.();
-  };
+const DateInput: React.FC<DateInputProps> = ({ valueIn, className, onChange }) => {
+  const [dateValue, setDateValue] = useState<Dayjs | null>(null);
 
   useEffect(() => {
-    const today = new Date();
-    const formatterDate = today.toISOString().split("T")[0];
-    setCurrentDate(formatterDate);
-  }, []);
+    // Nếu có giá trị đầu vào (string hoặc Date)
+    if (valueIn) {
+      const dateStr = typeof valueIn === "string" ? valueIn : dayjs(valueIn).format("YYYY-MM-DD");
+      setDateValue(dayjs(dateStr));
+    } else {
+      // Nếu không có thì set mặc định là ngày hiện tại
+      const today = dayjs().startOf("day");
+      setDateValue(today);
+      onChange(today.format("YYYY-MM-DD"));
+    }
+  }, [valueIn, onChange]);
+
+  const handleChangeDate = (date: Dayjs | null) => {
+    setDateValue(date);
+    onChange(date ? date.format("YYYY-MM-DD") : "");
+  };
 
   return (
-    <div className={styled["date-input-container"]}>
-      <div className={styled["ic-date"]}>
-        <FontAwesomeIcon className={styled.ic} icon={faCalendarDay} />
-      </div>
-      <div className={styled["date-input"]}>
-        <label className={styled.title}>{title}</label>
-        <input
-          type="date"
-          name="date-departure"
-          id="date"
-          className={styled["date-departure"]}
-          value={currentDate}
-          onFocus={handleFocusDateDeparture}
-          onChange={handleChangeDate}
-        />
-      </div>
+    <div className={`${styled.input} ${className || ""}`}>
+      <DatePicker
+        id="date"
+        className={styled.datePicker}
+        variant="borderless"
+        format="DD-MM-YYYY"
+        value={dateValue}
+        onChange={handleChangeDate}
+      />
     </div>
   );
 };

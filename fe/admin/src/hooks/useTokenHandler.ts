@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { eventEmitter } from "../utils/eventEmitter";
 
 const useTokenHandler = () => {
   const navigate = useNavigate();
@@ -15,6 +16,18 @@ const useTokenHandler = () => {
       navigate("/");
     }
   }, [location.pathname, navigate]);
+
+  useEffect(() => {
+    const handleForceLogout = () => {
+      navigate("/login");
+    };
+
+    eventEmitter.on("force-logout", handleForceLogout);
+
+    return () => {
+      eventEmitter.off("force-logout", handleForceLogout);
+    };
+  }, [navigate]);
 };
 
 export default useTokenHandler;
