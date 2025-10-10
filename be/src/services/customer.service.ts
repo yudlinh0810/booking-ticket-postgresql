@@ -600,7 +600,6 @@ export class CustomerService {
     return new Promise(async (resolve, reject) => {
       try {
         const { id, emails, displayName, photos } = profile;
-        console.log("profile", { id, emails, displayName, photos });
         const sql = "call loginOAuthWithGoogle(?, ?, ?, ?, ?)";
         const values = [emails[0].value, id, provider, displayName, photos[0].value];
         const [rows] = await this.db.execute(sql, values);
@@ -613,23 +612,25 @@ export class CustomerService {
             message: "Email already in use with a different login method",
           });
         } else {
-          const detailCustomer = await this.getDetailUserByEmail(emails[0].value);
+          // const detailCustomer = await this.getDetailUserByEmail(emails[0].value);
+          console.log("email", emails[0].value);
           const access_token = generalAccessToken({ id: emails[0].value, role: "customer" });
           const refresh_token = generalRefreshToken({ id: emails[0].value, role: "customer" });
           const expirationTime = Date.now() + 60 * 60 * 1000;
 
           const sessionKey = `session_${emails[0].value}`;
+          const refreshKey = `refresh_${emails[0].value}`;
           await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
-          await redisClient.set(sessionKey, refresh_token, { EX: 60 * 60 * 24 * 7 });
+          await redisClient.set(refreshKey, refresh_token, { EX: 60 * 60 * 24 * 7 });
 
           if (result.action === "existing") {
             resolve({
               status: "OK",
+              message: "Login success",
+              email: emails[0].value,
               access_token: access_token,
               refresh_token: refresh_token,
               expirationTime,
-              message: "Login success",
-              data: detailCustomer,
             });
           }
 

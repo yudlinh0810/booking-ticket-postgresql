@@ -27,7 +27,7 @@ passport.use(
           done(null, false, { message: "User not found" });
         } else {
           const userData = {
-            email: customer.data.email,
+            email: customer.email,
             access_token: customer.access_token,
             refresh_token: customer.refresh_token,
             provider_id: profile.id,

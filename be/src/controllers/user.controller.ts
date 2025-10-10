@@ -4,6 +4,7 @@ import { UserService } from "../services/user.service";
 import { errorResponse, successResponse } from "../utils/response.util";
 import { verifyRefreshToken } from "../services/auth.service";
 import testEmail from "../utils/testEmail";
+import { redisClient } from "../config/redis";
 
 export class UserController {
   private userService = new UserService(bookBusTicketsDB);
@@ -216,6 +217,9 @@ export class UserController {
       if ("access_token" in response && "expirationTime" in response) {
         const { access_token, expirationTime } = response;
 
+        const sessionKey = `session_${response.id}`;
+        await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
+
         res.cookie("access_token", access_token, {
           httpOnly: true,
           secure: true,
@@ -244,6 +248,9 @@ export class UserController {
 
   logout = async (req: Request, res: Response): Promise<any> => {
     try {
+      await redisClient.del(`session_${req.user?.id}`);
+      await redisClient.del(`refresh_${req.user?.id}`);
+
       res.clearCookie("access_token", {
         httpOnly: true,
         secure: true,
@@ -256,6 +263,7 @@ export class UserController {
         sameSite: "none",
         path: "/",
       });
+
       return successResponse(res, 200, { status: "OK", message: "Logout success" });
     } catch (error) {
       console.log("Controller", error);

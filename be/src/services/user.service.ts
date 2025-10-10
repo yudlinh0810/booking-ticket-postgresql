@@ -155,14 +155,16 @@ export class UserService {
 
             const expirationTime = Date.now() + 60 * 60 * 1000;
 
-            // Note: save session in redis
-            const sessionKey = `session_${checkPerson?.email}`;
-            await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
-
             const refresh_token = generalRefreshToken({
               id: checkPerson?.email,
               role: checkPerson?.role,
             });
+
+            // Note: save session in redis
+            const sessionKey = `session_${checkPerson?.email}`;
+            const refreshKey = `refresh_${checkPerson?.email}`;
+            await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
+            await redisClient.set(refreshKey, refresh_token, { EX: 60 * 60 * 24 * 7 });
 
             resolve({
               status: "OK",
@@ -228,14 +230,16 @@ export class UserService {
 
             const expirationTime = Date.now() + 60 * 60 * 1000;
 
-            // Note: save session in redis
-            const sessionKey = `session_${checkPerson?.email}`;
-            await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
-
             const refresh_token = generalRefreshToken({
               id: checkPerson?.email,
               role: checkPerson?.role,
             });
+
+            // Note: save session in redis
+            const sessionKey = `session_${checkPerson?.email}`;
+            const refreshKey = `refresh_${checkPerson?.email}`;
+            await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
+            await redisClient.set(refreshKey, refresh_token, { EX: 60 * 60 * 24 * 7 });
 
             resolve({
               status: "OK",
@@ -287,14 +291,15 @@ export class UserService {
 
             const expirationTime = Date.now() + 60 * 60 * 1000;
 
-            // Note: save session in redis
-            const sessionKey = `session_${checkPerson?.email}`;
-            await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
-
             const refresh_token = generalRefreshToken({
               id: checkPerson?.email,
               role: checkPerson?.role,
             });
+            // Note: save session in redis
+            const sessionKey = `session_${checkPerson?.email}`;
+            const refreshKey = `refresh_${checkPerson?.email}`;
+            await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
+            await redisClient.set(refreshKey, refresh_token, { EX: 60 * 60 * 24 * 7 });
 
             resolve({
               status: "OK",
@@ -352,8 +357,9 @@ export class UserService {
 
             // Note: save session in redis
             const sessionKey = `session_${checkPerson?.email}`;
+            const refreshKey = `refresh_${checkPerson?.email}`;
             await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
-            await redisClient.set(sessionKey, refresh_token, { EX: 60 * 60 * 24 * 7 });
+            await redisClient.set(refreshKey, refresh_token, { EX: 60 * 60 * 24 * 7 });
 
             resolve({
               status: "OK",
