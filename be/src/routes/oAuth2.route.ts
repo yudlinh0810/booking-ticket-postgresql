@@ -21,7 +21,6 @@ router.get(
     session: true,
   }),
   (req, res) => {
-    console.log("Google login success:", req.user);
     res.redirect("/auth/success");
   }
 );

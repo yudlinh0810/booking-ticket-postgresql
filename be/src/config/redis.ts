@@ -15,3 +15,5 @@ export async function connectRedis() {
     await redisClient.connect();
   }
 }
+
+export type RedisClient = typeof redisClient;

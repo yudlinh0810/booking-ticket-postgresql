@@ -14,10 +14,14 @@ import testEmail from "../utils/testEmail";
 import { formatDate } from "../utils/formatDate";
 import { UpdatePassword } from "../@types/user.type";
 import { redisClient } from "../config/redis";
+import { PrismaClient } from "@prisma/client";
+import { setTokensInRedis } from "../utils/setTokensInRedis";
 
 const userService = new UserService(bookBusTicketsDB);
 const otpService = new OtpService();
-
+const prisma = new PrismaClient({
+  log: ["query", "error"],
+});
 export class CustomerService {
   private db;
 
@@ -600,43 +604,66 @@ export class CustomerService {
     return new Promise(async (resolve, reject) => {
       try {
         const { id, emails, displayName, photos } = profile;
-        const sql = "call loginOAuthWithGoogle(?, ?, ?, ?, ?)";
-        const values = [emails[0].value, id, provider, displayName, photos[0].value];
-        const [rows] = await this.db.execute(sql, values);
-        const result = rows[0][0];
+        let access_token = "",
+          refresh_token = "",
+          expirationTime = 0;
 
-        if (result.action === "conflict") {
-          resolve({
-            status: "ERR",
-            action: "conflict",
-            message: "Email already in use with a different login method",
-          });
-        } else {
-          // const detailCustomer = await this.getDetailUserByEmail(emails[0].value);
-          console.log("email", emails[0].value);
-          const access_token = generalAccessToken({ id: emails[0].value, role: "customer" });
-          const refresh_token = generalRefreshToken({ id: emails[0].value, role: "customer" });
-          const expirationTime = Date.now() + 60 * 60 * 1000;
+        const existingUser = await userService.findUserByEmail(emails[0].value, "customer");
 
-          const sessionKey = `session_${emails[0].value}`;
-          const refreshKey = `refresh_${emails[0].value}`;
-          await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
-          await redisClient.set(refreshKey, refresh_token, { EX: 60 * 60 * 24 * 7 });
-
-          if (result.action === "existing") {
-            resolve({
+        if (existingUser) {
+          if (existingUser.provider === "google") {
+            access_token = generalAccessToken({ id: existingUser.email, role: "customer" });
+            refresh_token = generalRefreshToken({ id: existingUser.email, role: "customer" });
+            expirationTime = Date.now() + 60 * 60 * 1000;
+            await setTokensInRedis(
+              { email: existingUser.email, role: "customer" },
+              access_token,
+              refresh_token,
+              60 * 60,
+              60 * 60 * 24 * 7,
+              redisClient
+            );
+            return resolve({
               status: "OK",
               message: "Login success",
-              email: emails[0].value,
+              email: existingUser.email,
+              avatar: existingUser.url_img,
               access_token: access_token,
               refresh_token: refresh_token,
               expirationTime,
             });
+          } else {
+            return reject({
+              status: "ERR",
+              action: "conflict",
+              message: "Email already in use with a different login method",
+            });
           }
-
+        } else {
+          const newUser = await prisma.user.create({
+            data: {
+              email: emails[0].value,
+              full_name: displayName,
+              url_img: photos[0].value,
+              provider: "google",
+              role: "customer",
+              status: "active",
+            },
+          });
+          if (!newUser) {
+            return reject({
+              status: "ERR",
+              message: "Create user failed",
+            });
+          }
           resolve({
             status: "OK",
             message: "Login success",
+            email: newUser.email,
+            avatar: newUser.url_img,
+            access_token: access_token,
+            refresh_token: refresh_token,
+            expirationTime,
           });
         }
       } catch (error) {

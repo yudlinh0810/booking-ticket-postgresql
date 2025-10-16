@@ -42,7 +42,7 @@ export class UserController {
           httpOnly: true,
           secure: true,
           sameSite: "none",
-          maxAge: 12 * 60 * 60 * 1000,
+          maxAge: 60 * 60 * 1000 * 24,
           path: "/",
         });
         return successResponse(res, 200, { status, data, expirationTime: expirationTime });

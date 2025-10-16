@@ -1,11 +1,7 @@
 import bcrypt from "bcrypt";
 import { generalAccessToken, generalRefreshToken } from "../services/auth.service";
 import { redisClient } from "../config/redis";
-
-interface TokenData {
-  id: string;
-  role: string;
-}
+import { PrismaClient, Provider, Role, User } from "@prisma/client";
 
 interface LoginType {
   email: string;
@@ -24,24 +20,35 @@ interface UserType {
   role?: string;
 }
 
+const prisma = new PrismaClient();
+
 export class UserService {
   private db;
   constructor(db: any) {
     this.db = db;
   }
-  decodeToken(token: string): TokenData | null {
-    try {
-      const payload = JSON.parse(atob(token.split(".")[1]));
-      return { id: payload.id, role: payload.role };
-    } catch (error) {
-      console.error("Invalid token", error);
-      return null;
-    }
+
+  async getTotalUser(): Promise<number> {
+    const count = await prisma.user.count({
+      where: { is_deleted: false },
+    });
+    return count;
   }
 
-  isAdmin(token: string): boolean {
-    const decoded = this.decodeToken(token);
-    return decoded ? decoded.role === "admin" : false;
+  async findUserByEmail(email: string, role: Role): Promise<User | null> {
+    return prisma.user.findFirst({
+      where: { email, role: role, is_deleted: false },
+    });
+  }
+
+  async fetchUser(email: string, provider: Provider, role: Role): Promise<User> {
+    const detailUser = await prisma.user.findFirst({
+      where: { email, provider, role, is_deleted: false },
+    });
+    if (!detailUser) {
+      throw new Error("User not found or deleted");
+    }
+    return detailUser;
   }
 
   async checkUser(email: string): Promise<boolean> {
@@ -164,7 +171,7 @@ export class UserService {
             const sessionKey = `session_${checkPerson?.email}`;
             const refreshKey = `refresh_${checkPerson?.email}`;
             await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
-            await redisClient.set(refreshKey, refresh_token, { EX: 60 * 60 * 24 * 7 });
+            await redisClient.set(refreshKey, refresh_token, { EX: 60 * 60 * 24 });
 
             resolve({
               status: "OK",

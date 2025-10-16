@@ -1,0 +1,393 @@
+
+datasource db {
+  provider = "postgresql" 
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+//  1. Relationships User
+
+model User {
+  id                    Int      @id @default(autoincrement())
+  provider_id           String?  @db.VarChar(255)
+  current_location_id   Int?
+  email                 String?  @unique @db.VarChar(255)
+  full_name             String?  @db.VarChar(50)
+  password              String?  @db.VarChar(255)
+  sex                   Sex?     @default(female)
+  url_img               String?  @db.VarChar(255)
+  url_public_img        String?  @db.VarChar(255)
+  phone                 String?  @db.VarChar(15)
+  date_birth            DateTime? @db.Date
+  address               String?  @db.VarChar(255)
+  license_number        String?  @db.VarChar(15)
+  experience_years      DateTime? @db.Date
+  provider              Provider? @default(local)
+  status                UserStatus?
+  role                  Role     @default(customer)
+  is_deleted            Boolean? @default(false)
+  create_at             DateTime? @default(now())
+  update_at             DateTime? @default(now()) @updatedAt
+
+  // Relationships
+  Location              Location? @relation("User_current_location_id", fields: [current_location_id], references: [id])
+  Setting               Setting? 
+  FeedBack              FeedBack[]
+  Review                Review[]
+  Ticket                Ticket[]
+  Trip_Trip_driver_id   Trip[]    @relation("Trip_driver_id")
+  TripCodriver          TripCodriver[]
+  Notification          Notification[]
+
+  @@map("user")
+}
+
+
+model Setting {
+  id                     Int       @id @default(autoincrement())
+  user_id                Int       @unique
+  notification_enabled   Boolean?  @default(true) @map("notification_enabled")
+  theme                  Theme?    @default(light)
+  language               String?   @default("vi") @db.VarChar(10)
+  created_at             DateTime? @default(now())
+  updated_at             DateTime? @default(now()) @updatedAt
+
+  // Relationships
+  User                   User      @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("setting")
+}
+
+model Notification {
+  id           Int              @id @default(autoincrement())
+  recipient_id Int
+  type         NotificationType
+  content      String           @db.Text
+  is_read      Boolean          @default(false)
+  link_to      String?          @db.VarChar(255) 
+  created_at   DateTime         @default(now())
+
+  // Relationships
+  Recipient User @relation(fields: [recipient_id], references: [id])
+
+  @@map("notification")
+}
+
+// 2. Transport & Trip Tables
+
+model Location {
+  id                    Int      @id @default(autoincrement())
+  name                  String   @db.VarChar(50)
+  address               String?  @db.Text
+  latitude              Decimal? @db.Decimal(10, 8)
+  longitude             Decimal? @db.Decimal(11, 8)
+  is_deleted            Boolean? @default(false)
+
+  // Relationships
+  User_User_current_location_id   User[]   @relation("User_current_location_id")
+  Car_current_location_id         Car[]    @relation("Car_current_location_id")
+  Trip_Trip_departure_location_id Trip[]   @relation("Trip_departure_location_id")
+  Trip_Trip_arrival_location_id   Trip[]   @relation("Trip_arrival_location_id")
+
+  @@map("location")
+}
+
+model Car {
+  id                    Int      @id @default(autoincrement())
+  current_location_id   Int?
+  license_plate         String   @unique @db.VarChar(10)
+  capacity              Int
+  type                  CarType? @default(xe_thuong)
+  status                CarStatus? @default(available)
+  is_deleted            Boolean? @default(false)
+  create_at             DateTime? @default(now())
+  update_at             DateTime? @default(now()) @updatedAt
+
+  // Relationships
+  Location              Location? @relation("Car_current_location_id", fields: [current_location_id], references: [id])
+  ImgCar                ImgCar[]
+  Trip                  Trip[]
+
+  @@map("car")
+}
+
+model Trip {
+  id                        Int      @id @default(autoincrement())
+  car_id                    Int
+  driver_id                 Int
+  trip_name                 String  @db.VarChar(50)
+  departure_location_id     Int
+  start_time                DateTime
+  arrival_location_id       Int
+  end_time                  DateTime
+  status                    TripStatus? @default(san_sang)
+  price                     Decimal @default(0.00) @db.Decimal(10, 2)
+  is_deleted                Boolean? @default(false)
+  create_at                 DateTime? @default(now())
+  update_at                 DateTime? @default(now()) @updatedAt
+
+  // Relationships
+  Car                       Car?      @relation(fields: [car_id], references: [id])
+  Driver                    User?     @relation("Trip_driver_id", fields: [driver_id], references: [id])
+  DepartureLocation         Location? @relation("Trip_departure_location_id", fields: [departure_location_id], references: [id])
+  ArrivalLocation           Location? @relation("Trip_arrival_location_id", fields: [arrival_location_id], references: [id])
+  FeedBack                  FeedBack[]
+  Review                    Review[]
+  Seat                      Seat[]
+  Ticket                    Ticket[]
+  TripCodriver              TripCodriver[]
+
+  @@map("trip")
+}
+
+model Seat {
+  id            Int      @id @default(autoincrement())
+  trip_id       Int?
+  seat_number   String?  @db.VarChar(5)
+  floor         SeatFloor?
+  status        SeatStatus? @default(available)
+  update_at     DateTime? @default(now()) @updatedAt
+
+  // Relationships
+  Trip          Trip?         @relation(fields: [trip_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  TicketSeat    TicketSeat[]
+
+  @@map("seat")
+}
+
+// 3. Booking & Related Tables 
+
+model Ticket {
+  id                Int      @id @default(autoincrement())
+  trip_id           Int
+  customer_id       Int
+  transaction_id    String?  @db.VarChar(100)
+  email             String?  @db.VarChar(50)
+  full_name         String?  @db.VarChar(50)
+  phone             String?  @db.VarChar(15)
+  price             Decimal @db.Decimal(10, 2)
+  payment_status    PaymentStatus? @default(pending)
+  payment_type      PaymentType? @default(banking)
+  is_deleted        Boolean? @default(false)
+  create_at         DateTime? @default(now())
+  update_at         DateTime? @default(now()) @updatedAt
+
+  // Relationships
+  Trip              Trip     @relation(fields: [trip_id], references: [id])
+  Customer          User     @relation(fields: [customer_id], references: [id])
+  TicketSeat        TicketSeat[]
+
+  @@map("ticket")
+}
+
+model TicketSeat {
+  id            Int      @id @default(autoincrement())
+  ticket_id     Int
+  seat_id       Int
+  status        TicketSeatStatus?
+  create_at     DateTime? @default(now())
+  update_at     DateTime? @default(now()) @updatedAt
+
+  // Relationships
+  Ticket        Ticket @relation(fields: [ticket_id], references: [id])
+  Seat          Seat   @relation(fields: [seat_id], references: [id])
+
+  @@unique([ticket_id, seat_id])
+  @@map("ticket_seat")
+}
+
+// 4. Auxiliary Tables
+
+model ImgCar {
+  id                    Int      @id @default(autoincrement())
+  car_id                Int
+  url_img               String   @db.VarChar(255)
+  url_public_img        String   @db.VarChar(255)
+  is_main               Boolean? @default(false)
+  is_deleted            Boolean? @default(false)
+  create_at             DateTime? @default(now())
+  update_at             DateTime? @default(now()) @updatedAt
+
+  Car            Car      @relation(fields: [car_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("img_car")
+}
+
+model Coupon {
+  id                    Int      @id @default(autoincrement())
+  code                  String?  @unique @db.VarChar(50)
+  car_type              CarType
+  type                  CouponType
+  status                CouponStatus @default(active)
+  coupon_amount         Decimal @default(0.00) @db.Decimal(10, 2)
+  description           String  @db.Text
+  url_img               String   @db.VarChar(255)
+  url_public_img        String   @db.VarChar(255)
+  start_date            DateTime?
+  end_date              DateTime?
+  is_deleted            Boolean? @default(false)
+  created_at            DateTime? @default(now())
+
+  @@map("coupon")
+}
+
+model FeedBack {
+  id                    Int      @id @default(autoincrement())
+  customer_id           Int
+  trip_id               Int
+  content               String?  @db.VarChar(500)
+  is_deleted            Boolean? @default(false)
+  created_at            DateTime? @default(now())
+
+  // Relationships
+  Customer    User     @relation(fields: [customer_id], references: [id])
+  Trip        Trip     @relation(fields: [trip_id], references: [id])
+
+  @@map("feed_back")
+}
+
+model Review {
+  id                    Int      @id @default(autoincrement())
+  customer_id           Int
+  trip_id               Int
+  rating                Int? 
+  is_deleted            Boolean? @default(false)
+  created_at            DateTime? @default(now())
+
+  Customer    User     @relation(fields: [customer_id], references: [id])
+  Trip        Trip     @relation(fields: [trip_id], references: [id])
+
+  @@map("review")
+}
+
+model TripCodriver {
+  id           Int      @id @default(autoincrement()) 
+  trip_id      Int?
+  co_driver_id Int?
+  create_at    DateTime? @default(now())
+  update_at    DateTime? @default(now()) @updatedAt
+
+  // Relationships
+  Trip         Trip?    @relation(fields: [trip_id], references: [id])
+  CoDriver     User?    @relation(fields: [co_driver_id], references: [id])
+
+  @@map("trip_codriver")
+}
+
+model Otp {
+  id        Int      @id @default(autoincrement())
+  email     String   @db.VarChar(255)
+  otp       String?  @db.VarChar(255)
+  password  String?  @db.VarChar(255)
+  full_name String?  @db.VarChar(45)
+  create_at DateTime? @default(now()) @updatedAt
+  role      Role?
+
+  @@index([email])
+  @@map("otp")
+}
+
+
+// 5. Enums
+//  Các Enum này sẽ được map thành native Enum type của PostgreSQL.
+
+enum Sex {
+  male
+  female
+  other
+}
+
+enum Provider {
+  local
+  google
+  facebook
+}
+
+enum UserStatus {
+  active
+  busy
+  inactive
+}
+
+enum Role {
+  customer
+  admin
+  driver
+  co_driver @map("co-driver")
+}
+
+enum CarType {
+  xe_thuong @map("xe thường")
+  xe_giuong_nam @map("xe giường nằm")
+  all
+}
+
+enum CarStatus {
+  busy
+  available
+  maintenance
+  inactive
+}
+
+enum CouponType {
+  percentage
+  fixed
+}
+
+enum CouponStatus {
+  active   // Đang hoạt động
+  expired  // Đã hết hạn
+  inactive // Không hoạt động
+}
+
+enum TripStatus {
+  san_sang @map("sẵn sàng")
+  sap_khoi_hanh @map("sắp khỏi hành")
+  dang_chay @map("đang chạy")
+  bao_tri @map("bảo trì")
+  hoan_thanh @map("hoàn thành")
+}
+
+enum SeatFloor {
+  top
+  bottom
+}
+
+enum SeatStatus {
+  available
+  pending
+  booked
+  unavailable
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  failed
+  refunded
+}
+
+enum PaymentType {
+  banking
+  cash
+}
+
+enum TicketSeatStatus {
+  reserved
+  occupied
+  cancelled
+}
+
+enum Theme {
+  light
+  dark
+}
+
+enum NotificationType {
+  system_update
+  trip_reminder
+}

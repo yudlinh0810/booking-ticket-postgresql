@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@payos/node": "^1.0.10",
+    "@prisma/client": "^6.17.0",
     "bcrypt": "^5.1.1",
     "chrono-node": "^2.8.0",
     "cloudinary": "^2.5.1",
@@ -57,6 +58,7 @@
     "@types/qrcode": "^1.5.5",
     "@types/socket.io": "^3.0.2",
     "nodemon": "^3.1.9",
+    "prisma": "^6.17.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   }
