@@ -7,27 +7,12 @@ import Layout from "./layouts/Layout";
 import useClientWidth from "./utils/useClientWidth";
 import { ToastContainer } from "react-toastify";
 import SearchTripPage from "./pages/SearchTripPage";
-import { useEffect } from "react";
 import BookedPage from "./pages/BookedPage";
-import { handleTokenExpiration } from "./utils/handleTokenExpiration ";
 import useOffline from "./hooks/useOfflie";
 import Profile from "./pages/Profile";
 
 function App() {
   useOffline();
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const status = localStorage.getItem("status");
-      if (status === "OK") {
-        handleTokenExpiration();
-        clearInterval(interval);
-      }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   useClientWidth();
   return (
     <Router>
