@@ -1,6 +1,6 @@
 import SearchTrip from "../components/SearchTrip";
 import Slider from "../components/Slider";
-import styles from "../styles/homepage.module.scss";
+import styles from "../styles/homePage.module.scss";
 import { sliderData } from "../data/SliderData";
 import { message } from "antd";
 import { useSearchParams } from "react-router";
