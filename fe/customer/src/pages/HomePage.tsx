@@ -11,7 +11,7 @@ import { fetchUser } from "../services/userServices.service";
 const HomePage = () => {
   const [params, setParams] = useSearchParams();
   const { openModal } = useAuthModalStore();
-  const { setUser } = useUserStore();
+  const { setUser, logout } = useUserStore();
 
   useEffect(() => {
     document.title = "Trang chủ";
@@ -29,12 +29,21 @@ const HomePage = () => {
       } else if (status === "success") {
         message.success("Đăng nhập thành công");
         params.delete("login");
-        const getUser = await fetchUser();
-        setUser({
-          id: getUser?.id,
-          email: getUser?.email,
-          fullName: getUser?.fullName,
-        });
+
+        try {
+          console.log("Attempting fetchUser after successful login...");
+          const getUser = await fetchUser();
+
+          setUser({
+            id: getUser.id,
+            email: getUser.email,
+            fullName: getUser.fullName,
+          });
+        } catch (error) {
+          console.error("fetchUser failed immediately after OAuth:", error);
+          message.error("Không thể lấy thông tin người dùng. Vui lòng thử lại.");
+          logout();
+        }
         setParams(params, { replace: true });
       } else {
         return;

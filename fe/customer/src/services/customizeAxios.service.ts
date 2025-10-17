@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useUserStore } from "../store/userStore";
 
 type FailedRequest = {
   resolve: (value?: unknown) => void;
@@ -34,6 +35,7 @@ bookTicketAPI.interceptors.response.use(
   (response) => response.data || [],
   async (error) => {
     const originalRequest = error.config;
+    const { logout } = useUserStore();
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {
@@ -54,6 +56,7 @@ bookTicketAPI.interceptors.response.use(
         return bookTicketAPI(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError);
+        logout();
         toast.warning("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại!");
         return Promise.reject(refreshError);
       } finally {
