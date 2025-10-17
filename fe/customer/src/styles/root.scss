@@ -1,4 +1,10 @@
 :root {
+  /* Theme: light*/
+  --background-color: #ffffff;
+  --text-color: #212529;
+  --primary-color: #007bff;
+  --border-color: #dee2e6;
+
   /* Color */
   --light-gray: 240, 240, 240;
   --white: 255, 255, 255;
@@ -56,6 +62,13 @@
   --ff-initial: initial; /* Đặt về giá trị mặc định của trình duyệt */
   --ff-revert: revert; /* Khôi phục về giá trị mặc định của trình duyệt hoặc stylesheet gốc */
   --ff-unset: unset; /* Nếu thẻ cha có font-family → kế thừa, nếu không → trở về giá trị mặc định */
+}
+
+html.dark {
+  --background-color: #1a1a1a;
+  --text-color: #f8f9fa;
+  --primary-color: #61dafb;
+  --border-color: #495057;
 }
 
 /* Sử dụng biến trong CSS */

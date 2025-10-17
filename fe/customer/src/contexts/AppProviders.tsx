@@ -1,18 +1,19 @@
-import React, { ReactNode } from "react";
-import { ModalProvider } from "./ModalContext";
+import { ReactNode } from "react";
+import ThemeProvider from "./ThemeProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
-interface AppProvidersProps {
-  children: ReactNode;
-}
 
-const AppProviders: React.FC<AppProvidersProps> = ({ children }) => {
+type Props = {
+  children: ReactNode;
+};
+
+const AppProvider = ({ children }: Props) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <ModalProvider>{children}</ModalProvider>
+      <ThemeProvider>{children}</ThemeProvider>
     </QueryClientProvider>
   );
 };
 
-export default AppProviders;
+export default AppProvider;

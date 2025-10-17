@@ -1,6 +1,9 @@
 import { Dispatch, SetStateAction } from "react";
 
+export type Theme = "light" | "dark";
+
 export type ThemeContextType = {
-  theme: string;
-  setTheme: Dispatch<SetStateAction<string>>;
+  theme: Theme;
+  setTheme: Dispatch<SetStateAction<Theme>>;
+  toggleTheme: () => void;
 };

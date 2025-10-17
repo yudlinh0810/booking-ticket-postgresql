@@ -20,9 +20,9 @@ const SocialAuth = () => {
       <a className={styled["btn-item"]} href={googleLink}>
         Tiếp tục với Google
       </a>
-      <a type="button" className={styled["btn-item"]}>
+      {/* <a type="button" className={styled["btn-item"]}>
         Tiếp tục với Facebook
-      </a>
+      </a> */}
     </div>
   );
 };

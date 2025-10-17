@@ -32,7 +32,6 @@ const Header = () => {
   const handleLogout = async () => {
     const response = await logoutCustomer();
     if (response && response.status === "OK") {
-      localStorage.removeItem("expirationTime");
       logout();
       clearAccessToken();
       setCollapsed(true);

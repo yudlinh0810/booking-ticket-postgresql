@@ -7,13 +7,13 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import App from "./App";
-import AppProviders from "./contexts/AppProviders";
 import "./styles/index.scss";
+import AppProvider from "./contexts/AppProviders";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <AppProviders>
+    <AppProvider>
       <App />
-    </AppProviders>
+    </AppProvider>
   </StrictMode>
 );

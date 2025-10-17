@@ -50,16 +50,11 @@ bookTicketAPI.interceptors.response.use(
 
         if (response.data.success !== true) throw new Error("Failed to refresh token");
 
-        const newExpirationTime = response.data.data.expirationTime;
-
-        localStorage.setItem("expirationTime", newExpirationTime);
-
         processQueue(null);
         return bookTicketAPI(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError);
         toast.warning("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại!");
-        localStorage.removeItem("expirationTime");
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

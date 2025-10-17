@@ -1,6 +1,6 @@
 import SearchTrip from "../components/SearchTrip";
 import Slider from "../components/Slider";
-import styles from "../styles/homePage.module.scss";
+import styles from "../styles/homepage.module.scss";
 import { sliderData } from "../data/SliderData";
 import { message } from "antd";
 import { useSearchParams } from "react-router";
@@ -8,7 +8,6 @@ import { useEffect } from "react";
 import { useAuthModalStore } from "../store/authModalStore";
 import { useUserStore } from "../store/userStore";
 import { fetchUser } from "../services/userServices.service";
-
 const HomePage = () => {
   const [params, setParams] = useSearchParams();
   const { openModal } = useAuthModalStore();

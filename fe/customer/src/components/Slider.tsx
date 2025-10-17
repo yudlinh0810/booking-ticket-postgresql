@@ -10,12 +10,18 @@ import { useEqualHeightWithCSSModules } from "../hooks/useEqualHeight";
 import styled from "../styles/sliders.module.scss";
 
 interface SliderProps {
+  // sliderId: string;  // Thêm thuộc tính sliderId để phân biệt các slider
   sliderArray: SliderObj[];
   delay?: number;
   swiperWidth?: number;
 }
 
-const Slider: React.FC<SliderProps> = ({ sliderArray, delay = 3000, swiperWidth = 15 }) => {
+const Slider: React.FC<SliderProps> = ({
+  // sliderId,
+  sliderArray,
+  delay = 3000,
+  swiperWidth = 15,
+}) => {
   const [swiperEl, setSwiperEl] = useState<HTMLElement | null>(null);
   const [showNavPagination, setShowNavPagination] = useState(false);
 
@@ -72,12 +78,13 @@ const Slider: React.FC<SliderProps> = ({ sliderArray, delay = 3000, swiperWidth 
         }}
         spaceBetween={10}
         slidesPerView={"auto"}
-        loop={true}
+        loop={showNavPagination && sliderArray.length >= 6}
         className={styled["custom-swiper"]}
         onBeforeInit={(swiper: SwiperClass) => {
           setSwiperEl(swiper.el);
         }}
         onInit={(swiper: SwiperClass) => {
+          // console.log(`[Swiper init]: Slider "${sliderId}" has initialized`);
           // Set pagination
           if (paginationRef.current) {
             (swiper.params.pagination as PaginationOptions).el = paginationRef.current;

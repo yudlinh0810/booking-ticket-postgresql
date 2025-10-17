@@ -18,8 +18,6 @@ const useOffline = () => {
     if (response.status === "OK") {
       toast.success("Đăng xuất thành công");
       logout();
-      localStorage.removeItem("accept");
-      localStorage.removeItem("expirationTime");
       openModal("login");
     } else {
       toast.error("Đăng xuất thất bại");
