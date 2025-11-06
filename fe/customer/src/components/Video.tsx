@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import styles from "../styles/video.module.scss";
+import styles from "../styles/components/video.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPause, faPlay, faVolumeHigh, faVolumeXmark } from "@fortawesome/free-solid-svg-icons";
 

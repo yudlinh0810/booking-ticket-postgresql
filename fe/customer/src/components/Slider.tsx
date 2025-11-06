@@ -7,7 +7,7 @@ import { Swiper, SwiperClass, SwiperSlide } from "swiper/react";
 import { NavigationOptions, PaginationOptions } from "swiper/types";
 import { SliderObj } from "../data/SliderData";
 import { useEqualHeightWithCSSModules } from "../hooks/useEqualHeight";
-import styled from "../styles/sliders.module.scss";
+import styled from "../styles/components/sliders.module.scss";
 
 interface SliderProps {
   // sliderId: string;  // Thêm thuộc tính sliderId để phân biệt các slider

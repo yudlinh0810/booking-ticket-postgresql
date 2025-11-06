@@ -1,12 +1,11 @@
-import { faCheck, faDownload, faShareFromSquare } from "@fortawesome/free-solid-svg-icons";
+import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { QRCode } from "antd";
 import React, { useEffect } from "react";
-import styles from "../styles/paymentSuccess.module.scss";
+import styles from "../styles/components/paymentSuccess.module.scss";
 import { DataPaymentSuccess } from "../types/payment";
 import { formatCurrency } from "../utils/formatCurrency";
-import { formatDate } from "../utils/formatDate";
 import { useQueryClient } from "@tanstack/react-query";
+import SliderTicket from "./SliderTicket";
 
 interface PaymentSuccessProps {
   data: DataPaymentSuccess[];
@@ -110,67 +109,7 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({ data }) => {
                 </div>
               </div>
             </div>
-            <div className={styles["ticket-info__seats-wrapper"]}>
-              <div className={styles["ticket-info__seats"]}>
-                {data &&
-                  data.map((t, index) => (
-                    <div key={`${t.id}-${index}`} className={styles["ticket-info__seat-item"]}>
-                      <div className={styles["ticket-info__seat-item__actions"]}>
-                        <FontAwesomeIcon icon={faDownload} className={styles.ic} />
-                        <h3
-                          className={styles["ticket-info__seat-item__actions-title"]}
-                        >{`Mã vé ${t.id}${t.seatPosition}`}</h3>
-                        <FontAwesomeIcon icon={faShareFromSquare} className={styles.ic} />
-                      </div>
-                      <div className={styles["ticket-info__seat-item__qr"]}>
-                        <QRCode value={`${t.id}${t.seatPosition}`} />
-                      </div>
-                      <div className={styles["ticket-info__seat-item-info"]}>
-                        <div className={styles["ticket-info__seat-item-info__detail"]}>
-                          <p>Tuyến xe</p>
-                          <p className={styles["ticket-info__seat-item-info__detail__content"]}>
-                            {`${t.departure} - ${t.arrival}`}
-                          </p>
-                        </div>
-                        <div className={styles["ticket-info__seat-item-info__detail"]}>
-                          <p>Thời gian</p>
-                          <p className={styles["ticket-info__seat-item-info__detail__content"]}>
-                            {formatDate(t.startTime, "DD-MM-YYYY-HH:mm", false).split(" ")[0]}
-                          </p>
-                        </div>
-                        <div className={styles["ticket-info__seat-item-info__detail"]}>
-                          <p>Số ghế</p>
-                          <p className={styles["ticket-info__seat-item-info__detail__content"]}>
-                            {t.seatPosition}
-                          </p>
-                        </div>
-                        <div className={styles["ticket-info__seat-item-info__detail"]}>
-                          <p>Điểm lên xe</p>
-                          <p className={styles["ticket-info__seat-item-info__detail__content"]}>
-                            {`Bến xe ${t.departure}`}
-                          </p>
-                        </div>
-                        <div className={styles["ticket-info__seat-item-info__detail"]}>
-                          <p>Giá vé</p>
-                          <p className={styles["ticket-info__seat-item-info__detail__content"]}>
-                            {formatCurrency(t.price)}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-              </div>
-            </div>
-            <div className="actions">
-              <button type="button" className={styles["actions__share"]}>
-                <FontAwesomeIcon icon={faShareFromSquare} className={styles.ic} />
-                Chia sẻ
-              </button>
-              <button type="button" className={styles["actions__download"]}>
-                <FontAwesomeIcon icon={faDownload} className={styles.ic} />
-                Tải xuống
-              </button>
-            </div>
+            {data && <SliderTicket sliderTicketArray={data} swiperWidth={18} />}
           </div>
         </div>
       )}

@@ -2,11 +2,12 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 import { register } from "../services/auth.service";
 import { useAuthModalStore } from "../store/authModalStore";
-import styled from "../styles/registerForm.module.scss";
+import styled from "../styles/components/registerForm.module.scss";
 import { RegisterPayLoad } from "../types";
 import CustomModal from "./CustomModal";
 import Otp from "./Otp";
 import SocialAuth from "./SocialAuth";
+import InputField from "./InputFiled";
 
 const RegisterForm = () => {
   const { closeModal, setType } = useAuthModalStore();
@@ -44,58 +45,42 @@ const RegisterForm = () => {
   return (
     <div className={styled["register-container"]}>
       <form onSubmit={handleSubmit} className={styled["register-form"]}>
-        <div className={styled["register-form__input-group"]}>
-          <label className={styled["register-form__label"]} htmlFor="email">
-            Email:
-          </label>
-          <input
-            type="text"
-            id="email"
-            name="email"
-            className={styled["register-form__input"]}
-            required
-            onChange={handleChangeValue}
-          />
-        </div>
-        <div className={styled["register-form__input-group"]}>
-          <label className={styled["register-form__label"]} htmlFor="fullName">
-            Full Name:
-          </label>
-          <input
-            type="text"
-            id="fullName"
-            name="fullName"
-            className={styled["register-form__input"]}
-            required
-            onChange={handleChangeValue}
-          />
-        </div>
-        <div className={styled["register-form__input-group"]}>
-          <label className={styled["register-form__label"]} htmlFor="password">
-            Password:
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            className={styled["register-form__input"]}
-            required
-            onChange={handleChangeValue}
-          />
-        </div>
-        <div className={styled["register-form__input-group"]}>
-          <label className={styled["register-form__label"]} htmlFor="confirmPassword">
-            Confirm Password:
-          </label>
-          <input
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            className={styled["register-form__input"]}
-            required
-            onChange={handleChangeValue}
-          />
-        </div>
+        <InputField
+          type="text"
+          id="email"
+          name="email"
+          label="Email"
+          required
+          onChange={handleChangeValue}
+        />
+
+        <InputField
+          type="text"
+          id="fullName"
+          name="fullName"
+          label="Full Name"
+          required
+          onChange={handleChangeValue}
+        />
+
+        <InputField
+          type="password"
+          id="password"
+          name="password"
+          label="Password"
+          required
+          onChange={handleChangeValue}
+        />
+
+        <InputField
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          label="Confirm password"
+          required
+          onChange={handleChangeValue}
+        />
+
         <button type="submit" className={styled["register-form__submit"]}>
           Register
         </button>

@@ -4,7 +4,7 @@ import { bookTicketAPI } from "./customizeAxios.service";
 
 export const createPayOsURL = async (newPayment: PayOSType) => {
   try {
-    const response = await bookTicketAPI.post(`/payos/create-payment`, newPayment);
+    const response = await bookTicketAPI.post(`/payos`, newPayment);
     return response.data;
   } catch (err) {
     toast.warning(err instanceof Error ? err.message : "Lỗi khi tạo link thanh toán");
@@ -14,7 +14,7 @@ export const createPayOsURL = async (newPayment: PayOSType) => {
 
 export const cancelPaymentPayOS = async ({ id, reason }: { id: number; reason: string }) => {
   try {
-    const response = await bookTicketAPI.post(`/payos/cancel-payment-link`, { id, reason });
+    const response = await bookTicketAPI.put(`/payos/link/cancel`, { id, reason });
     return response.data;
   } catch (err) {
     toast.warning(err instanceof Error ? err.message : "Lỗi khi huỷ thanh toán");

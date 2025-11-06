@@ -10,7 +10,7 @@ export type RegisterType = {
 
 export const register = async (data: RegisterType) => {
   try {
-    const response = await bookTicketAPI.post("/customer/register", data);
+    const response = await bookTicketAPI.post("/customers", data);
     return response.data;
   } catch (err) {
     toast.warning(err instanceof Error ? err.message : "Lỗi khi đăng ký");
@@ -20,7 +20,7 @@ export const register = async (data: RegisterType) => {
 
 export const updatePasswordCustomer = async (data: object) => {
   try {
-    const response = await bookTicketAPI.post("/customer/update-password", data);
+    const response = await bookTicketAPI.put("/customers/password", data);
     return response;
   } catch (err) {
     toast.warning(err instanceof Error ? err.message : "Lỗi khi cập nhật mật khẩu");
@@ -30,7 +30,7 @@ export const updatePasswordCustomer = async (data: object) => {
 
 export const insetOtpForgotPassword = async (email: string) => {
   try {
-    const response = await bookTicketAPI.post("/customer/insert-otp-forgot-password", { email });
+    const response = await bookTicketAPI.post("/customers/otp/forgot-password", { email });
     return response.data;
   } catch (err) {
     toast.warning(err instanceof Error ? err.message : "Lỗi khi gửi mã OTP quên mật khẩu");
@@ -40,7 +40,7 @@ export const insetOtpForgotPassword = async (email: string) => {
 
 export const sendOtp = async (email: string) => {
   try {
-    const response = await bookTicketAPI.post("/customer/send-otp", { email });
+    const response = await bookTicketAPI.post("/customers/otp/send", { email });
     return response.data;
   } catch (err) {
     toast.warning(err instanceof Error ? err.message : "Lỗi khi gửi mã OTP xác thực");
@@ -50,7 +50,7 @@ export const sendOtp = async (email: string) => {
 
 export const verifyOtpForgotPassword = async (data: object) => {
   try {
-    const response = await bookTicketAPI.post("/customer/verify-email-forgot-password", data);
+    const response = await bookTicketAPI.post("/customers/verify-email-forgot-password", data);
     return response.data;
   } catch (err) {
     toast.warning(err instanceof Error ? err.message : "Lỗi khi xác thực OTP");
@@ -60,7 +60,7 @@ export const verifyOtpForgotPassword = async (data: object) => {
 
 export const updateNewPassword = async (data: object) => {
   try {
-    const response = await bookTicketAPI.post("/customer/update-new-password", data);
+    const response = await bookTicketAPI.put("/customers/new-password", data);
     return response.data;
   } catch (err) {
     toast.warning(err instanceof Error ? err.message : "Lỗi khi cập nhật mật khẩu mới");

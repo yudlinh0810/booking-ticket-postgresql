@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { io, Socket } from "socket.io-client";
 import { useUserStore } from "../store/userStore";
-import styles from "../styles/chatBox.module.scss";
+import styles from "../styles/components/chatBox.module.scss";
 import { ResponseData } from "../types/chatbox";
 import { TripData } from "../types/trip";
 import TripCardInChatBox from "./TripCardInChatBox";

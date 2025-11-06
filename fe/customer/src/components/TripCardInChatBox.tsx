@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import styles from "../styles/tripCardInChatBox.module.scss";
+import styles from "../styles/components/tripCardInChatBox.module.scss";
 import { TripData } from "../types/trip";
 import { formatDate } from "../utils/formatDate";
 import { formatCurrency } from "../utils/formatCurrency";

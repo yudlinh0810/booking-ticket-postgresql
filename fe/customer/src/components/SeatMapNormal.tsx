@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import styles from "../styles/seatMapNormal.module.scss";
+import styles from "../styles/components/seatMapNormal.module.scss";
 import Seat, { SeatType } from "./Seat";
 import { message } from "antd";
 

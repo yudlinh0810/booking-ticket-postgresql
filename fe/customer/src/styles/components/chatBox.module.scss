@@ -8,9 +8,9 @@
 
 .chat-button {
   padding: 0.25rem;
-  border: 0.15rem solid var(--white-bd);
+  border: 0.15rem solid var(---color-white-hex);
   border-radius: 50%;
-  background-color: var(--primary-bd);
+  background-color: var(color-primary-rgb);
 
   .ic-message {
     height: 2rem;
@@ -18,13 +18,13 @@
     padding: 0.25rem;
     border-radius: 50%;
 
-    background-color: var(--primary-bd);
-    color: var(--white-bd);
+    background-color: var(color-primary-rgb);
+    color: var(--color-white);
   }
 }
 
 .chat-box {
-      box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
   width: 30rem;
   height: 40rem;
   background-color: #fff;
@@ -81,7 +81,7 @@
 
         &-content {
           margin-top: 0.4rem;
-          color: var(--gray-bd);
+          color: var(--color-gray-800-rgb);
 
           font-size: 0.85rem;
         }
@@ -108,7 +108,7 @@
 
         &-content {
           margin-top: 0.4rem;
-          color: var(--gray-bd);
+          color: var(--color-gray-800-rgb);
 
           font-size: 0.85rem;
         }
@@ -161,26 +161,26 @@
     }
 
     .send-btn {
-      border: 1px solid var(--primary-bd);
+      border: 1px solid var(color-primary-rgb);
 
       transition: 0.3s all;
 
       &:hover {
         border-color: none;
-        background-color: var(--primary-bd);
-        color: var(--white-bd);
+        background-color: var(color-primary-rgb);
+        color: var(--color-white);
       }
     }
 
     .close-btn {
-      border: 1px solid var(--danger-bd);
+      border: 1px solid var(--color-danger-hex);
 
       transition: 0.3s all;
 
       &:hover {
         border-color: none;
-        background-color: var(--danger-bd);
-        color: var(--white-bd);
+        background-color: var(--color-danger-hex);
+        color: var(--color-white);
       }
     }
   }
@@ -200,10 +200,10 @@
   -ms-user-select: none; /* IE/Edge */
 
   &.online {
-    color: var(--success-bd);
+    color: var(--color-success-rgb);
   }
   &.offline {
-    color: var(--danger-bd);
+    color: var(--color-danger-hex);
   }
 }
 

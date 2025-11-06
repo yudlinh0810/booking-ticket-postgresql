@@ -7,7 +7,7 @@
     flex: 1;
 
     padding: 0.5rem;
-    border: 1px solid var(--primary-bd);
+    border: 1px solid var(--bg-primary);
     border-radius: 1rem;
 
     color: var(--black);
@@ -16,10 +16,10 @@
     transition: all 0.3s;
 
     &:hover {
-      border-color: var(--white-bd);
+      border-color: var(--color-white-hex);
 
-      background-color: var(--primary-bd);
-      color: var(--white-bd);
+      background-color: var(--bg-primary);
+      color: var(--color-white-hex);
     }
   }
 }

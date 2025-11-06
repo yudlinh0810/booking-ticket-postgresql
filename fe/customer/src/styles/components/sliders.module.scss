@@ -1,4 +1,4 @@
-@use "./mixin" as mix;
+@use "../mixin" as mix;
 
 .swiper-container {
   position: relative;
@@ -28,7 +28,7 @@
 :global {
   .swiper-pagination-bullet {
     cursor: pointer;
-    background: var(--white-bd);
+    background: var(--color-white-hex);
     opacity: 1;
 
     &:hover:not(.swiper-pagination-bullet-active) {
@@ -67,7 +67,7 @@
 
     background: transparent;
     font-size: 4rem;
-    color: var(--white-bd);
+    color: var(--color-white-hex);
 
     transition: color 0.3s ease;
 
@@ -101,8 +101,8 @@
 
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.05);
 
-  background: var(--white-bd);
-  color: var(--dark-bd);
+  background: var(--color-white-hex);
+  color: var(--color-black-hex);
   text-decoration: none;
 
   transition: border-color 0.3s ease;
@@ -121,7 +121,7 @@
 
       .card-button-icon {
         transform: rotate(-45deg);
-        color: var(--white-bd);
+        color: var(--color-white-hex);
         transition: all 0.3s ease;
       }
     }

@@ -1,15 +1,16 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./styles/app.scss";
-import "./styles/root.scss";
-import "./styles/reset.scss";
-import HomePage from "./pages/HomePage";
-import Layout from "./layouts/Layout";
-import useClientWidth from "./utils/useClientWidth";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import SearchTripPage from "./pages/SearchTripPage";
-import BookedPage from "./pages/BookedPage";
 import useOffline from "./hooks/useOfflie";
-import Profile from "./pages/Profile";
+import Layout from "./layouts/Layout";
+import BookedPage from "./pages/BookedPage";
+import HomePage from "./pages/HomePage";
+import NotFoundPage from "./pages/NotFoundPage";
+import ProfilePage from "./pages/ProfilePage";
+import SearchTripPage from "./pages/SearchTripPage";
+import "./styles/app.scss";
+import "./styles/reset.scss";
+import "./styles/root.scss";
+import useClientWidth from "./utils/useClientWidth";
 
 function App() {
   useOffline();
@@ -47,8 +48,16 @@ function App() {
           path="/profile"
           element={
             <Layout>
-              <Profile />
+              <ProfilePage />
             </Layout>
+          }
+        />
+        <Route
+          path="*"
+          element={
+            // <Layout>
+            <NotFoundPage />
+            // </Layout>
           }
         />
       </Routes>

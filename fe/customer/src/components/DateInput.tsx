@@ -1,7 +1,12 @@
 import { DatePicker } from "antd";
 import dayjs, { Dayjs } from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { memo, useEffect, useState } from "react";
-import styled from "../styles/dateInput.module.scss";
+import styled from "../styles/components/dateInput.module.scss";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 interface DateInputProps {
   valueIn?: string | Date;
@@ -14,14 +19,15 @@ const DateInput: React.FC<DateInputProps> = ({ valueIn, className, onChange }) =
 
   useEffect(() => {
     // Nếu có giá trị đầu vào (string hoặc Date)
+    const VIETNAM_TZ = "Asia/Ho_Chi_Minh";
     if (valueIn) {
       const dateStr = typeof valueIn === "string" ? valueIn : dayjs(valueIn).format("YYYY-MM-DD");
       setDateValue(dayjs(dateStr));
     } else {
       // Nếu không có thì set mặc định là ngày hiện tại
-      const today = dayjs().startOf("day");
-      setDateValue(today);
-      onChange(today.format("YYYY-MM-DD"));
+      const todayInVN = dayjs.tz(VIETNAM_TZ).startOf("day");
+      setDateValue(todayInVN);
+      onChange(todayInVN.format("YYYY-MM-DD"));
     }
   }, [valueIn, onChange]);
 

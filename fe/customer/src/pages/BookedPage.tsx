@@ -15,7 +15,7 @@ import { createTicket, deleteTicket } from "../services/ticket.service";
 import { detailTripBooked, getLocations } from "../services/trip.service";
 import { useAuthModalStore } from "../store/authModalStore";
 import { useUserStore } from "../store/userStore";
-import styles from "../styles/bookedPage.module.scss";
+import styles from "../styles/pages/bookedPage.module.scss";
 import { ParamsSearchDetailTrip } from "../types/trip";
 import { User } from "../types/user";
 import { formatCurrency } from "../utils/formatCurrency";

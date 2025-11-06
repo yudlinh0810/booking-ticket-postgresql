@@ -8,7 +8,7 @@ import Loading from "../components/Loading";
 import SearchTrip from "../components/SearchTrip";
 import SortTrip from "../components/SortTrip";
 import { getLocations, searchTrips } from "../services/trip.service";
-import styles from "../styles/searchTripPage.module.scss";
+import styles from "../styles/pages/searchTripPage.module.scss";
 import { ParamsSearchTrips, SearchTripResponse, TripInfoBase } from "../types/trip";
 import { formatCurrency } from "../utils/formatCurrency";
 import { formatDate } from "../utils/formatDate";
@@ -143,112 +143,115 @@ const SearchTripPage = () => {
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
   return (
     <div className={styles["search-trip-page-wrapper"]}>
-      <div className={styles["search-trip-cpn-wrapper"]}>
-        <SearchTrip valueSearchIn={searchParamsValue} />
-      </div>
-      <div className={styles["search-trip"]}>
-        <div className={styles["sort-filtered-container"]}>
-          <div className={styles["sort-wrapper"]}>
-            <SortTrip
-              onchange={handleChangeSortValue}
-              valueIn={searchParamsValue.sort ?? "default"}
-            />
-          </div>
-          <div className={styles["sort-filtered-container"]} hidden>
-            <div className={styles["filtered-wrapper"]}>filter</div>
-          </div>
+      <div className={styles["search-trip-page-container"]}>
+        <div className={styles["search-trip-cpn-wrapper"]}>
+          <SearchTrip valueSearchIn={searchParamsValue} />
         </div>
-
-        {isErrSearchTrip && (
-          <p>{errSearchTrip ? errSearchTrip.message : `Lỗi tìm kiếm chuyến đi`}</p>
-        )}
-        {tripDataSeeMore && !isSearchTripsLoading ? (
-          <div className={styles["result-search-trip-info"]}>
-            <div className={styles["result-total-trips"]}>
-              <p className={styles["label"]}>Kết quả:</p>
-              <p className={styles["result"]}>{tripDataSeeMore?.total}</p>
+        <div className={styles["search-trip"]}>
+          <div className={styles["sort-filtered-container"]}>
+            <div className={styles["sort-wrapper"]}>
+              <SortTrip
+                onchange={handleChangeSortValue}
+                valueIn={searchParamsValue.sort ?? "default"}
+              />
             </div>
-            <div className={styles["result-search-trips"]}>
-              {tripDataSeeMore.data &&
-                tripDataSeeMore.data.map((t, index) => (
-                  <div key={`${t.id}-${index}`} className={styles["result-search-trip__item"]}>
-                    <div className={styles["result-search-container"]}>
-                      <div className={styles["img-trip"]}>
-                        <img
-                          src={t.image}
-                          alt={`img-${t.id}`}
-                          loading="lazy"
-                          className={styles.image}
-                        />
-                      </div>
-                      <div className={styles["info-trip"]}>
-                        <div className={styles["info-trip__title"]}>
-                          <p className={styles["info-trip__title-name"]}>{t.tripName}</p>
-                          <p className={styles["info-trip__title-price"]}>
-                            {formatCurrency(Number(t.price))}
-                          </p>
+            <div className={styles["sort-filtered-container"]} hidden>
+              <div className={styles["filtered-wrapper"]}>filter</div>
+            </div>
+          </div>
+
+          {isErrSearchTrip && (
+            <p>{errSearchTrip ? errSearchTrip.message : `Lỗi tìm kiếm chuyến đi`}</p>
+          )}
+          {tripDataSeeMore && !isSearchTripsLoading ? (
+            <div className={styles["result-search-trip-info"]}>
+              <div className={styles["result-total-trips"]}>
+                <p className={styles["label"]}>Kết quả:</p>
+                <p className={styles["result"]}>{tripDataSeeMore?.total}</p>
+              </div>
+              <div className={styles["result-search-trips"]}>
+                {tripDataSeeMore.data &&
+                  tripDataSeeMore.data.map((t, index) => (
+                    <div key={`${t.id}-${index}`} className={styles["result-search-trip__item"]}>
+                      <div className={styles["result-search-container"]}>
+                        <div className={styles["img-trip"]}>
+                          <img
+                            src={t.image}
+                            alt={`img-${t.id}`}
+                            loading="lazy"
+                            className={styles.image}
+                          />
                         </div>
-                        <div className={styles["info-trip__detail"]}>
-                          <div className={styles["info-trip__detail-ic-from-to"]}>
-                            <IconDeparture />
-                            <div className={styles.dash}>
-                              <span className={styles["no-select"]}>{`.......`}</span>
-                            </div>
-                            <FontAwesomeIcon
-                              className={`${styles.ic} ${styles["ic-departure"]}`}
-                              icon={faLocationDot}
-                            />
+                        <div className={styles["info-trip"]}>
+                          <div className={styles["info-trip__title"]}>
+                            <p className={styles["info-trip__title-name"]}>{t.tripName}</p>
+                            <p className={styles["info-trip__title-price"]}>
+                              {formatCurrency(Number(t.price))}
+                            </p>
                           </div>
-                          <div className={styles["info-trip__detail-hour-location"]}>
-                            <div className={styles["info-trip__detail-hour"]}>
-                              <p>
-                                {formatDate(t.startTime, "DD-MM-YYYY-HH:mm", false).split(" ")[0]}
-                              </p>
-                              <p>
-                                {formatDate(t.endTime, "DD-MM-YYYY-HH:mm", false).split(" ")[0]}
-                              </p>
+                          <div className={styles["info-trip__detail"]}>
+                            <div className={styles["info-trip__detail-ic-from-to"]}>
+                              <IconDeparture />
+                              <div className={styles.dash}>
+                                <span className={styles["no-select"]}>{`.......`}</span>
+                              </div>
+                              <FontAwesomeIcon
+                                className={`${styles.ic} ${styles["ic-departure"]}`}
+                                icon={faLocationDot}
+                              />
                             </div>
-                            <div className={styles["info-trip__detail-location"]}>
-                              <p>{t.departure}</p>
-                              <p>{t.arrival}</p>
+                            <div className={styles["info-trip__detail-hour-location"]}>
+                              <div className={styles["info-trip__detail-hour"]}>
+                                <p>
+                                  {formatDate(t.startTime, "DD-MM-YYYY-HH:mm", false).split(" ")[0]}
+                                </p>
+                                <p>
+                                  {formatDate(t.endTime, "DD-MM-YYYY-HH:mm", false).split(" ")[0]}
+                                </p>
+                              </div>
+                              <div className={styles["info-trip__detail-location"]}>
+                                <p>{t.departure}</p>
+                                <p>{t.arrival}</p>
+                              </div>
+                            </div>
+                            <div className={styles["info-trip__detail-and-actions"]}>
+                              <p
+                                className={styles.strong}
+                              >{`Còn ${t.totalSeatAvailable} chỗ trống`}</p>
+                              <button
+                                type="button"
+                                className={styles["btn-detail-trip"]}
+                                onClick={() => hanleDetailTrip(t)}
+                              >
+                                Xem chuyến
+                              </button>
                             </div>
                           </div>
-                          <div className={styles["info-trip__detail-and-actions"]}>
-                            <p
-                              className={styles.strong}
-                            >{`Còn ${t.totalSeatAvailable} chỗ trống`}</p>
-                            <button
-                              type="button"
-                              className={styles["btn-detail-trip"]}
-                              onClick={() => hanleDetailTrip(t)}
-                            >
-                              Xem chuyến
-                            </button>
+                          <div className={styles["notify-trip"]}>
+                            <p>Vé chặng thuộc chuyến</p>
+                            <p>{`${formatDate(t.startTime, "DD-MM-YYYY-HH:mm")}`}</p>
                           </div>
-                        </div>
-                        <div className={styles["notify-trip"]}>
-                          <p>Vé chặng thuộc chuyến</p>
-                          <p>{`${formatDate(t.startTime, "DD-MM-YYYY-HH:mm")}`}</p>
                         </div>
                       </div>
                     </div>
+                  ))}
+                {tripDataSeeMore.total > 0 ? (
+                  <div className="quantity-trips-current">
+                    <p>{`${tripDataSeeMore.data.length} trên ${tripDataSeeMore.total}`}</p>
                   </div>
-                ))}
-              {tripDataSeeMore.total > 0 ? (
-                <div className="quantity-trips-current">
-                  <p>{`${tripDataSeeMore.data.length} trên ${tripDataSeeMore.total}`}</p>
-                </div>
-              ) : null}
-              {tripDataSeeMore.total > 0 && tripDataSeeMore.total >= tripDataSeeMore.data.length ? (
-                <button onClick={handleSeeMore} disabled={!hasNextPage || isFetchingNextPage}>
-                  Xem thêm
-                </button>
-              ) : null}
+                ) : null}
+                {tripDataSeeMore.total > 0 &&
+                tripDataSeeMore.total >= tripDataSeeMore.data.length ? (
+                  <button onClick={handleSeeMore} disabled={!hasNextPage || isFetchingNextPage}>
+                    Xem thêm
+                  </button>
+                ) : null}
+              </div>
             </div>
-          </div>
-        ) : (
-          <Loading />
-        )}
+          ) : (
+            <Loading />
+          )}
+        </div>
       </div>
     </div>
   );

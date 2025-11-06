@@ -1,5 +1,5 @@
 import { forwardRef } from "react";
-import styled from "../styles/contentHotline.module.scss";
+import styled from "../styles/components/contentHotline.module.scss";
 import CustomLink from "./CustomLink";
 
 interface ContentHotlineProps {

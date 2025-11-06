@@ -1,7 +1,7 @@
 import { useState } from "react";
 import CustomModal from "./CustomModal";
 import QRPayment from "./QRPayment";
-import styles from "../styles/paymentType.module.scss";
+import styles from "../styles/components/paymentType.module.scss";
 import { Radio, RadioChangeEvent } from "antd";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBuildingColumns, faWallet } from "@fortawesome/free-solid-svg-icons";

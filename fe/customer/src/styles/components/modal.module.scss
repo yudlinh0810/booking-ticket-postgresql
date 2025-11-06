@@ -1,0 +1,13 @@
+.modal-content-scrollable {
+  max-height: 90vh;
+  overflow-y: auto;
+
+  /* Ẩn thanh cuộn trên IE, Edge, và Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Ẩn thanh cuộn trên Chrome, Safari, và Opera */
+.modal-content-scrollable::-webkit-scrollbar {
+  display: none; /* WebKit */
+}

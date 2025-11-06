@@ -1,78 +1,110 @@
+/* 
+  PHẦN 1: BẢNG MÀU (PALETTE) - CỐ ĐỊNH
+  Lưu trữ các màu ở dạng R,G,B để dùng với rgba()
+*/
 :root {
-  /* Theme: light*/
-  --background-color: #ffffff;
-  --text-color: #212529;
-  --primary-color: #007bff;
-  --border-color: #dee2e6;
+  /* --- Brand Colors --- */
+  --color-primary-rgb: 46, 180, 252;
+  --color-primary-hex: #2eb4fc;
 
-  /* Color */
-  --light-gray: 240, 240, 240;
-  --white: 255, 255, 255;
-  --bright-blue: 46, 180, 252;
-  --belize-hole: 52, 152, 219;
-  --gray: 195, 195, 195;
+  --color-secondary-rgb: 108, 117, 125;
+  --color-secondary-hex: #6c757d;
 
-  /* Border */
-  --gray-bd: #c3c3c3;
-  --primary-bd: #2eb4fc;
-  --secondary-bd: #6c757d;
-  --success-bd: #28a745;
-  --danger-bd: #dc3545;
-  --warning-bd: #ffc107;
-  --info-bd: #17a2b8;
-  --light-bd: #f8f9fa;
-  --dark-bd: #343a40;
-  --blue-dark: #0973b9;
-  //
-  --light-gray-bd: #f0f0f0;
-  --white-bd: #ffffff;
-  --bright-blue-bd: #2eb4fc;
-  --belize-hole-bd: #3498db; //shade of blue
-  --gray-bd: #c3c3c3;
+  --color-success-rgb: 40, 167, 69;
+  --color-success-hex: #28a745;
+
+  --color-danger-rgb: 220, 53, 69;
+  --color-danger-hex: #dc3545;
+
+  --color-warning-rgb: 255, 193, 7;
+  --color-warning-hex: #ffc107;
+
+  --color-info-rgb: 23, 162, 184;
+  --color-info-hex: #17a2b8;
+
+  /* --- Grayscale Colors --- */
+  --color-white-rgb: 255, 255, 255;
+  --color-white-hex: #ffffff;
+
+  --color-gray-100-rgb: 248, 249, 250;
+  --color-gray-100-hex: #f8f9fa;
+
+  --color-gray-200-rgb: 240, 240, 240;
+  --color-gray-200-hex: #f0f0f0;
+
+  --color-gray-400-rgb: 195, 195, 195;
+  --color-gray-400-hex: #c3c3c3;
+
+  --color-gray-500-rgb: 222, 226, 230;
+  --color-gray-500-hex: #dee2e6;
+
+  --color-gray-700-rgb: 73, 80, 87;
+  --color-gray-700-hex: #495057;
+
+  --color-gray-800-rgb: 52, 58, 64;
+  --color-gray-800-hex: #343a40;
+
+  --color-gray-900-rgb: 33, 37, 41;
+  --color-gray-900-hex: #212529;
+
+  --color-black-rgb: 26, 26, 26;
+  --color-black-hex: #1a1a1a;
+
+  /* --- PHẦN 2: FONT CHỮ --- */
+  --ff-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  --ff-serif: "Times New Roman", serif;
+  --ff-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
+}
+
+/* --- PHẦN 3: ĐỊNH NGHĨA THEME (SEMANTIC) --- */
+
+/* --- 3.1: Light Theme (Mặc định) --- */
+:root,
+html.light {
+  --bg-page: var(--color-white-hex);
+  --bg-surface: var(--color-gray-100-hex); /* Dùng cho card, modal... */
+  --bg-primary: var(--color-primary-hex);
+
+  --text-primary: var(--color-gray-900-hex);
+  --text-secondary: var(--color-gray-800-hex);
+  --text-on-primary: var(--color-white-hex); /* Chữ trên nền màu primary */
+
+  --border-main: var(--color-gray-500-hex);
+  --border-subtle: var(--color-gray-200-hex);
 
   /* Button Colors */
-  --primary: 46, 180, 252;
-  --secondary: 108, 117, 125;
-  --success: 40, 167, 69;
-  --danger: 220, 53, 69;
-  --warning: 255, 193, 7;
-  --info: 23, 162, 184;
-  --light: 248, 249, 250;
-  --dark: 52, 58, 64;
-
-  /* Font Family - Custom Variables */
-  --ff-TimeNR: "Times New Roman", serif;
-  --ff-gill: "Gill Sans Extrabold", sans-serif;
-  --ff-goudy: "Goudy Bookletter 1911", sans-serif;
-  --ff-serif: serif;
-  --ff-sans: sans-serif;
-  --ff-mono: monospace;
-  --ff-cursive: cursive;
-  --ff-fantasy: fantasy;
-  --ff-ui-serif: ui-serif;
-  --ff-ui-sans: ui-sans-serif;
-  --ff-ui-mono: ui-monospace;
-  --ff-ui-rounded: ui-rounded;
-  --ff-emoji: emoji;
-  --ff-math: math;
-  --ff-fangsong: fangsong;
-
-  /* Global values */
-  --ff-inherit: inherit; /* Kế thừa font từ phần tử cha */
-  --ff-initial: initial; /* Đặt về giá trị mặc định của trình duyệt */
-  --ff-revert: revert; /* Khôi phục về giá trị mặc định của trình duyệt hoặc stylesheet gốc */
-  --ff-unset: unset; /* Nếu thẻ cha có font-family → kế thừa, nếu không → trở về giá trị mặc định */
+  --btn-primary-bg: var(--color-primary-hex);
+  --btn-primary-text: var(--color-white-hex);
+  --btn-secondary-bg: var(--color-secondary-hex);
+  --btn-secondary-text: var(--color-white-hex);
 }
 
+/* --- 3.2: Dark Theme --- */
 html.dark {
-  --background-color: #1a1a1a;
-  --text-color: #f8f9fa;
-  --primary-color: #61dafb;
-  --border-color: #495057;
-}
+  --bg-page: var(--color-black-hex);
+  --bg-surface: var(--color-gray-800-hex); /* Dùng cho card, modal... */
+  --bg-primary: var(--color-primary-hex);
 
-/* Sử dụng biến trong CSS */
+  --text-primary: var(--color-gray-100-hex);
+  --text-secondary: var(--color-gray-400-hex);
+  --text-on-primary: var(--color-white-hex);
+
+  --border-main: var(--color-gray-700-hex);
+  --border-subtle: var(--color-gray-800-hex);
+
+  /* Button Colors */
+  --btn-primary-bg: var(--color-primary-hex);
+  --btn-primary-text: var(--color-white-hex);
+  --btn-secondary-bg: var(--color-gray-700-hex);
+  --btn-secondary-text: var(--color-gray-100-hex);
+}
+/* --- PHẦN 4: SỬ DỤNG TRONG ỨNG DỤNG --- */
+
 body {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
   font-family: var(--ff-sans);
 }
 
@@ -80,9 +112,21 @@ h1,
 h2,
 h3,
 h4 {
-  font-family: var(--ff-TimeNR);
+  font-family: var(--ff-serif);
+  color: var(--text-primary);
 }
 
 p {
-  font-family: var(--ff-inherit);
+  color: var(--text-secondary);
+}
+
+.my-button {
+  background-color: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+}
+
+.my-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-main);
 }

@@ -1,4 +1,4 @@
-@use "./mixin" as mix;
+@use "../mixin" as mix;
 
 .search-trip {
   display: flex;
@@ -9,10 +9,10 @@
   max-width: 51.05rem;
   height: auto;
   padding: 2rem;
-  border: 1px solid var(--primary-bd);
+  border: 1px solid rgba(255, 255, 255, 0.9);
   border-radius: 0.725rem;
 
-  background-color: #fff;
+  background-color: var(--bg-page);
 
   @include mix.responsive(tablet) {
     flex-wrap: wrap;
@@ -36,16 +36,16 @@
     border-radius: 0.725rem;
 
     @include mix.responsive(desktop) {
-      border: 1px solid var(--primary-bd);
+      border: 1px solid var(--bg-primary);
       flex-wrap: nowrap;
     }
     @include mix.responsive(tablet) {
-      border: 1px solid var(--primary-bd);
+      border: 1px solid var(--bg-primary);
       flex-wrap: nowrap;
     }
 
     @include mix.responsive(mobile) {
-      border: 1px solid var(--primary-bd);
+      border: 1px solid var(--bg-primary);
       flex-wrap: wrap !important;
     }
 

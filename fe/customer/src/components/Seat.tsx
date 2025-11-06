@@ -1,7 +1,7 @@
 import seatActive from "../assets/images/seat_active.svg";
 import seatSelecting from "../assets/images/seat_selecting.svg";
 import seatDisable from "../assets/images/seat_disabled.svg";
-import styles from "../styles/seat.module.scss";
+import styles from "../styles/components/seat.module.scss";
 import React from "react";
 import { message } from "antd";
 

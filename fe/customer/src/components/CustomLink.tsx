@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router";
-import styled from "../styles/link.module.scss";
+import styled from "../styles/components/link.module.scss";
 import { CustomLinkProps } from "../types/props";
 
 const CustomLink: React.FC<CustomLinkProps> = ({ className, to, href, title, children }) => {

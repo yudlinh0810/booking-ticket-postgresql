@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../styles/selectType.module.scss";
+import styles from "../styles/components/selectType.module.scss";
 
 interface Props {
   selectedType: "all" | "percentage" | "fixed";

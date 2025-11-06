@@ -1,4 +1,4 @@
-@use "./mixin" as mix;
+@use "../mixin" as mix;
 
 .homepage-container {
   display: flex;
@@ -30,12 +30,6 @@
     }
     .search-trip-wrapper {
       z-index: 10;
-      background-image: url("https://static.vexere.com/production/banners/1209/leaderboard_1440x480.jpg");
     }
-  }
-
-  .slider-wrapper {
-    // display: flex;
-    // flex-direction: column;
   }
 }

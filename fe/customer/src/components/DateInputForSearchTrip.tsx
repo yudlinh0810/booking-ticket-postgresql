@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DatePicker } from "antd";
 import dayjs, { Dayjs } from "dayjs";
 import { memo, useEffect, useState } from "react";
-import styled from "../styles/dateInputForSeachTrip.module.scss";
+import styled from "../styles/components/dateInputForSeachTrip.module.scss";
 
 interface DateInputProps {
   title: string;

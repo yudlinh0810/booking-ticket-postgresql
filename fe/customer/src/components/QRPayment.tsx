@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styles from "../styles/qRPayment.module.scss";
+import styles from "../styles/components/qRPayment.module.scss";
 import { PayOSPaymentResponseData } from "../types/payos";
 import { formatCurrency } from "../utils/formatCurrency";
 import { faQrcode } from "@fortawesome/free-solid-svg-icons";

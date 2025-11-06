@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { veriFyEmail } from "../services/auth.service";
 import { toast } from "react-toastify";
 import { useUserStore } from "../store/userStore";
-import styled from "../styles/otp.module.scss";
+import styled from "../styles/components/otp.module.scss";
 
 const Otp = ({ email, onCloseModal }: { email: string; onCloseModal: () => void }) => {
   const [otpValue, setOtpValue] = useState({});

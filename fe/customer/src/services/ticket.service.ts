@@ -4,7 +4,7 @@ import { bookTicketAPI } from "./customizeAxios.service";
 
 export const createTicket = async (formData: FormDataTicket) => {
   try {
-    const response = await bookTicketAPI.post("/ticket/add", formData);
+    const response = await bookTicketAPI.post("/tickets", formData);
     return response.data;
   } catch (err) {
     toast.warning(err instanceof Error ? err.message : "Lỗi khi tạo vé");
@@ -14,7 +14,7 @@ export const createTicket = async (formData: FormDataTicket) => {
 
 export const getDetailTicket = async (data: object) => {
   try {
-    const response = await bookTicketAPI.post("/ticket/get-detail-ticket", data);
+    const response = await bookTicketAPI.get("/tickets/detail", { data });
     return response.data;
   } catch (err) {
     toast.warning(err instanceof Error ? err.message : "Lỗi khi lấy chi tiết vé");
@@ -24,7 +24,7 @@ export const getDetailTicket = async (data: object) => {
 
 export const getDetailTicketByEmail = async (email: string) => {
   try {
-    const response = await bookTicketAPI.post("/ticket/get-detail-ticket-by-email", {email: email});
+    const response = await bookTicketAPI.get("/tickets/email", { data: email });
     return response.data;
   } catch (err) {
     toast.warning(err instanceof Error ? err.message : "Lỗi khi lấy vé theo email");
@@ -34,7 +34,7 @@ export const getDetailTicketByEmail = async (email: string) => {
 
 export const deleteTicket = async (id: number) => {
   try {
-    const response = await bookTicketAPI.delete(`/ticket/delete/${id}`);
+    const response = await bookTicketAPI.delete(`/tickets/${id}`);
     return response.data;
   } catch (err) {
     toast.warning(err instanceof Error ? err.message : "Lỗi khi xoá vé");

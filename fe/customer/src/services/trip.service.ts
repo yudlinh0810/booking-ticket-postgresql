@@ -21,7 +21,7 @@ export const detailTripBooked = async ({
 }) => {
   try {
     const response = await bookTicketAPI.get<TripBookedInfo>(
-      `/trip/detail-booked?from=${from}&to=${to}&start_day=${start_day}&start_hours=${start_hours}&end_day=${end_day}&end_hours=${end_hours}&license_plate=${license_plate}`
+      `/trips/booked?from=${from}&to=${to}&start_day=${start_day}&start_hours=${start_hours}&end_day=${end_day}&end_hours=${end_hours}&license_plate=${license_plate}`
     );
     return response.data;
   } catch (err) {
@@ -32,7 +32,7 @@ export const detailTripBooked = async ({
 
 export const searchTrip = async (data: object) => {
   try {
-    const response = await bookTicketAPI.post("/trip/search", data);
+    const response = await bookTicketAPI.post("/trips/search", data);
     return response.data;
   } catch (err) {
     toast.warning(err instanceof Error ? err.message : "Lỗi khi tìm kiếm chuyến xe");
@@ -42,7 +42,7 @@ export const searchTrip = async (data: object) => {
 
 export const getLocations = async () => {
   try {
-    const response = await bookTicketAPI.get<LocationType[]>("/location/get-all");
+    const response = await bookTicketAPI.get<LocationType[]>("/locations");
     return response.data;
   } catch (err) {
     toast.warning(err instanceof Error ? err.message : "Lỗi khi tải danh sách địa điểm");
@@ -66,8 +66,8 @@ export const searchTrips = async ({
   offset: number;
 }) => {
   try {
-    const response = await bookTicketAPI.get<SearchTripResponse>(
-      `/trip/search?from=${from}&to=${to}&start_time=${start_time}&sort=${sort}&limit=${limit}&offset=${offset}`
+    const response = await bookTicketAPI.post<SearchTripResponse>(
+      `/trips/search?from=${from}&to=${to}&start_time=${start_time}&sort=${sort}&limit=${limit}&offset=${offset}`
     );
     return response.data;
   } catch (err) {

@@ -1,11 +1,12 @@
 import { useState } from "react";
-import styled from "../styles/loginForm.module.scss";
+import styled from "../styles/components/loginForm.module.scss";
 import { LoginPayLoad } from "../types";
 import { loginUser } from "../services/auth.service";
 import { useUserStore } from "../store/userStore";
 import { useAuthModalStore } from "../store/authModalStore";
 import SocialAuth from "./SocialAuth";
 import { message } from "antd";
+import InputField from "./InputFiled";
 
 const LoginForm = () => {
   const [dataLogin, setDataLogin] = useState<LoginPayLoad>({
@@ -39,38 +40,30 @@ const LoginForm = () => {
       message.success("Đăng nhập thành công");
       closeModal();
       return;
+    } else {
+      return message.error("Đăng nhập thất bại, vui lòng kiểm tra lại thông tin");
     }
   };
 
   return (
     <div className={styled["login-container"]}>
       <form onSubmit={handleSubmit} className={styled["login-form"]}>
-        <div className={styled["login-form__input-group"]}>
-          <label className={styled["login-form__label"]} htmlFor="email">
-            Email:
-          </label>
-          <input
-            type="text"
-            id="email"
-            name="email"
-            className={styled["login-form__input"]}
-            required
-            onChange={handleChangeValue}
-          />
-        </div>
-        <div className={styled["login-form__input-group"]}>
-          <label className={styled["login-form__label"]} htmlFor="password">
-            Password:
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            className={styled["login-form__input"]}
-            required
-            onChange={handleChangeValue}
-          />
-        </div>
+        <InputField
+          type="text"
+          id="email"
+          name="email"
+          label="Email"
+          required
+          onChange={handleChangeValue}
+        />
+        <InputField
+          type="password"
+          id="password"
+          name="password"
+          label="Password"
+          required
+          onChange={handleChangeValue}
+        />
         <button type="submit" className={styled["login-form__submit"]}>
           Đăng nhập
         </button>

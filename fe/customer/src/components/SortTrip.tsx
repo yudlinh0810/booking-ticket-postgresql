@@ -1,5 +1,5 @@
 import { Radio, RadioChangeEvent } from "antd";
-import styles from "../styles/sortTrip.module.scss";
+import styles from "../styles/components/sortTrip.module.scss";
 import { useEffect, useState } from "react";
 
 interface SortTripProps {

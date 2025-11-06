@@ -1,4 +1,4 @@
-@use "./mixin" as mix;
+@use "../mixin" as mix;
 
 .container-header {
   display: flex;
@@ -32,7 +32,7 @@
 
         .action__show-side-bar__icon {
           font-size: 1.5rem;
-          color: var(--white-bd);
+          color: var(--color-white-hex);
         }
       }
 
@@ -46,7 +46,7 @@
       display: flex;
       justify-content: center;
 
-      background-color: var(--white-bd);
+      background-color: var(--color-white-hex);
 
       border-radius: 0 0 10rem 10rem;
 
@@ -77,7 +77,7 @@
         padding: 0.5rem;
         border-radius: 2rem;
 
-        color: var(--black-bd);
+        color: var(--color-black-hex);
         font-weight: 400;
 
         .login-register__link-text {
@@ -110,8 +110,8 @@
         padding: 0.5rem;
         border-radius: 2rem;
 
-        background-color: var(--white-bd);
-        color: var(--black-bd);
+        background-color: var(--color-white-hex);
+        color: var(--color-black-hex);
         font-weight: 400;
 
         .user-actions__link-text {
@@ -141,17 +141,17 @@
 
         border-radius: 0.7rem;
 
-        background-color: var(--white-bd);
+        background-color: var(--color-white-hex);
 
         .item {
           padding: 0.5rem 1rem;
-          border-bottom: 1px solid var(--warning-bd);
+          border-bottom: 1px solid var(--color-warning-hex);
 
           cursor: pointer;
           transition: background-color 0.3s;
 
           .text {
-            color: var(--dark-bd);
+            color: var(--color-gray-900-hex);
             transition: all 0.3s;
           }
 
@@ -160,7 +160,7 @@
           }
 
           &:hover > .text {
-            color: var(--bright-blue-bd);
+            color: var(--bg-primary);
           }
         }
       }
@@ -179,7 +179,7 @@
           right: -0.4rem;
           border-left: 0.6rem solid transparent;
           border-right: 0.6rem solid transparent;
-          border-bottom: 0.6rem solid var(--white-bd);
+          border-bottom: 0.6rem solid var(--color-white-hex);
         }
       }
     }
@@ -218,7 +218,7 @@
 
             width: 0;
             height: 2px;
-            background-color: var(--white-bd);
+            background-color: var(--color-white-hex);
           }
           &:hover:after {
             width: 100%;
@@ -248,7 +248,7 @@
     max-width: 24rem;
     min-height: 100vh;
     padding: 1rem;
-    background-color: var(--white-bd);
+    background-color: var(--color-white-hex);
 
     transform: translateX(-100%);
     visibility: hidden;
@@ -268,7 +268,7 @@
     padding: 1rem;
     border-right: 1px solid #ddd;
 
-    background-color: var(--white-bd);
+    background-color: var(--color-white-hex);
 
     display: flex;
     flex-direction: column;
@@ -324,7 +324,7 @@
           display: flex;
 
           padding: 0.225rem;
-          border-bottom: 0.5px solid var(--primary-bd);
+          border-bottom: 0.5px solid var(--bg-primary);
 
           &:nth-last-child(1) {
             border: none;

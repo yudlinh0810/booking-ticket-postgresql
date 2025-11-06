@@ -1,27 +1,38 @@
 import React, { ReactNode } from "react";
 import { Modal } from "antd";
+import styles from "../styles/components/modal.module.scss";
 
 interface CustomModalProps {
   open: boolean;
   title: ReactNode;
   children: ReactNode;
-  onCancel: () => void;
   footer?: ReactNode[];
+  width?: number; // %
+  height?: number; // vh
+  onCancel: () => void;
 }
 
-const CustomModal: React.FC<CustomModalProps> = ({ open, title, children, onCancel }) => {
+const CustomModal: React.FC<CustomModalProps> = ({
+  open,
+  title,
+  children,
+  onCancel,
+  width = 80,
+  height = 90,
+}) => {
   return (
     <Modal
-      width={"fit-content"}
+      width={`${width}%`}
       open={open}
       title={title}
       onCancel={onCancel}
       footer={null}
       maskClosable={false}
-      // getContainer={false}
       centered
     >
-      {children}
+      <div className={styles["modal-content-scrollable"]} style={{ maxHeight: `${height}` }}>
+        {children}
+      </div>
     </Modal>
   );
 };

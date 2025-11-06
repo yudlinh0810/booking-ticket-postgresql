@@ -1,6 +1,6 @@
 import { FormEvent, useEffect, useState, useRef } from "react";
 import InputDropDownList from "./InputDropDownList";
-import styles from "../styles/searchTrip.module.scss";
+import styles from "../styles/components/searchTrip.module.scss";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRightLeft } from "@fortawesome/free-solid-svg-icons";
 import { getLocations } from "../services/trip.service";

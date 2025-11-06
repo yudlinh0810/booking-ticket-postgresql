@@ -1,5 +1,5 @@
 export interface UserInfo {
-  id?: number;
+  id: number;
 }
 export interface User extends UserInfo {
   email: string;

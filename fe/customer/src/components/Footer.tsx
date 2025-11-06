@@ -1,6 +1,6 @@
 import { faFacebook, faGithub, faYoutube } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import styled from "../styles/footer.module.scss";
+import styled from "../styles/components/footer.module.scss";
 import CustomLink from "./CustomLink";
 import LinkList from "./LinkList";
 

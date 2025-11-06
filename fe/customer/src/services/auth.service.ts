@@ -4,7 +4,7 @@ import { bookTicketAPI } from "./customizeAxios.service";
 
 export const loginUser = async (data: LoginPayLoad) => {
   try {
-    const response = await bookTicketAPI.post("/user/auth/customer/login", data);
+    const response = await bookTicketAPI.post("/users/auth/customer/login", data);
     return response.data;
   } catch (err) {
     message.error(err instanceof Error ? err.message : "Đăng nhập thất bại");
@@ -14,7 +14,7 @@ export const loginUser = async (data: LoginPayLoad) => {
 
 export const register = async (data: RegisterPayLoad) => {
   try {
-    const response = await bookTicketAPI.post("/customer/register", data);
+    const response = await bookTicketAPI.post("/customers", data);
     return response.data;
   } catch (err) {
     message.error(err instanceof Error ? err.message : "Đăng ký thất bại");
@@ -24,7 +24,7 @@ export const register = async (data: RegisterPayLoad) => {
 
 export const veriFyEmail = async (data: object) => {
   try {
-    const response = await bookTicketAPI.post("/customer/verify-email", data);
+    const response = await bookTicketAPI.post("/customers/verify-email", data);
     return response.data;
   } catch (err) {
     message.error(err instanceof Error ? err.message : "Xác thực email thất bại");
@@ -34,7 +34,7 @@ export const veriFyEmail = async (data: object) => {
 
 export const logoutCustomer = async () => {
   try {
-    const response = await bookTicketAPI.post("/user/auth/logout");
+    const response = await bookTicketAPI.post("/users/auth/logout");
     return response.data;
   } catch (err) {
     message.error(err instanceof Error ? err.message : "Đăng xuất thất bại");
@@ -44,7 +44,7 @@ export const logoutCustomer = async () => {
 
 export const getUserByEmail = async (email: string) => {
   try {
-    const response = await bookTicketAPI.post("/customer/get-detail-user-email", email);
+    const response = await bookTicketAPI.get("/customers/email", { data: email });
     return response.data;
   } catch (err) {
     message.error(err instanceof Error ? err.message : "Lấy thông tin người dùng thất bại");
@@ -52,9 +52,9 @@ export const getUserByEmail = async (email: string) => {
   }
 };
 
-export const updateDetailUser = async (data: FormData) => {
+export const updateDetailUser = async (id: number, data: FormData) => {
   try {
-    const response = await bookTicketAPI.post("/customer/update-detail-user", data);
+    const response = await bookTicketAPI.put(`/customers/${id}`, data);
     return response.data;
   } catch (err) {
     message.error(err instanceof Error ? err.message : "Cập nhật thông tin thất bại");
@@ -64,7 +64,7 @@ export const updateDetailUser = async (data: FormData) => {
 
 export const updateUserNoImage = async (data: object) => {
   try {
-    const response = await bookTicketAPI.post("/customer/update-no-image", data);
+    const response = await bookTicketAPI.put("/customers/no-image", data);
     return response.data;
   } catch (err) {
     message.error(err instanceof Error ? err.message : "Cập nhật thông tin thất bại");

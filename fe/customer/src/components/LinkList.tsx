@@ -1,5 +1,5 @@
 import CustomLink from "./CustomLink";
-import style from "../styles/linkList.module.scss";
+import style from "../styles/components/linkList.module.scss";
 import { LinkListProps } from "../types/props";
 const LinkList: React.FC<LinkListProps> = ({ linkList }) => {
   return (

@@ -1,7 +1,7 @@
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { memo, useEffect, useRef, useState } from "react";
-import styled from "../styles/inputDropDownList.module.scss";
+import styled from "../styles/components/inputDropDownList.module.scss";
 import { InputDropDownProps } from "../types/props";
 import { removeDiacritics } from "../utils/removeDiacritics";
 import DropDownList from "./DropDownList";

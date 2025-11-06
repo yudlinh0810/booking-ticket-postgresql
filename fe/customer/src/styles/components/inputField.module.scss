@@ -1,0 +1,40 @@
+.input-field-container {
+  position: relative;
+  display: block;
+  width: 100%;
+
+  .label {
+    position: absolute;
+
+    top: 25%;
+    left: 0.5rem;
+
+    padding: 0 0.25rem;
+
+    background-color: var(--color-white-hex);
+
+    transition: top 0.3s ease-in-out, left 0.3s ease-in-out;
+  }
+  .input {
+    width: 100%;
+    padding: 0.5rem;
+
+    border: 1px solid var(--color-gray-800-hex);
+    border-radius: 1rem 0.5rem 1rem 0.5rem;
+
+    outline: none;
+
+    transition: border 0.3s ease-in-out;
+
+    &:focus {
+      border: 1px solid var(--bg-primary);
+    }
+  }
+
+  &:focus-within .label, // khi đang focus
+  .input:not(:placeholder-shown) ~ .label {
+    // khi đã nhập
+    top: -0.75rem;
+    left: 0.5rem;
+  }
+}

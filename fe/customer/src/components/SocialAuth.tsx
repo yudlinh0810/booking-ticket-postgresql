@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import styled from "../styles/socialAuth.module.scss";
+import styled from "../styles/components/socialAuth.module.scss";
 
 const SocialAuth = () => {
   const [backendUrl, setBackendUrl] = useState<string>("");

@@ -8,8 +8,7 @@ import logo from "../assets/images/logo-booking-bus.png";
 import { logoutCustomer } from "../services/auth.service";
 import { useAuthModalStore } from "../store/authModalStore";
 import { useUserStore } from "../store/userStore";
-import styled from "../styles/header.module.scss";
-import { clearAccessToken } from "../utils/auth";
+import styled from "../styles/components/header.module.scss";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -33,7 +32,6 @@ const Header = () => {
     const response = await logoutCustomer();
     if (response && response.status === "OK") {
       logout();
-      clearAccessToken();
       setCollapsed(true);
       message.success("Đăng xuất thành công");
       navigate("/");

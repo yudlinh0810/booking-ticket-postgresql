@@ -1,4 +1,5 @@
-@use "./mixin" as mix;
+@use "../mixin" as mix;
+
 .footer-container {
   display: flex;
   justify-content: center;

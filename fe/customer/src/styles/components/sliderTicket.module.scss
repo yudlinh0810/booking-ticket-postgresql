@@ -1,0 +1,155 @@
+@use "../mixin" as mix;
+
+.swiper-container {
+  position: relative;
+  width: 100%;
+  padding: 0 5.5rem;
+
+  @include mix.responsive(mobile) {
+    padding: 0 1rem;
+  }
+
+  @include mix.responsive(tablet) {
+    padding: 0 3rem;
+  }
+}
+
+.custom-swiper {
+  width: 100%;
+}
+
+.custom-pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.6rem;
+}
+
+:global {
+  .swiper-pagination-bullet {
+    cursor: pointer;
+    background: var(--color-white-hex);
+    opacity: 1;
+
+    &:hover:not(.swiper-pagination-bullet-active) {
+      background: #5372f0;
+      transition: all 0.3s ease;
+    }
+
+    &-active {
+      width: 1.5rem;
+      border-radius: 0.5rem;
+      background: #5372f0;
+    }
+  }
+}
+
+.nav-buttons {
+  z-index: 2;
+  position: absolute;
+  top: 40%;
+
+  display: inline-flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 1rem;
+
+  transform: translateY(-50%);
+  margin-top: 1rem;
+
+  .nav-btn {
+    display: none;
+    position: absolute;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 1rem;
+
+    background: transparent;
+    font-size: 4rem;
+    color: var(--color-white-hex);
+
+    transition: color 0.3s ease;
+
+    @include mix.responsive(desktop) {
+      display: block;
+    }
+
+    &:hover {
+      color: var(--light-gray);
+    }
+
+    &.nav-prev {
+      left: -4rem;
+    }
+
+    &.nav-next {
+      right: 7rem;
+    }
+  }
+}
+
+.ticket-info__seats-wrapper {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+
+  padding-bottom: 3rem;
+
+  .ticket-info__seats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+
+    width: 40rem;
+
+    @include mix.responsive(mobile) {
+      flex-direction: column;
+      align-items: center;
+      width: 25rem;
+    }
+
+    .ticket-info__seat-item {
+      padding: 0.5rem;
+      border: 1px solid var(--bg-primary);
+      border-radius: 0.4rem;
+
+      @include mix.responsive(mobile) {
+      }
+
+      &__actions {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+
+        &-title {
+          font-weight: 600;
+          color: var(--blue-dark);
+        }
+      }
+
+      &__qr {
+        display: flex;
+        justify-content: center;
+        padding: 0.5rem 0;
+      }
+
+      &-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        &__detail {
+          display: flex;
+          justify-content: space-between;
+          gap: 6rem;
+
+          &__content {
+            color: var(--blue-dark);
+          }
+        }
+      }
+    }
+  }
+}

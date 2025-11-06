@@ -1,9 +1,9 @@
 .card {
-  border: 1px solid var(--primary-bd);
+  border: 1px solid var(--bg-primary);
   border-radius: 0.5rem;
   padding: 0.75rem;
   margin: 0.5rem 0;
-  background-color: var(--white-bd);
+  background-color: var(--color-white-hex);
 }
 
 .cardContent {
@@ -50,12 +50,12 @@
 
 .statusReady {
   background-color: #d4edda;
-  color: var(--success-bd);
+  color: var(--color-success-hex);
 }
 
 .statusNotReady {
   background-color: #f8d7da;
-  color: var(--danger-bd);
+  color: var(--color-danger-hex);
 }
 
 .detailBtn {
