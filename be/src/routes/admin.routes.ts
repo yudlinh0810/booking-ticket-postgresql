@@ -5,10 +5,13 @@ import { AdminController } from "../controllers/admin.controller";
 
 const route = express.Router();
 const adminController = new AdminController();
-
-route.post("/create", verifyAccessToken, authorizeRoles("admin"), adminController.create);
-route.put("/update/:id", verifyAccessToken, authorizeRoles("admin"), adminController.update);
-route.get("/get-all", verifyAccessToken, authorizeRoles("admin"), adminController.getAll);
-route.get("/get-detail/:id", verifyAccessToken, authorizeRoles("admin"), adminController.fetch);
+// Tạo mới
+route.post("/", verifyAccessToken, authorizeRoles("admin"), adminController.create);
+// Cập nhật
+route.put("/:id", verifyAccessToken, authorizeRoles("admin"), adminController.update);
+// Lấy danh sách tất cả
+route.get("/", verifyAccessToken, authorizeRoles("admin"), adminController.getAll);
+// Lấy chi tiết
+route.get("/:id", verifyAccessToken, authorizeRoles("admin"), adminController.fetch);
 
 export default route;

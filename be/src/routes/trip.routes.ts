@@ -7,10 +7,14 @@ const router = express.Router();
 const tripController = new TripController();
 
 router.get("/form-data", verifyAccessToken, authorizeRoles("admin"), tripController.getFormData);
-router.post("/add", verifyAccessToken, authorizeRoles("admin"), tripController.add);
-router.get("/get-all", verifyAccessToken, authorizeRoles("admin"), tripController.getAll);
-router.get("/get-detail/:id", verifyAccessToken, authorizeRoles("admin"), tripController.fetch);
-router.get("/search", tripController.search);
-router.get("/detail-booked", tripController.getDetailTripBooked);
+// Thêm mới
+router.post("/", verifyAccessToken, authorizeRoles("admin"), tripController.add);
+// Lấy danh sách tất cả
+router.get("/", verifyAccessToken, tripController.getAll);
+// Lấy chi tiết
+router.get("/:id", verifyAccessToken, tripController.fetch);
+router.post("/search", tripController.search);
+// Lấy chi tiết chuyến đi đã đặt
+router.get("/booked", tripController.getDetailTripBooked);
 
 export default router;

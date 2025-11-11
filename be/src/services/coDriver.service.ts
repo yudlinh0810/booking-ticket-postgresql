@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
-import { CloudinaryAsset } from "../@types/cloudinary";
+import { CloudinaryAsset } from "../@types/interface";
 import { ArrangeType } from "../@types/type";
 import { ModelCoDriver } from "../models/user";
 import { convertToVietnamTime } from "../utils/convertTime";

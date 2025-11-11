@@ -11,25 +11,31 @@ const router = express.Router();
 const driverController = new DriverController();
 const userController = new UserController();
 
-router.get("/get-all", verifyAccessToken, authorizeRoles("admin"), driverController.getAll);
-router.get("/get-detail/:id", verifyAccessToken, authorizeRoles("admin"), driverController.fetch);
+// Lấy danh sách tất cả
+router.get("/", verifyAccessToken, authorizeRoles("admin"), driverController.getAll);
+// Lấy chi tiết
+router.get("/:id", verifyAccessToken, authorizeRoles("admin"), driverController.fetch);
+// Tạo mới
 router.post(
-  "/create",
+  "/",
   verifyAccessToken,
   authorizeRoles("admin"),
   uploadImage,
   uploadImageToCloudinary,
   driverController.create
 );
-router.put("/update-info/:id", verifyAccessToken, authorizeRoles("admin"), driverController.update);
+// Cập nhật thông tin
+router.put("/:id", verifyAccessToken, authorizeRoles("admin"), driverController.update);
+// Cập nhật ảnh
 router.put(
-  "/update-img",
+  "/:id/image",
   verifyAccessToken,
   authorizeRoles("admin"),
   uploadImage,
   uploadImageToCloudinary,
   driverController.updateImage
 );
-router.delete("/delete/:id", verifyAccessToken, authorizeRoles("admin"), userController.delete);
+// Xóa
+router.delete("/:id", verifyAccessToken, authorizeRoles("admin"), userController.delete);
 
 export default router;

@@ -8,35 +8,35 @@ import { uploadImageToCloudinary } from "../middlewares/uploadHandler";
 const route = express.Router();
 const coDriverController = new CoDriverController();
 
+// Tạo mới
 route.post(
-  "/create",
+  "/",
   verifyAccessToken,
   authorizeRoles("admin"),
   uploadImage,
   uploadImageToCloudinary,
   coDriverController.create
 );
+// Cập nhật thông tin
+route.put("/:id", verifyAccessToken, authorizeRoles("admin"), coDriverController.update);
+// Cập nhật ảnh
 route.put(
-  "/update-info/:id",
-  verifyAccessToken,
-  authorizeRoles("admin"),
-  coDriverController.update
-);
-route.put(
-  "/update-img",
+  "/:id/image",
   verifyAccessToken,
   authorizeRoles("admin"),
   uploadImage,
   uploadImageToCloudinary,
   coDriverController.updateImage
 );
+// Lấy danh sách tất cả
 route.get(
-  "/get-all",
+  "/",
   // verifyAccessToken, authorizeRoles("admin"),
   coDriverController.getAll
 );
+// Lấy chi tiết
 route.get(
-  "/get-detail/:id",
+  "/:id",
   // verifyAccessToken, authorizeRoles("admin"),
   coDriverController.fetch
 );

@@ -4,20 +4,22 @@ import { authorizeRoles } from "../middlewares/auth.middleware";
 import payosController from "../controllers/payos.controller";
 const router = express.Router();
 
+// Tạo thanh toán
 router.post(
-  "/create-payment",
+  "/",
   verifyAccessToken,
   authorizeRoles("admin", "customer"),
   payosController.createPayment
 );
+// Lấy link thanh toán
 router.post(
-  "/get-payment-link",
+  "/link",
   verifyAccessToken,
   authorizeRoles("admin", "customer"),
   payosController.getPaymentLink
 );
-router.post(
-  "/cancel-payment-link",
+router.put(
+  "/link/cancel",
   verifyAccessToken,
   authorizeRoles("admin", "customer"),
   payosController.cancelPayment

@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { errorResponse, successResponse } from "../utils/response.util";
-import { RequestFile } from "../middlewares/uploadHandler";
-import { CloudinaryAsset } from "../@types/cloudinary";
+import { RequestWithUploadedImage, CloudinaryAsset } from "../@types/interface";
 import { ArrangeType } from "../@types/type";
 import { CustomerService } from "../services/customer.service";
 import { bookBusTicketsDB } from "../config/db";
@@ -273,7 +272,7 @@ export class CustomerController {
     }
   };
 
-  updateUser = async (req: RequestFile, res: Response): Promise<any> => {
+  updateUser = async (req: RequestWithUploadedImage, res: Response): Promise<any> => {
     try {
       const updateData = JSON.parse(req.body.data);
       const file = req.uploadedImage as CloudinaryAsset;
@@ -291,7 +290,7 @@ export class CustomerController {
     }
   };
 
-  updateImage = async (req: RequestFile, res: Response): Promise<any> => {
+  updateImage = async (req: RequestWithUploadedImage, res: Response): Promise<any> => {
     try {
       const id = Number(req.body.id);
       const file = req.uploadedImage as CloudinaryAsset;
@@ -327,7 +326,7 @@ export class CustomerController {
     }
   };
 
-  create = async (req: RequestFile, res: Response): Promise<any> => {
+  create = async (req: RequestWithUploadedImage, res: Response): Promise<any> => {
     try {
       const file = req.uploadedImage as CloudinaryAsset;
       const newCustomer = JSON.parse(req.body.data);

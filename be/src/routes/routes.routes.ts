@@ -18,20 +18,20 @@ import oAuth2 from "./oAuth2.route";
 
 const routes = (app: express.Application): void => {
   // Cấu hình routes
-  app.use("/api/user", userRouter);
-  app.use("/api/location", locationRouter);
-  app.use("/api/customer", customerRouter);
-  app.use("/api/bus", busRouter);
-  app.use("/api/driver", driverRoute);
-  app.use("/api/co-driver", coDriverRoute);
-  app.use("/api/admin", adminRoute);
-  app.use("/api/trip", tripRoute);
-  app.use("/api/promotion", promotionRoute);
-  app.use("/api/ticket", ticketRoute);
+  app.use("/api/users", userRouter);
+  app.use("/api/locations", locationRouter);
+  app.use("/api/customers", customerRouter);
+  app.use("/api/cars", busRouter);
+  app.use("/api/drivers", driverRoute);
+  app.use("/api/co-drivers", coDriverRoute);
+  app.use("/api/admins", adminRoute);
+  app.use("/api/trips", tripRoute);
+  app.use("/api/promotions", promotionRoute);
+  app.use("/api/tickets", ticketRoute);
   app.use("/api/payos", payOSRoute);
   app.use("/api/webhook", webhookPayOsRoute);
-  app.use("/api/statistical", statisticalRoute);
-  app.use("/api/revenue", revenueRoute);
+  app.use("/api/statisticals", statisticalRoute);
+  app.use("/api/revenues", revenueRoute);
   app.use("/auth", oAuth2);
 
   // Route cho các yêu cầu không tìm thấy

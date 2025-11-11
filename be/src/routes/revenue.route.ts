@@ -6,21 +6,21 @@ import revenueController from "../controllers/revenue.controller";
 const router = express.Router();
 
 router.get(
-  "/get-hour",
+  "/hourly",
   verifyAccessToken,
   authorizeRoles("admin"),
   revenueController.getHourlyRevenue
 );
 
 router.get(
-  "/get-month",
+  "/monthly",
   verifyAccessToken,
   authorizeRoles("admin"),
   revenueController.getMonthlyRevenue
 );
 
 router.get(
-  "/get-year",
+  "/yearly",
   verifyAccessToken,
   authorizeRoles("admin"),
   revenueController.getYearlyRevenue

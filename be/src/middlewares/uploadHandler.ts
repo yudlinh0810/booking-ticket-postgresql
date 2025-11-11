@@ -1,44 +1,41 @@
+// File Middleware đã đồng bộ
+
 import { Request, Response, NextFunction } from "express";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.util";
 import { uploadImages, uploadVideo } from "./multerConfig";
 import deleteOldFile from "../utils/deleteOldFile.util";
-import { getCloudinaryFolder } from "../utils/getCloudinaryFolder.util";
 import { validateFile } from "../utils/validateFile.util";
 import { UploadApiResponse } from "cloudinary";
-import { CloudinaryAsset } from "../@types/cloudinary";
+import {
+  CloudinaryAsset,
+  RequestWithFileMetadata,
+  RequestWithProcessedFiles,
+  RequestWithUploadedImage,
+} from "../@types/interface";
+// Đã thay thế các interface cũ bằng tên mới từ interfaces.ts
 
-export interface RequestFile extends Request {
-  uploadedImage: CloudinaryAsset;
-}
+// Lưu ý: Các interface RequestFile và RequestWithFile đã được thay thế.
+// Đổi tên các interface trong các hàm:
 
-interface RequestWithFile extends Request {
-  file?: Express.Multer.File & { cloudinaryFile?: CloudinaryAsset };
-}
-
-export interface UploadedFile extends Express.Multer.File {
-  cloudinaryImages?: CloudinaryAsset;
-}
-
-export interface RequestWithProcessedFiles extends Request {
-  processedFiles: CloudinaryAsset[];
-  processedFile: CloudinaryAsset;
-}
-
-const uploadVideoToCloudinary = async (req: RequestWithFile, res: Response, next: NextFunction) => {
+const uploadVideoToCloudinary = async (
+  req: RequestWithFileMetadata,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ message: "No file uploaded" });
+      res.status(400).json({ message: "No file uploaded" });
     }
 
     let bodyData;
     try {
       bodyData = JSON.parse(req.body?.data || "{}");
     } catch (error) {
-      return res.status(400).json({ message: "Invalid JSON data format" });
+      res.status(400).json({ message: "Invalid JSON data format" });
     }
 
     const { id, public_video_id } = bodyData;
-    if (!id) return res.status(400).json({ message: "Missing Trip id" });
+    if (!id) res.status(400).json({ message: "Missing Trip id" });
 
     const folder = `booking-ticket/bus/trip/${id}`;
 
@@ -59,7 +56,8 @@ const uploadVideoToCloudinary = async (req: RequestWithFile, res: Response, next
     req.file.cloudinaryFile = {
       public_id: uploadResult.public_id,
       secure_url: uploadResult.secure_url,
-    };
+      // Cần thêm các thuộc tính khác để đồng bộ với CloudinaryAsset nếu cần
+    } as CloudinaryAsset; // Ép kiểu tường minh
 
     next();
   } catch (error) {
@@ -84,23 +82,26 @@ const uploadImagesToCloudinary = async (
     const folder = "book-bus-ticket/images/car";
     const allowedFormats = ["png", "jpg", "jpeg"];
 
-    // Upload all images in parallel
-    const uploadImages = await Promise.all(
-      files.map(async (file, index) => {
-        if (!validateFile(file.originalname, "image")) {
-          throw new Error(
-            `Invalid file format: ${file.originalname}. Only jpg, png, jpeg are allowed.`
-          );
-        }
+    const validFiles = files.filter((file) => validateFile(file.originalname, "image"));
 
+    if (validFiles.length !== files.length) {
+      console.warn("Some files were ignored due to invalid format.");
+      res.status(400).json({ message: "Some files have invalid format" });
+      return;
+    }
+
+    if (validFiles.length === 0) {
+      console.warn("Some files were ignored due to invalid format.");
+    }
+
+    const uploadImages = await Promise.all(
+      validFiles.map(async (file, index) => {
         const result = await uploadToCloudinary(file.buffer, folder, allowedFormats, "image");
 
         return {
-          secure_url: result.secure_url,
-          public_id: result.public_id,
-          asset_id: result.asset_id,
+          ...result, // Sử dụng spread operator để lấy tất cả thuộc tính
           originIndex: index,
-        };
+        } as CloudinaryAsset; // Ép kiểu tường minh
       })
     );
 
@@ -116,7 +117,11 @@ const uploadImagesToCloudinary = async (
   }
 };
 
-const uploadImageToCloudinary = async (req: RequestFile, res: Response, next: NextFunction) => {
+const uploadImageToCloudinary = async (
+  req: RequestWithUploadedImage,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     if (!req.file) {
       return next();
@@ -140,9 +145,10 @@ const uploadImageToCloudinary = async (req: RequestFile, res: Response, next: Ne
       "image"
     );
 
-    req.uploadedImage = result;
+    // Gán kết quả upload (đã là UploadApiResponse, kế thừa CloudinaryAsset)
+    req.uploadedImage = result as CloudinaryAsset;
 
-    next();
+    return next();
   } catch (error) {
     console.error("Upload Images error:", error);
     res.status(500).json({ message: "Error uploading images to Cloudinary" });

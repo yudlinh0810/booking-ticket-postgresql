@@ -6,7 +6,7 @@ import statisticalController from "../controllers/statistical.controller";
 const router = express.Router();
 
 router.get(
-  "/get-stats",
+  "/",
   verifyAccessToken,
   authorizeRoles("admin"),
   statisticalController.getDashboardSummary

@@ -26,6 +26,20 @@ router.get(
 );
 
 router.get("/success", (req, res) => {
+  const accessToken = req.user?.access_token;
+  const refreshToken = req.user?.refresh_token;
+
+  console.log("--- Auth /success Log ---");
+  console.log("Access Token is defined:", !!accessToken);
+  console.log("Refresh Token is defined:", !!refreshToken);
+  console.log("-------------------------");
+
+  if (!accessToken || !refreshToken) {
+    // Log rõ ràng nếu token bị thiếu
+    console.error("Redirecting to failure: Missing token in req.user");
+    return res.redirect("/auth/failure");
+  }
+  //
   res.cookie("access_token", req.user?.access_token, {
     httpOnly: true,
     secure: true,
@@ -41,10 +55,12 @@ router.get("/success", (req, res) => {
   });
 
   res.redirect("http://localhost:5173/?login=success");
+  // res.redirect(`${process.env.URL_FRONTEND_CLIENT}/?login=success`);
 });
 
 router.get("/failure", (req, res) => {
   res.redirect("http://localhost:5173/?login=failed&reason=oauth-failed");
+  // res.redirect(`${process.env.URL_FRONTEND_CLIENT}/?login=failed&reason=oauth-failed`);
 });
 
 export default router;

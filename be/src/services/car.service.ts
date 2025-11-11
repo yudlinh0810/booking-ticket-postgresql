@@ -1,5 +1,5 @@
 import { Car, CarType, Image } from "../@types/car.type";
-import { CloudinaryAsset } from "../@types/cloudinary";
+import { CloudinaryAsset } from "../@types/interface";
 import { ResultSetHeader } from "mysql2";
 import deleteOldFile from "../utils/deleteOldFile.util";
 import { ArrangeType } from "../@types/type";

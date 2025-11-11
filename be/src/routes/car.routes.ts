@@ -1,5 +1,4 @@
 import express from "express";
-
 import {
   uploadImages,
   uploadImagesToCloudinary,
@@ -13,69 +12,60 @@ import { CarController } from "../controllers/car.controller";
 const carRouter = express.Router();
 const carController = new CarController();
 
+// Thêm xe mới
 carRouter.post(
-  "/add",
+  "/", // Thay vì /add
   verifyAccessToken,
   authorizeRoles("admin"),
-  // validateCreateCar,
-  // validateCreateCarMiddleware,
   uploadImages,
   uploadImagesToCloudinary,
   carController.addCar
 );
+// Cập nhật thông tin xe
 carRouter.put(
-  "/update",
+  "/:id", // Thay vì /update. Giả định bạn truyền ID qua body hoặc /:id
   verifyAccessToken,
   authorizeRoles("admin"),
-  // validateUpdateCar,
-  // validateUpdateCarMiddleware,
   uploadImages,
   uploadImagesToCloudinary,
   carController.updateCar
 );
-carRouter.put(
-  "/image/update",
+// Thêm ảnh của xe
+carRouter.post(
+  "/:id/image",
   verifyAccessToken,
   authorizeRoles("admin"),
   uploadImage,
   uploadImageToCloudinary,
   carController.updateImgCar
 );
+// Cập nhật ảnh của xe
+carRouter.put(
+  "/:id/image",
+  verifyAccessToken,
+  authorizeRoles("admin"),
+  uploadImage,
+  uploadImageToCloudinary,
+  carController.updateImgCar
+);
+// Xóa ảnh của xe
 carRouter.delete(
-  "/image/delete",
+  "/:id/image",
   verifyAccessToken,
   authorizeRoles("admin"),
   carController.deleteImgCar
 );
-carRouter.delete(
-  "/delete/:id",
-  verifyAccessToken,
-  authorizeRoles("admin"),
-  carController.deleteCar
-);
-carRouter.get("/get-all", verifyAccessToken, authorizeRoles("admin"), carController.getAllCar);
+// Xóa xe
+carRouter.delete("/:id", verifyAccessToken, authorizeRoles("admin"), carController.deleteCar);
+// Lấy danh sách tất cả xe
+carRouter.get("/", verifyAccessToken, authorizeRoles("admin"), carController.getAllCar);
 
+// Lấy chi tiết theo biển số
 carRouter.get(
-  "/detail/:licensePlate",
+  "/license-plate/:licensePlate",
   verifyAccessToken,
   authorizeRoles("admin", "customer"),
   carController.getCarByLicensePlate
 );
-
-// carRouter.get("/get", async (req, res) => {
-//   try {
-//     const client = await pool.connect();
-//     const result = await client.query("SELECT NOW()"); // Kiểm tra kết nối bằng truy vấn thời gian hiện tại
-//     client.release();
-
-//     res.json({
-//       message: "Connected to PostgreSQL!",
-//       serverTime: result.rows[0].now,
-//     });
-//   } catch (err) {
-//     console.error("Connection error:", err);
-//     res.status(500).json({ message: "Database connection failed", error: err });
-//   }
-// });
 
 export default carRouter;

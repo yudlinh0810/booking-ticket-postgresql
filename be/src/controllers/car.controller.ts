@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { errorResponse, successResponse } from "../utils/response.util";
-import { RequestWithProcessedFiles, RequestFile } from "../middlewares/uploadHandler";
+import { RequestWithProcessedFiles, RequestWithUploadedImage } from "../@types/interface";
 import { bookBusTicketsDB } from "../config/db";
 import { CarService } from "../services/car.service";
 import { ArrangeType } from "../@types/type";
@@ -92,7 +92,7 @@ export class CarController {
     }
   };
 
-  updateImgCar = async (req: RequestFile, res: Response): Promise<any> => {
+  updateImgCar = async (req: RequestWithUploadedImage, res: Response): Promise<any> => {
     try {
       const data = JSON.parse(req.body.data);
       const result = await this.carService.updateImgCar(data, req.uploadedImage);

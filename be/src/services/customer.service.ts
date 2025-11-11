@@ -3,7 +3,7 @@ import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
 import otpGenerator from "otp-generator";
 import { bookBusTicketsDB } from "../config/db";
 import { sendOtpEmail } from "./email.service";
-import { CloudinaryAsset } from "../@types/cloudinary";
+import { CloudinaryAsset } from "../@types/interface";
 import { ArrangeType, UserRegister } from "../@types/type";
 import { ModelCustomer } from "../models/user";
 import deleteOldFile from "../utils/deleteOldFile.util";
