@@ -5,12 +5,18 @@ import { redisClient } from "../config/redis";
 dotenv.config();
 
 // Tạo Access Token
-export const generalAccessToken = ({ id, role }: { id: string; role: string }): string => {
+export const generalAccessToken = ({ id, role }: { id: string | number; role: string }): string => {
   return jwt.sign({ id, role }, process.env.ACCESS_TOKEN, { expiresIn: "1h" });
 };
 
 // Tạo Refresh Token
-export const generalRefreshToken = ({ id, role }: { id: string; role: string }): string => {
+export const generalRefreshToken = ({
+  id,
+  role,
+}: {
+  id: string | number;
+  role: string;
+}): string => {
   return jwt.sign({ id, role }, process.env.REFRESH_TOKEN, { expiresIn: "7d" });
 };
 
@@ -70,7 +76,7 @@ export const verifyRefreshToken = (
   token: string
 ): Promise<
   | {
-      id?: string; //email
+      id?: number; //id
       access_token: string;
       expirationTime: number;
     }
@@ -78,7 +84,7 @@ export const verifyRefreshToken = (
 > => {
   return new Promise(async (resolve) => {
     const decoded = jwt.verify(token, process.env.REFRESH_TOKEN as string) as {
-      id: string; //email
+      id: number; //id
       role: "customer" | "admin" | "driver" | "co-driver";
     };
 

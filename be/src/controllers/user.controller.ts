@@ -5,6 +5,8 @@ import { errorResponse, successResponse } from "../utils/response.util";
 import { verifyRefreshToken } from "../services/auth.service";
 import testEmail from "../utils/testEmail";
 import { redisClient } from "../config/redis";
+import { CloudinaryAsset, RequestWithUploadedImage } from "../@types/interface";
+import { UpdateUserMapper } from "../dto/user";
 
 export class UserController {
   private userService = new UserService(bookBusTicketsDB);
@@ -270,6 +272,7 @@ export class UserController {
       return errorResponse(res, "ERR Controller.logout", 500);
     }
   };
+
   getUserDetail = async (req: Request, res: Response): Promise<any> => {
     try {
       const userId = req.user?.id;
@@ -281,6 +284,29 @@ export class UserController {
     } catch (error) {
       console.log("Controller", error);
       return errorResponse(res, "ERR Controller.getUserDetail", 500);
+    }
+  };
+
+  updateUserByRole = async (req: RequestWithUploadedImage, res: Response): Promise<any> => {
+    try {
+      let updateData = JSON.parse(req.body.data);
+      const id = Number(req.params.id),
+        newAvatar = req.uploadedImage as CloudinaryAsset;
+
+      const result = await this.userService.updateUserByRole(
+        id,
+        updateData.role,
+        updateData,
+        newAvatar
+      );
+      if (result.status === "OK") {
+        return successResponse(res, 200, result);
+      } else {
+        return errorResponse(res, result.status, 404);
+      }
+    } catch (error) {
+      console.log("Err Controller", error);
+      return errorResponse(res, "ERR Controller.update", 500);
     }
   };
 }

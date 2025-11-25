@@ -14,7 +14,7 @@ export const uploadToCloudinary = async (
   return new Promise<cloudinary.UploadApiResponse>((resolve, reject) => {
     const stream = cloudinary.v2.uploader.upload_stream(
       {
-        folder: folder,
+        folder: `book-bus-tickets/${folder}`,
         allowed_formats: allowedFormats,
         resource_type: typeFile,
         transformation:

@@ -29,13 +29,7 @@ router.get("/success", (req, res) => {
   const accessToken = req.user?.access_token;
   const refreshToken = req.user?.refresh_token;
 
-  console.log("--- Auth /success Log ---");
-  console.log("Access Token is defined:", !!accessToken);
-  console.log("Refresh Token is defined:", !!refreshToken);
-  console.log("-------------------------");
-
   if (!accessToken || !refreshToken) {
-    // Log rõ ràng nếu token bị thiếu
     console.error("Redirecting to failure: Missing token in req.user");
     return res.redirect("/auth/failure");
   }

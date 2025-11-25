@@ -21,7 +21,7 @@ passport.use(
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
-        const customer = await customerService.loginOAuthWithGoogle(profile, "google");
+        const customer = await customerService.loginOAuthWithGoogle(profile);
 
         if (customer.status !== "OK") {
           done(null, false, { message: "User not found" });

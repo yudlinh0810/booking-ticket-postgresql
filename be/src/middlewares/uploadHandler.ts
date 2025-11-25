@@ -1,6 +1,6 @@
 // File Middleware đã đồng bộ
 
-import { Request, Response, NextFunction } from "express";
+import { Response, NextFunction } from "express";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.util";
 import { uploadImages, uploadVideo } from "./multerConfig";
 import deleteOldFile from "../utils/deleteOldFile.util";
@@ -12,10 +12,6 @@ import {
   RequestWithProcessedFiles,
   RequestWithUploadedImage,
 } from "../@types/interface";
-// Đã thay thế các interface cũ bằng tên mới từ interfaces.ts
-
-// Lưu ý: Các interface RequestFile và RequestWithFile đã được thay thế.
-// Đổi tên các interface trong các hàm:
 
 const uploadVideoToCloudinary = async (
   req: RequestWithFileMetadata,
@@ -52,11 +48,9 @@ const uploadVideoToCloudinary = async (
       await deleteOldFile(public_video_id, "video");
     }
 
-    // Assign data to req
     req.file.cloudinaryFile = {
       public_id: uploadResult.public_id,
       secure_url: uploadResult.secure_url,
-      // Cần thêm các thuộc tính khác để đồng bộ với CloudinaryAsset nếu cần
     } as CloudinaryAsset; // Ép kiểu tường minh
 
     next();
@@ -99,7 +93,7 @@ const uploadImagesToCloudinary = async (
         const result = await uploadToCloudinary(file.buffer, folder, allowedFormats, "image");
 
         return {
-          ...result, // Sử dụng spread operator để lấy tất cả thuộc tính
+          ...result,
           originIndex: index,
         } as CloudinaryAsset; // Ép kiểu tường minh
       })
@@ -127,8 +121,9 @@ const uploadImageToCloudinary = async (
       return next();
     }
     let file = req.file as Express.Multer.File;
+    const { id, role } = req.user;
 
-    const folder = "book-bus-ticket/images/avatar";
+    const folder = `images/${role}s/avatar/${id}`;
 
     const allowedFormats = ["png", "jpg", "jpeg"];
 

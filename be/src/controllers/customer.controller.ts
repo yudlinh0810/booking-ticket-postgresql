@@ -227,6 +227,16 @@ export class CustomerController {
     }
   };
 
+  fetchMe = async (req: Request, res: Response): Promise<any> => {
+    const id = Number(req.user.id);
+    try {
+      const result = await this.customerService.fetchMe(id);
+      return successResponse(res, 200, result);
+    } catch (error) {
+      return errorResponse(res, "ERR Controller.fetchMe", 500);
+    }
+  };
+
   fetch = async (req: Request, res: Response): Promise<any> => {
     const id = Number(req.params.id);
     try {
@@ -244,64 +254,6 @@ export class CustomerController {
       return successResponse(res, 200, result);
     } catch (error) {
       return errorResponse(res, "ERR Controller.getDetailUserByEmail", 500);
-    }
-  };
-
-  update = async (req: Request, res: Response): Promise<any> => {
-    try {
-      const id = Number(req.params.id);
-      if (!id) return errorResponse(res, "id is required", 404);
-
-      const updateData = req.body;
-      const result = await this.customerService.update(id, updateData);
-      return successResponse(res, 200, result);
-    } catch (error) {
-      console.log("Err Controller", error);
-      return errorResponse(res, "ERR Controller.update", 500);
-    }
-  };
-
-  updateNoImage = async (req: Request, res: Response): Promise<any> => {
-    try {
-      const updateData = req.body;
-      const result = await this.customerService.updateNoImage(updateData);
-      return successResponse(res, 200, result);
-    } catch (error) {
-      console.log("Err Controller", error);
-      return errorResponse(res, "ERR Controller.update", 500);
-    }
-  };
-
-  updateUser = async (req: RequestWithUploadedImage, res: Response): Promise<any> => {
-    try {
-      const updateData = JSON.parse(req.body.data);
-      const file = req.uploadedImage as CloudinaryAsset;
-      const publicId = req.body.publicId;
-
-      const result = await this.customerService.updateUser(updateData, publicId, file);
-      if (result.status === "ERR") {
-        return errorResponse(res, result.message, 404);
-      } else {
-        return successResponse(res, 200, result);
-      }
-    } catch (error) {
-      console.log("Err Controller", error);
-      return errorResponse(res, "ERR Controller.update", 500);
-    }
-  };
-
-  updateImage = async (req: RequestWithUploadedImage, res: Response): Promise<any> => {
-    try {
-      const id = Number(req.body.id);
-      const file = req.uploadedImage as CloudinaryAsset;
-      const publicId = req.body.publicId;
-      if (!id) return errorResponse(res, "id is required", 404);
-
-      const result = await this.customerService.updateImage(id, publicId, file);
-      return successResponse(res, 200, result);
-    } catch (error) {
-      console.log("Err Controller", error);
-      return errorResponse(res, "ERR Controller.updateImage", 500);
     }
   };
 
