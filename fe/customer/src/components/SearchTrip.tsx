@@ -28,7 +28,7 @@ const SearchTrip: React.FC<SearchTripProps> = ({ valueSearchIn }) => {
   const { data: locationData, isLoading: isLocationsLoading } = useQuery({
     queryKey: ["locations"],
     queryFn: () => getLocations(),
-    staleTime: 60 * 60 * 1000,
+    staleTime: 24 * 60 * 60 * 1000,
   });
 
   const [searchValue, setSearchValue] = useState<SearchTripType>({

@@ -1,0 +1,20 @@
+.button {
+  width: clamp(10rem, 100%, 30rem);
+  border: 1px solid var(--color-primary-hex);
+  border-radius: 1rem 0.5rem 1rem 0.5rem;
+  padding: 0.75rem;
+
+  font-size: 1.1rem;
+  font-weight: 500;
+
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    background-color: var(--bg-primary);
+    color: var(--text-on-primary);
+
+    border-radius: 0.5rem 1rem 0.5rem 1rem;
+
+    cursor: pointer;
+  }
+}

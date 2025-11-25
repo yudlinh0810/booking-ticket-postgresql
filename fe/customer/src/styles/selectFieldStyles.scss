@@ -1,0 +1,51 @@
+.select-field-container {
+  position: relative;
+  display: block;
+  width: clamp(10rem, 100%, 40rem);
+
+  .label {
+    position: absolute;
+    top: -0.75rem;
+    left: 0.5rem;
+    padding: 0 0.25rem;
+    background-color: var(--bg-page);
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    font-weight: 300;
+    z-index: 2;
+  }
+}
+
+.antd-select-override {
+  height: 2.8rem;
+  width: 100%;
+
+  .ant-select-selector {
+    border: 1px solid var(--color-gray-800-hex) !important;
+    border-radius: 1rem 0.5rem 1rem 0.5rem !important;
+    background-color: var(--bg-surface) !important;
+
+    padding: 0.5rem 2.5rem 0.5rem 0.75rem !important;
+    height: auto !important;
+    min-height: 40px !important;
+
+    .ant-select-selection-item,
+    .ant-select-selection-placeholder {
+      color: var(--text-primary) !important;
+    }
+  }
+
+  // Hiệu ứng Focus/Hover
+  // Khi focus
+  &.ant-select-focused:not(.ant-select-disabled) .ant-select-selector {
+    border-color: var(--color-primary-hex) !important;
+
+    box-shadow: 0 0 0 0.15rem rgba(var(--color-primary-rgb), 0.25) !important;
+    outline: none;
+  }
+
+  // Khi hover
+  &:hover:not(.ant-select-disabled) .ant-select-selector {
+    border-color: var(--color-primary-hex) !important;
+  }
+}

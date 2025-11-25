@@ -82,6 +82,7 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({ data }) => {
                       id="totalPrice"
                     >
                       {formatCurrency(data.reduce((sum, tk) => sum + Number(tk.price), 0))}
+                      <sup>vnd</sup>
                     </strong>
                   </div>
                   <div className={styles["ticket-info__payment-detail"]}>

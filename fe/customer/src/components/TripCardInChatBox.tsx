@@ -41,6 +41,7 @@ const TripCardInChatBox = ({ trip }: { trip: TripData }) => {
 
           <p className={styles.text}>
             <strong>Giá mỗi ghế:</strong> {formatCurrency(trip.price)}
+            <sup>vnd</sup>
           </p>
 
           <div className={styles.status}>

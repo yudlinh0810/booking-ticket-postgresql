@@ -1,12 +1,12 @@
+import { message } from "antd";
 import { useState } from "react";
+import { loginUser } from "../services/auth.service";
+import { useAuthModalStore } from "../store/authModalStore";
+import { useUserStore } from "../store/userStore";
 import styled from "../styles/components/loginForm.module.scss";
 import { LoginPayLoad } from "../types";
-import { loginUser } from "../services/auth.service";
-import { useUserStore } from "../store/userStore";
-import { useAuthModalStore } from "../store/authModalStore";
+import InputField from "./InputFileld";
 import SocialAuth from "./SocialAuth";
-import { message } from "antd";
-import InputField from "./InputFiled";
 
 const LoginForm = () => {
   const [dataLogin, setDataLogin] = useState<LoginPayLoad>({
@@ -31,11 +31,12 @@ const LoginForm = () => {
       setUser({
         id: result?.data?.id,
         email: result?.data?.email,
-        fullName: result?.data?.fullName,
-        dateBirth: result?.data?.dateBirth,
+        first_name: result?.data?.first_name,
+        last_name: result?.data?.last_name,
+        date_birth: result?.data?.date_birth,
         phone: result?.data?.phone,
         address: result?.data?.address,
-        avatar: result?.data?.urlImg,
+        avatar: result?.data?.url_img,
       });
       message.success("Đăng nhập thành công");
       closeModal();
@@ -54,6 +55,7 @@ const LoginForm = () => {
           name="email"
           label="Email"
           required
+          value={dataLogin.email}
           onChange={handleChangeValue}
         />
         <InputField
@@ -61,6 +63,7 @@ const LoginForm = () => {
           id="password"
           name="password"
           label="Password"
+          value={dataLogin.password}
           required
           onChange={handleChangeValue}
         />

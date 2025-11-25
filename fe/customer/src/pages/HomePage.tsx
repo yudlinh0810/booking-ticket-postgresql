@@ -8,8 +8,7 @@ import { fetchUserDetail } from "../services/userServices.service";
 import { useAuthModalStore } from "../store/authModalStore";
 import { useUserStore } from "../store/userStore";
 import styles from "../styles/pages/homePage.module.scss";
-import PaymentSuccess from "../components/PaymentSuccess";
-import CustomModal from "../components/CustomModal";
+
 const HomePage = () => {
   const [params, setParams] = useSearchParams();
   const { openModal } = useAuthModalStore();
@@ -40,7 +39,8 @@ const HomePage = () => {
           setUser({
             id: getUser.id,
             email: getUser.email,
-            fullName: getUser.fullName,
+            first_name: getUser.first_name,
+            last_name: getUser.last_name,
           });
         } catch (error) {
           console.error("fetchUser failed immediately after OAuth:", error);
@@ -54,99 +54,6 @@ const HomePage = () => {
     };
     fetchAndSetUser();
   }, []);
-
-  const mock = [
-    {
-      id: 1001,
-      customerId: 501,
-      email: "nguyenlinh@example.com",
-      fullName: "Nguyễn Văn Linh",
-      phone: "0987654321",
-      tripName: "Đà Nẵng - Huế",
-      startTime: "2025-11-10T08:30:00Z",
-      departure: "Đà Nẵng",
-      arrival: "Huế",
-      seatPosition: "A12",
-      paymentStatus: "paid",
-      paymentMethod: "Banking",
-      price: 250000,
-    },
-    {
-      id: 1002,
-      customerId: 501,
-      email: "nguyenlinh@example.com",
-      fullName: "Nguyễn Văn Linh",
-      phone: "0987654321",
-      tripName: "Đà Nẵng - Huế",
-      startTime: "2025-11-10T08:30:00Z",
-      departure: "Đà Nẵng",
-      arrival: "Huế",
-      seatPosition: "A13",
-      paymentStatus: "paid",
-      paymentMethod: "Banking",
-      price: 250000,
-    },
-    {
-      id: 1003,
-      customerId: 501,
-      email: "nguyenlinh@example.com",
-      fullName: "Nguyễn Văn Linh",
-      phone: "0987654321",
-      tripName: "Đà Nẵng - Huế",
-      startTime: "2025-11-10T08:30:00Z",
-      departure: "Đà Nẵng",
-      arrival: "Huế",
-      seatPosition: "A13",
-      paymentStatus: "paid",
-      paymentMethod: "Banking",
-      price: 250000,
-    },
-    {
-      id: 1004,
-      customerId: 501,
-      email: "nguyenlinh@example.com",
-      fullName: "Nguyễn Văn Linh",
-      phone: "0987654321",
-      tripName: "Đà Nẵng - Huế",
-      startTime: "2025-11-10T08:30:00Z",
-      departure: "Đà Nẵng",
-      arrival: "Huế",
-      seatPosition: "A13",
-      paymentStatus: "paid",
-      paymentMethod: "Banking",
-      price: 250000,
-    },
-    {
-      id: 1004,
-      customerId: 501,
-      email: "nguyenlinh@example.com",
-      fullName: "Nguyễn Văn Linh",
-      phone: "0987654321",
-      tripName: "Đà Nẵng - Huế",
-      startTime: "2025-11-10T08:30:00Z",
-      departure: "Đà Nẵng",
-      arrival: "Huế",
-      seatPosition: "A13",
-      paymentStatus: "paid",
-      paymentMethod: "Banking",
-      price: 250000,
-    },
-    {
-      id: 1004,
-      customerId: 501,
-      email: "nguyenlinh@example.com",
-      fullName: "Nguyễn Văn Linh",
-      phone: "0987654321",
-      tripName: "Đà Nẵng - Huế",
-      startTime: "2025-11-10T08:30:00Z",
-      departure: "Đà Nẵng",
-      arrival: "Huế",
-      seatPosition: "A13",
-      paymentStatus: "paid",
-      paymentMethod: "Banking",
-      price: 250000,
-    },
-  ];
 
   return (
     <div className={styles["homepage-container"]}>
@@ -163,9 +70,6 @@ const HomePage = () => {
       <Slider sliderArray={sliderData} delay={4000} />
       <Slider sliderArray={sliderData} delay={3000} swiperWidth={20} />
       <Slider sliderArray={sliderData} delay={1000} />
-      <CustomModal title="" onCancel={() => null} open={true}>
-        <PaymentSuccess data={mock} />
-      </CustomModal>
     </div>
   );
 };

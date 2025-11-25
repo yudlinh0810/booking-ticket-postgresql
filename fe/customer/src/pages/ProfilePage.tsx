@@ -1,19 +1,31 @@
-import { useEffect, useState } from "react";
-import styles from "../styles/pages/profilePage.module.scss";
-import { useUserStore } from "../store/userStore";
-import { User } from "../types/user";
+import dayjs from "dayjs";
+import moment from "moment";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
-import { updateDetailUser, updateUserNoImage } from "../services/auth.service";
-import moment from "moment";
-import dayjs from "dayjs";
+import ButtonField from "../components/ButtonField";
 import DateInput from "../components/DateInput";
-import { fetchUserDetail } from "../services/userServices.service";
+import InputField from "../components/InputFileld";
+import SelectField from "../components/SelectField";
 import { useFilePreview } from "../hooks/useFilePreview";
+import { fetchUserDetail, updateUser } from "../services/userServices.service";
+import { useUserStore } from "../store/userStore";
+import { useUiStore } from "../store/useUIStore";
+import styles from "../styles/pages/profilePage.module.scss";
+import { User } from "../types/user";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
+
+const sexOptions = [
+  { value: "male", label: "Nam" },
+  { value: "female", label: "Nữ" },
+  { value: "other", label: "Khác" },
+];
 
 const ProfilePage = () => {
   const navigate = useNavigate();
   const { user, setUser } = useUserStore();
+  const { isLoading, setLoading } = useUiStore();
 
   const [fileAvatar, setFileAvatar] = useState<File | null>(null);
 
@@ -22,11 +34,12 @@ const ProfilePage = () => {
   const [serverAvatarUrl, setServerAvatarUrl] = useState<string>(user?.avatar || "");
 
   const [dataUser, setDataUser] = useState<Partial<User>>({
-    fullName: "",
     email: "",
+    first_name: "",
+    last_name: "",
     phone: "",
     avatar: "",
-    dateBirth: new Date().toISOString().split("T")[0],
+    date_birth: new Date().toISOString().split("T")[0],
     sex: "male",
     address: "",
   });
@@ -35,26 +48,28 @@ const ProfilePage = () => {
 
   useEffect(() => {
     document.title = "Trang cá nhân";
-    if (user) {
+    if (user && user.id) {
       handleProfile();
-    } else {
-      navigate("/login");
+    } else if (user === null) {
+      navigate("/");
     }
-  }, [user, navigate]);
+  }, [user]);
 
   const handleProfile = async () => {
     const detailUser = await fetchUserDetail();
-    const formattedDate = moment(user?.dateBirth).format("YYYY-MM-DD");
+    const formattedDate = moment(detailUser?.date_birth).format("YYYY-MM-DD");
 
-    if (detailUser?.urlImg) {
-      setServerAvatarUrl(detailUser.urlImg);
+    if (detailUser?.url_img) {
+      console.log("Server URL:", detailUser.url_img);
+      setServerAvatarUrl(detailUser.url_img);
     }
 
     setDataUser({
-      fullName: detailUser?.fullName || "",
       email: user?.email || "",
+      first_name: detailUser?.first_name || "",
+      last_name: detailUser?.last_name || "",
       phone: detailUser?.phone || "",
-      dateBirth: formattedDate || dayjs().format("YYYY-MM-DD"),
+      date_birth: formattedDate || dayjs().format("YYYY-MM-DD"),
       sex: detailUser?.sex || "male",
       address: detailUser?.address || "",
     });
@@ -62,6 +77,12 @@ const ProfilePage = () => {
 
   const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+    setDataUser((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+  const handleSelectChangeValue = (value: string, name: string) => {
     setDataUser((prev) => ({
       ...prev,
       [name]: value,
@@ -78,48 +99,39 @@ const ProfilePage = () => {
     setFileAvatar(file);
   };
 
-  const handleChangeDate = (date: string) => {
-    setDataUser((prev) => ({ ...prev, dateBirth: date }));
-  };
+  const handleChangeDate = useCallback((date: string) => {
+    setDataUser((prev) => ({ ...prev, date_birth: date }));
+  }, []);
 
   const handleUpdateUser = async () => {
+    // Validate trước khi setLoading
+    if (dataUser.date_birth && !dayjs(dataUser.date_birth).isValid()) {
+      toast.error("Ngày sinh không hợp lệ!");
+      return;
+    }
+
+    setLoading(true);
     try {
-      if (fileAvatar) {
+      if (user?.id) {
         const formData = new FormData();
-        formData.append("data", JSON.stringify(dataUser));
-        formData.append("file", fileAvatar);
-        if (user?.id) {
-          const res = await updateDetailUser(user.id, formData);
-
-          if (res && res.status === "OK") {
-            const formattedDate = moment(res?.user?.dateBirth).format("YYYY-MM-DD");
-            const data = {
-              ...res?.user,
-              dateBirth: formattedDate,
-            };
-
-            setServerAvatarUrl(res?.user?.urlImg);
-            setFileAvatar(null);
-
-            setDataUser(data);
-            setUser(res?.user);
-            toast.success("Bạn đã cập nhật thành công!");
-          } else {
-            toast.error("Cập nhật thất bại!");
-          }
+        if (fileAvatar) {
+          formData.append("avatar", fileAvatar);
         }
-      } else {
-        const res = await updateUserNoImage(dataUser);
+        formData.append("data", JSON.stringify(dataUser));
+        const res = await updateUser(user.id, formData);
 
         if (res && res.status === "OK") {
-          const formattedDate = moment(res?.user?.dateBirth).format("YYYY-MM-DD");
+          const formattedDate = moment(res?.data?.date_birth).format("YYYY-MM-DD");
           const data = {
-            ...res?.user,
-            dateBirth: formattedDate,
+            ...res?.data,
+            date_birth: formattedDate,
           };
 
+          setServerAvatarUrl(res?.data?.url_img);
+          setFileAvatar(null);
+
           setDataUser(data);
-          setUser(res?.user);
+          setUser(data);
           toast.success("Bạn đã cập nhật thành công!");
         } else {
           toast.error("Cập nhật thất bại!");
@@ -128,6 +140,8 @@ const ProfilePage = () => {
     } catch (error) {
       console.log("Lỗi: ", error);
       toast.error("Đã xảy ra lỗi trong quá trình cập nhật.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -138,17 +152,24 @@ const ProfilePage = () => {
           {dataUser ? (
             <div className={styles.account__card}>
               <div className={styles.account__avatar}>
-                <img src={displayAvatar || "/default-avatar.png"} alt="Avatar" />
-                <input
-                  id="avatar"
-                  hidden
-                  type="file"
-                  accept="image/png, image/jpeg, image/jpg"
-                  onChange={handleOnchangeAvatar}
-                />
-                <label htmlFor="avatar" className={styles.label}>
-                  Chọn ảnh
-                </label>
+                <div className={styles["account__avatar-actions"]}>
+                  <img
+                    src={displayAvatar || "/default-avatar.png"}
+                    className={styles["account__avatar-actions-img"]}
+                    loading="lazy"
+                  />
+                  <input
+                    id="avatar"
+                    // hidden
+                    type="file"
+                    accept="image/png, image/jpeg, image/jpg"
+                    onChange={handleOnchangeAvatar}
+                  />
+                  <FontAwesomeIcon
+                    icon={faCloudArrowUp}
+                    className={styles["account__avatar-actions-icon"]}
+                  />
+                </div>
                 <p className={styles.account__note}>
                   Dung lượng file tối đa 1 MB
                   <br />
@@ -157,74 +178,80 @@ const ProfilePage = () => {
               </div>
 
               <div className={styles.account__info}>
-                <div className={styles.info__item}>
-                  <label className={styles.label}>Email:</label>
-                  <input
-                    className={styles["input"]}
-                    type="text"
-                    placeholder="Email"
-                    value={dataUser?.email}
-                    onChange={handleChangeValue}
-                    disabled
-                  />
-                </div>
-                <div className={styles.info__item}>
-                  <label className={styles.label}>Họ và tên:</label>
-                  <input
-                    className={styles["input"]}
-                    type="text"
-                    placeholder="Họ và tên"
-                    name="fullName"
-                    value={dataUser?.fullName}
+                <div className={styles["account__info-input"]}>
+                  {/* Email */}
+                  <InputField
+                    label="Email"
+                    type="email"
+                    name="email"
+                    id="email"
+                    value={dataUser?.email || ""}
+                    readOnly={true}
                     onChange={handleChangeValue}
                   />
-                </div>
-                <div className={styles.info__item}>
-                  <label className={styles.label}>Số điện thoại:</label>
-                  <input
-                    className={styles["input"]}
+
+                  {/* Họ và tên */}
+                  <div className={styles["account__info-full-name"]}>
+                    <InputField
+                      id="last_name"
+                      label="Họ"
+                      type="text"
+                      name="last_name"
+                      value={dataUser?.last_name || ""}
+                      onChange={handleChangeValue}
+                    />
+                    <InputField
+                      id="first_name"
+                      label="Tên"
+                      type="text"
+                      name="first_name"
+                      value={dataUser?.first_name || ""}
+                      onChange={handleChangeValue}
+                    />
+                  </div>
+
+                  {/* Số điện thoại */}
+                  <InputField
+                    id="phone"
+                    label="Số điện thoại:"
                     type="text"
-                    placeholder="Điện thoại"
                     name="phone"
-                    value={dataUser?.phone}
+                    value={dataUser?.phone || ""}
                     onChange={handleChangeValue}
                   />
-                </div>
-                <div className={styles.info__item}>
-                  <label className={styles.label}>Giới tính:</label>
-                  <select
-                    className={styles["input"]}
+
+                  <SelectField
+                    id="sex"
                     name="sex"
-                    onChange={handleChangeValue}
-                    value={dataUser.sex}
-                  >
-                    <option value="">-- Chọn giới tính --</option>
-                    <option value="male">Nam</option>
-                    <option value="female">Nữ</option>
-                    <option value="other">Khác</option>
-                  </select>
-                </div>
-                <div className={styles.info__item}>
-                  <label className={styles.label}>Ngày sinh:</label>
-                  <DateInput
-                    valueIn={dataUser?.dateBirth}
-                    className={styles.input}
-                    onChange={handleChangeDate}
+                    label="Giới tính:"
+                    value={dataUser?.sex || ""}
+                    options={sexOptions}
+                    onChange={(value) => handleSelectChangeValue(value, "sex")}
                   />
-                </div>
-                <div className={styles.info__item}>
-                  <label className={styles.label}>Địa chỉ:</label>
-                  <input
-                    className={styles["input"]}
+                  {/* Ngày sinh (Sử dụng DateInput riêng biệt) */}
+                  <div className={styles.info__item}>
+                    <label className={styles.label}>Ngày sinh:</label>
+                    <DateInput
+                      className={styles.input}
+                      valueIn={dataUser?.date_birth}
+                      name="date_birth"
+                      onChange={handleChangeDate}
+                    />
+                  </div>
+
+                  {/* Địa chỉ */}
+                  <InputField
+                    id="address"
+                    label="Địa chỉ"
                     type="text"
                     name="address"
-                    value={dataUser?.address}
+                    value={dataUser?.address || ""}
                     onChange={handleChangeValue}
                   />
                 </div>
-                <button className={styles.account__updateBtn} onClick={handleUpdateUser}>
-                  Cập nhật
-                </button>
+                <div className={styles["account__info-actions"]}>
+                  <ButtonField label="Cập nhật" onClick={handleUpdateUser} disabled={isLoading} />
+                </div>
               </div>
             </div>
           ) : (

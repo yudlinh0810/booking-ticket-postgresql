@@ -1,14 +1,17 @@
-.datePicker {
-  width: 100%;
+.date-input-container {
+  width: 80%;
+  .datePicker {
+    width: 100%;
 
-  :global(.ant-picker) {
-    border: none !important;
-    box-shadow: none !important;
-    background-color: transparent; // tùy bạn muốn ẩn nền luôn không
-  }
+    :global(.ant-picker) {
+      border: none !important;
+      box-shadow: none !important;
+      background-color: transparent; // tùy bạn muốn ẩn nền luôn không
+    }
 
-  :global(.ant-picker-input > input) {
-    border: none !important;
-    box-shadow: none !important;
+    :global(.ant-picker-input > input) {
+      border: none !important;
+      box-shadow: none !important;
+    }
   }
 }

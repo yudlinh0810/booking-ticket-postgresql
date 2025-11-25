@@ -8,9 +8,9 @@
 
 .chat-button {
   padding: 0.25rem;
-  border: 0.15rem solid var(---color-white-hex);
+  border: 0.15rem solid var(--color-white-hex);
   border-radius: 50%;
-  background-color: var(color-primary-rgb);
+  background-color: var(--color-primary-hex);
 
   .ic-message {
     height: 2rem;
@@ -18,8 +18,8 @@
     padding: 0.25rem;
     border-radius: 50%;
 
-    background-color: var(color-primary-rgb);
-    color: var(--color-white);
+    background-color: var(--color-primary-hex);
+    color: white;
   }
 }
 
@@ -161,13 +161,13 @@
     }
 
     .send-btn {
-      border: 1px solid var(color-primary-rgb);
+      border: 1px solid var(--color-primary-hex);
 
       transition: 0.3s all;
 
       &:hover {
         border-color: none;
-        background-color: var(color-primary-rgb);
+        background-color: var(--color-primary-hex);
         color: var(--color-white);
       }
     }

@@ -10,36 +10,45 @@ dayjs.extend(timezone);
 
 interface DateInputProps {
   valueIn?: string | Date;
+  name?: string;
   className?: string;
   onChange: (time: string) => void;
 }
 
-const DateInput: React.FC<DateInputProps> = ({ valueIn, className, onChange }) => {
+const DateInput: React.FC<DateInputProps> = ({ valueIn, className, name, onChange }) => {
   const [dateValue, setDateValue] = useState<Dayjs | null>(null);
 
   useEffect(() => {
-    // Nếu có giá trị đầu vào (string hoặc Date)
     const VIETNAM_TZ = "Asia/Ho_Chi_Minh";
     if (valueIn) {
       const dateStr = typeof valueIn === "string" ? valueIn : dayjs(valueIn).format("YYYY-MM-DD");
-      setDateValue(dayjs(dateStr));
+      const parsed = dayjs(dateStr);
+      // Kiểm tra valid trước khi set
+      if (parsed.isValid()) {
+        setDateValue(parsed);
+      }
     } else {
-      // Nếu không có thì set mặc định là ngày hiện tại
       const todayInVN = dayjs.tz(VIETNAM_TZ).startOf("day");
       setDateValue(todayInVN);
       onChange(todayInVN.format("YYYY-MM-DD"));
     }
-  }, [valueIn, onChange]);
+  }, [valueIn]);
 
   const handleChangeDate = (date: Dayjs | null) => {
     setDateValue(date);
-    onChange(date ? date.format("YYYY-MM-DD") : "");
+    // Chỉ gọi onChange khi date hợp lệ
+    if (date && date.isValid()) {
+      onChange(date.format("YYYY-MM-DD"));
+    } else {
+      onChange("");
+    }
   };
 
   return (
-    <div className={`${styled.input} ${className || ""}`}>
+    <div className={`${styled["date-input-container"]} ${className || ""}`}>
       <DatePicker
         id="date"
+        name={name}
         className={styled.datePicker}
         variant="borderless"
         format="DD-MM-YYYY"

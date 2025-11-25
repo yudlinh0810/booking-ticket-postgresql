@@ -7,8 +7,8 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import App from "./App";
-import "./styles/index.scss";
 import AppProvider from "./contexts/AppProviders";
+import "./styles/index.scss";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

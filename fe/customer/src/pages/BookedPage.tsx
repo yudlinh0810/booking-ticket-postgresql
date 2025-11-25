@@ -100,50 +100,6 @@ const BookedPage = () => {
     setIsReadyGetTrip(true);
   }, [locationData, searchTripParams]);
 
-  // useEffect(() => {
-  //   if (!tripData) {
-  //     return;
-  //   }
-
-  //   setFormDataTicket((prev) =>
-  //     prev
-  //       ? {
-  //           ...prev,
-  //           tripId: tripData.id,
-  //         }
-  //       : {
-  //           ticketId: 0,
-  //           tripId: tripData.id,
-  //           seats: [],
-  //           price: 0,
-  //           user: {
-  //             id: 0,
-  //             email: "",
-  //             fullName: "",
-  //             phone: "",
-  //           },
-  //         }
-  //   );
-  // }, [tripData]);
-
-  // useEffect(() => {
-  //   if (!user?.id) {
-  //     return;
-  //   } else {
-  //     setFormDataTicket((prev) =>
-  //       prev
-  //         ? {
-  //             ...prev,
-  //             user: {
-  //               ...prev.user,
-  //               id: user.id,
-  //             },
-  //           }
-  //         : prev
-  //     );
-  //   }
-  // }, [user]);
-
   const handleSelectedSeats = useCallback(
     (seatsSelected: SeatType[]) => {
       console.log("formDataTicket trước khi cập nhật:", formDataTicket);
@@ -193,7 +149,8 @@ const BookedPage = () => {
     } else if (
       formDataTicket?.user.id === 0 ||
       formDataTicket?.user.email === "" ||
-      formDataTicket?.user.fullName === "" ||
+      formDataTicket?.user.first_name === "" ||
+      formDataTicket?.user.last_name === "" ||
       formDataTicket?.user.phone === ""
     ) {
       toast.warning("Bạn chưa nhập thông tin người sẽ nhận vé");
@@ -285,7 +242,7 @@ const BookedPage = () => {
                     type="text"
                     name="fullName"
                     className={styles["input"]}
-                    value={formDataTicket?.user.fullName ?? ""}
+                    value={formDataTicket?.user.first_name ?? ""}
                     onChange={handleChangeValueUser}
                   />
                 </div>
@@ -355,7 +312,9 @@ const BookedPage = () => {
               </div>
               <div className={styles["booked-info__item"]}>
                 <p>Tổng tiền lượt đi</p>
-                <p>{formatCurrency(formDataTicket?.price || 0)}</p>
+                <strong>
+                  {formatCurrency(formDataTicket?.price || 0)} <sup>vnd</sup>
+                </strong>
               </div>
             </div>
 
@@ -369,7 +328,10 @@ const BookedPage = () => {
               </div>
               <div className={styles["booked-detail-price__title"]}>
                 <p>Giá vé lượt đi</p>
-                <p className={styles.price}>{formatCurrency(formDataTicket?.price || 0)}</p>
+                <strong className={styles.price}>
+                  {formatCurrency(formDataTicket?.price || 0)}
+                  <sup>vnd</sup>
+                </strong>
               </div>
               <div className={styles["booked-detail-price__title"]}>
                 <p>Phí thanh toán</p>
@@ -378,7 +340,10 @@ const BookedPage = () => {
               <span className={styles.dash}></span>
               <div className={styles["booked-detail-price__title"]}>
                 <p>Tổng tiền</p>
-                <p className={styles.price}>{formatCurrency(formDataTicket?.price || 0)}</p>
+                <strong className={styles.price}>
+                  {formatCurrency(formDataTicket?.price || 0)}
+                  <sup>vnd</sup>
+                </strong>
               </div>
             </div>
           </div>

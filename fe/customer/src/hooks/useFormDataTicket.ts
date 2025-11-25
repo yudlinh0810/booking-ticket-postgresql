@@ -18,7 +18,7 @@ export const useFormDataTicket = (user: User | null, tripData: TripBookedInfo | 
             tripId: tripData.id,
             seats: [],
             price: 0,
-            user: { id: 0, email: "", fullName: "", phone: "" },
+            user: { id: 0, email: "", first_name: "", last_name: "", phone: "" },
           }
     );
   }, [tripData]);

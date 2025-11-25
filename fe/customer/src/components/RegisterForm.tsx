@@ -7,7 +7,7 @@ import { RegisterPayLoad } from "../types";
 import CustomModal from "./CustomModal";
 import Otp from "./Otp";
 import SocialAuth from "./SocialAuth";
-import InputField from "./InputFiled";
+import InputField from "./InputFileld";
 
 const RegisterForm = () => {
   const { closeModal, setType } = useAuthModalStore();
@@ -50,6 +50,7 @@ const RegisterForm = () => {
           id="email"
           name="email"
           label="Email"
+          value={dataRegister.email}
           required
           onChange={handleChangeValue}
         />
@@ -59,6 +60,7 @@ const RegisterForm = () => {
           id="fullName"
           name="fullName"
           label="Full Name"
+          value={dataRegister.fullName}
           required
           onChange={handleChangeValue}
         />
@@ -68,6 +70,7 @@ const RegisterForm = () => {
           id="password"
           name="password"
           label="Password"
+          value={dataRegister.password}
           required
           onChange={handleChangeValue}
         />
@@ -77,6 +80,7 @@ const RegisterForm = () => {
           id="confirmPassword"
           name="confirmPassword"
           label="Confirm password"
+          value={dataRegister.confirmPassword}
           required
           onChange={handleChangeValue}
         />

@@ -3,8 +3,9 @@ export interface UserInfo {
 }
 export interface User extends UserInfo {
   email: string;
-  fullName: string;
-  dateBirth?: string | Date;
+  first_name: string;
+  last_name: string;
+  date_birth?: string | Date;
   avatar?: string;
   phone?: string;
   address?: string;
@@ -14,10 +15,10 @@ export interface User extends UserInfo {
 
 export interface UserData extends UserInfo {
   email: string;
-  fullName: string;
-  dateBirth?: string;
-  urlImg?: string;
-  urlPublicImg?: string;
+  first_name: string;
+  last_name: string;
+  date_birth?: string;
+  url_img?: string;
   phone?: string;
   address?: string;
   provider?: "google" | "facebook" | "local";

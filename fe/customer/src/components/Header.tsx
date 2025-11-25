@@ -117,13 +117,16 @@ const Header = () => {
               onClick={() => setShowDropDown((prev) => !prev)}
             >
               <FontAwesomeIcon icon={faUser} className={`${styled["user-ic"]}`} />
-              <p className={styled["user-actions__link-text"]}>
-                {user.fullName === "" ? user.email : user.fullName}
-              </p>
             </div>
             {showDropDown ? (
               <div ref={wrapperRef} className={styled["wrapper-drop-down-list"]}>
                 <ul className={styled["user-actions__list"]}>
+                  <li className={styled["item"]}>
+                    <span className={styled.text}>
+                      Xin chào, {user.first_name ? user.first_name : user.email}
+                    </span>
+                  </li>
+
                   <li className={styled["item"]}>
                     <NavLink className={styled.text} to={`/profile`}>
                       Cập nhật thông tin

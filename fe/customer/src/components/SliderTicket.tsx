@@ -116,9 +116,10 @@ const SliderTicket: React.FC<SliderProps> = ({ sliderTicketArray, swiperWidth = 
                       </div>
                       <div className={styles["ticket-info__seat-item-info__detail"]}>
                         <p>Giá vé</p>
-                        <p className={styles["ticket-info__seat-item-info__detail__content"]}>
+                        <strong className={styles["ticket-info__seat-item-info__detail__content"]}>
                           {formatCurrency(t.price)}
-                        </p>
+                          <sup>vnd</sup>
+                        </strong>
                       </div>
                     </div>
                   </div>

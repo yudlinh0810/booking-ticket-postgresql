@@ -51,23 +51,3 @@ export const getUserByEmail = async (email: string) => {
     return null;
   }
 };
-
-export const updateDetailUser = async (id: number, data: FormData) => {
-  try {
-    const response = await bookTicketAPI.put(`/customers/${id}`, data);
-    return response.data;
-  } catch (err) {
-    message.error(err instanceof Error ? err.message : "Cập nhật thông tin thất bại");
-    return null;
-  }
-};
-
-export const updateUserNoImage = async (data: object) => {
-  try {
-    const response = await bookTicketAPI.put("/customers/no-image", data);
-    return response.data;
-  } catch (err) {
-    message.error(err instanceof Error ? err.message : "Cập nhật thông tin thất bại");
-    return null;
-  }
-};

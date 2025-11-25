@@ -141,6 +141,7 @@ const SearchTripPage = () => {
       fetchNextPage();
     }
   }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+
   return (
     <div className={styles["search-trip-page-wrapper"]}>
       <div className={styles["search-trip-page-container"]}>
@@ -185,9 +186,10 @@ const SearchTripPage = () => {
                         <div className={styles["info-trip"]}>
                           <div className={styles["info-trip__title"]}>
                             <p className={styles["info-trip__title-name"]}>{t.tripName}</p>
-                            <p className={styles["info-trip__title-price"]}>
+                            <strong className={styles["info-trip__title-price"]}>
                               {formatCurrency(Number(t.price))}
-                            </p>
+                              <sup>vnd</sup>
+                            </strong>
                           </div>
                           <div className={styles["info-trip__detail"]}>
                             <div className={styles["info-trip__detail-ic-from-to"]}>

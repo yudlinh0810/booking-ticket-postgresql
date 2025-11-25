@@ -71,7 +71,10 @@ const QRPayment: React.FC<QRPaymentProps> = ({ valueIn, onPaymentSuccess }) => {
   return (
     <div className={styles["qr-payment-wrapper"]}>
       <p className={styles.title}>Tổng tiền thanh toán</p>
-      <p className={styles.price}>{formatCurrency(valueIn.amount)}</p>
+      <strong className={styles.price}>
+        {formatCurrency(valueIn.amount)}
+        <sup>vnd</sup>
+      </strong>
       <div className={styles["count-down"]}>
         <p>Thời gian còn lại còn</p>
         <p>5:00</p>

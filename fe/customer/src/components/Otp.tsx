@@ -15,8 +15,10 @@ const Otp = ({ email, onCloseModal }: { email: string; onCloseModal: () => void 
     if ((response.status === "OK", onCloseModal)) {
       const data = response.data;
       setUser({
+        id: data.id,
         email: data.email,
-        fullName: data.fullName,
+        first_name: data.first_name,
+        last_name: data.last_name,
       });
       setOtpValue({});
       onCloseModal();

@@ -1,22 +1,25 @@
-import React from "react";
 import styled from "../styles/components/inputField.module.scss";
 
 interface InputFieldProps {
   id: string;
   name: string;
-  type: string;
   label: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  type: string;
+  value: string;
   required?: boolean;
+  readOnly?: boolean;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
   id,
   name,
-  type,
   label,
-  onChange,
+  type,
+  value = "",
   required = false,
+  readOnly = false,
+  onChange,
 }) => {
   return (
     <div className={styled["input-field-container"]}>
@@ -26,7 +29,9 @@ const InputField: React.FC<InputFieldProps> = ({
         name={name}
         className={styled["input"]}
         placeholder=" "
+        value={value}
         required={required}
+        readOnly={readOnly}
         onChange={onChange}
       />
       <label className={styled["label"]} htmlFor={id}>
