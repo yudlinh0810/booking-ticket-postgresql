@@ -13,4 +13,6 @@ export type UpdateUserMapper = {
   admin: UpdateAdminDTO;
 };
 
-export type UpdateUserDTOByRole<T extends Role> = UpdateUserMapper[T];
+export type UserMapperKeys = keyof UpdateUserMapper;
+
+export type UpdateUserDTOByRole<T extends UserMapperKeys> = UpdateUserMapper[T];
