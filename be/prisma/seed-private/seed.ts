@@ -6,8 +6,7 @@ dotenv.config();
 const prisma = new PrismaClient();
 
 async function main() {
-  let password = process.env.PASS_SUPER_ADMIN!;
-  password = await bcrypt.hash(password, 10);
+  const password = await bcrypt.hash(process.env.PASS_SUPER_ADMIN!, 10);
 
   await prisma.user.upsert({
     where: { email: process.env.USER_NAME_SUPER_ADMIN! },
