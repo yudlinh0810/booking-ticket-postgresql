@@ -16,8 +16,8 @@ export const validateFormData = (
     return { valid: false, message: "Bạn chưa chọn bất kỳ ghế nào" };
   }
 
-  const { id, email, fullName, phone } = formDataTicket.user;
-  if (!id || !email || !fullName || !phone) {
+  const { id, email, first_name, phone } = formDataTicket.user;
+  if (!id || !email || !first_name || !phone) {
     return { valid: false, message: "Bạn chưa nhập thông tin người sẽ nhận vé" };
   }
 

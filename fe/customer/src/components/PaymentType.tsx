@@ -58,7 +58,7 @@ const PaymentType: React.FC<PaymentTypeProps> = ({ valueIn, onCloseModalPaymentT
         const responsePayment = await createPayOsURL({
           orderCode: ticketId,
           buyerEmail: user.email,
-          buyerName: user.fullName,
+          buyerName: `${user.last_name} ${user.first_name}`,
           buyerPhone: user.phone,
           items: [{ name: `Thanh toán vé ${ticketId}`, quantity: 1, price: price }],
           description: `TT Ghe ${seats.map((s) => s.position).join(" ")}`,
