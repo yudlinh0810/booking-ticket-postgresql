@@ -4,6 +4,7 @@ import { ArrangeType } from "../@types/type";
 import { ModelAdmin } from "../models/user";
 import { convertToVietnamTime } from "../utils/convertTime";
 import testEmail from "../utils/testEmail";
+import { addAdminDTO } from "../dto/user/admin.dto";
 
 type Admin = {
   email: string;
@@ -62,45 +63,45 @@ export class AdminService {
     };
   }
 
-  async add(newAdmin: Admin) {
-    const conn = await this.db.getConnection();
-    try {
-      await conn.beginTransaction();
+  // async add(newAdmin: Admin) {
+  //   const conn = await this.db.getConnection();
+  //   try {
+  //     await conn.beginTransaction();
 
-      const { email, fullName, password } = newAdmin;
-      if (!testEmail(email)) {
-        await conn.rollback();
-        return {
-          status: "ERR",
-          message: "Invalid email",
-        };
-      }
+  //     const { email, fullName, password } = newAdmin;
+  //     if (!testEmail(email)) {
+  //       await conn.rollback();
+  //       return {
+  //         status: "ERR",
+  //         message: "Invalid email",
+  //       };
+  //     }
 
-      const hashPass = await bcrypt.hash(password, 10);
-      const sql = "CALL addAdmin(?, ?, ?)";
-      const values = [email, fullName, hashPass];
-      const [rows] = (await conn.execute(sql, values)) as [ResultSetHeader];
+  //     const hashPass = await bcrypt.hash(password, 10);
+  //     const sql = "CALL addAdmin(?, ?, ?)";
+  //     const values = [email, fullName, hashPass];
+  //     const [rows] = (await conn.execute(sql, values)) as [ResultSetHeader];
 
-      if (rows.affectedRows === 0) {
-        await conn.rollback();
-        return {
-          status: "ERR",
-          message: "Create Admin failed",
-        };
-      }
+  //     if (rows.affectedRows === 0) {
+  //       await conn.rollback();
+  //       return {
+  //         status: "ERR",
+  //         message: "Create Admin failed",
+  //       };
+  //     }
 
-      await conn.commit();
-      return {
-        status: "OK",
-        message: "Create Admin success",
-      };
-    } catch (error) {
-      await conn.rollback();
-      throw error;
-    } finally {
-      conn.release();
-    }
-  }
+  //     await conn.commit();
+  //     return {
+  //       status: "OK",
+  //       message: "Create Admin success",
+  //     };
+  //   } catch (error) {
+  //     await conn.rollback();
+  //     throw error;
+  //   } finally {
+  //     conn.release();
+  //   }
+  // }
 
   async update(id: number, dataUpdate: Admin) {
     const conn = await this.db.getConnection();
@@ -125,5 +126,10 @@ export class AdminService {
     } finally {
       conn.release();
     }
+  }
+
+  // New Function Admin
+  async add(data: addAdminDTO) {
+    const { password, confirm_password } = data;
   }
 }

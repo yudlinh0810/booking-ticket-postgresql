@@ -8,6 +8,9 @@
     "start": "node dist/server.ts",
     "dev": "nodemon --exec ts-node --files src/server.ts"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed-private/seed.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -46,6 +49,7 @@
     "ws": "^8.18.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.0",
     "@types/express-session": "^1.18.1",

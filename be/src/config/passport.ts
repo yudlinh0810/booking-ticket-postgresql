@@ -17,7 +17,8 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: `https://${process.env.CALLBACK_URL}.ngrok-free.app/auth/google/callback`,
+      // callbackURL: `https://${process.env.CALLBACK_URL}.ngrok-free.app/auth/google/callback`,  // domain ngrok
+      callbackURL: `https://${process.env.CALLBACK_URL}.onrender.com/auth/google/callback`, // domain render
     },
     async (accessToken, refreshToken, profile, done) => {
       try {

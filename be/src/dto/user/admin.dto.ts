@@ -15,3 +15,22 @@ export type UpdateAdminDTO = Partial<
     | "role" // admin có thể đổi role người khác
   >
 >;
+
+export type addAdminDTO = Partial<
+  Pick<
+    Prisma.UserUpdateInput,
+    | "email"
+    | "username"
+    | "first_name"
+    | "last_name"
+    | "phone"
+    | "address"
+    | "date_birth"
+    | "sex"
+    | "password"
+    | "url_img"
+    | "url_public_img"
+    | "status"
+    | "role" // admin có thể đổi role người khác
+  > & { confirm_password: string }
+>;

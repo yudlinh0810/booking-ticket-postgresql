@@ -17,6 +17,7 @@ model User {
   company_id            Int?
   current_location_id   Int?
   email                 String?  @unique @db.VarChar(255)
+  username              String? @unique @db.VarChar(50) // login with admin
   first_name            String?     @db.VarChar(50) 
   last_name             String?     @db.VarChar(50)  
   password              String?  @db.VarChar(255)
@@ -341,11 +342,13 @@ enum UserStatus {
   active
   busy
   inactive
+  lock
 }
 
 enum Role {
   customer
   admin
+  super_admin
   driver
   manager
   co_driver @map("co-driver")
