@@ -2,7 +2,7 @@ import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import dotenv from "dotenv";
 import { bookBusTicketsDB } from "./db";
-import { CustomerService } from "../services/customer.service";
+import { CustomerService } from "@/services/customer.service";
 
 dotenv.config();
 

@@ -5,11 +5,15 @@
   "compilerOptions": {
     "target": "es6",
     "skipLibCheck": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@/*": ["*"]
+    },
+    "outDir": "./dist",
+    "rootDir": "./src",
     "module": "commonjs",
     "esModuleInterop": true,
-    "typeRoots": ["./node_modules/@types", "./src/@types"],
-    "outDir": "./dist",
-    "rootDir": "./src"
+    "typeRoots": ["./node_modules/@types", "./src/@types"]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
