@@ -1,10 +1,9 @@
 import bcrypt from "bcrypt";
 import { ResultSetHeader, RowDataPacket } from "mysql2/promise";
-import { ArrangeType } from "../@types/type";
-import { ModelAdmin } from "../models/user";
-import { convertToVietnamTime } from "../utils/convertTime";
-import testEmail from "../utils/testEmail";
-import { addAdminDTO } from "../dto/user/admin.dto";
+import { ArrangeType } from "@/@types/type";
+import { ModelAdmin } from "@/models/user";
+import { convertToVietnamTime } from "@/utils/convertTime";
+import { addAdminDTO } from "@/dto/user/admin.dto";
 
 type Admin = {
   email: string;

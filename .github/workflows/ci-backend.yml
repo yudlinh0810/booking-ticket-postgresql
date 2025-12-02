@@ -1,15 +1,15 @@
-name: Backend - CI/CD Pipeline (Windows + Render)
+name: Backend - CI/CD Pipeline (Ubuntu + Render)
 
 on:
   push:
     branches: [main]
     paths:
       - "be/**"
-      - ".github/workflows/ci-backend.yml"
+      - ".github/workflows/ci-backend-optimized.yml"
 
 jobs:
   build-and-test:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
@@ -20,14 +20,18 @@ jobs:
         with:
           node-version: "20.x"
 
+      - name: Prisma generate
+        working-directory: ./be
+        run: npx prisma generate
+
       - name: Install dependencies
         working-directory: ./be
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       - name: Run tests
         working-directory: ./be
         run: npm test
-        continue-on-error: true # Nếu chưa có test thì không fail
+        continue-on-error: true
 
       - name: Build backend
         working-directory: ./be
@@ -35,11 +39,12 @@ jobs:
 
   deploy:
     needs: build-and-test
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     environment: production
 
     steps:
-      # Gửi request để Render deploy
       - name: Trigger Render Deploy Hook
         run: |
-          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+        env:
+          RENDER_DEPLOY_HOOK: ${{ secrets.RENDER_DEPLOY_HOOK }}
