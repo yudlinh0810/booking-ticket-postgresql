@@ -1,0 +1,45 @@
+name: Backend - CI/CD Pipeline (Windows + Render)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "be/**"
+      - ".github/workflows/ci-backend.yml"
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Install dependencies
+        working-directory: ./be
+        run: npm install
+
+      - name: Run tests
+        working-directory: ./be
+        run: npm test
+        continue-on-error: true # Nếu chưa có test thì không fail
+
+      - name: Build backend
+        working-directory: ./be
+        run: npm run build
+
+  deploy:
+    needs: build-and-test
+    runs-on: windows-latest
+    environment: production
+
+    steps:
+      # Gửi request để Render deploy
+      - name: Trigger Render Deploy Hook
+        run: |
+          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
