@@ -1,4 +1,4 @@
-import { useAuthModalStore } from "../store/authModalStore";
+import { useAuthModalStore } from "@/store/authModalStore";
 import { Modal, Tabs } from "antd";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
