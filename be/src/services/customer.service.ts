@@ -14,18 +14,20 @@ import testEmail from "../utils/testEmail";
 import { formatDate } from "../utils/formatDate";
 import { UpdatePassword } from "../@types/user.type";
 import { redisClient } from "../config/redis";
-import { PrismaClient, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import cloudinary from "../config/cloudinary";
-import { RedisService } from "./redis.service";
 import { splitFullName } from "../utils/fullNameSplit.util";
+import { UserCacheService } from "./cache/userCache.service";
+import { AuthCacheService } from "./cache/authCache.service";
 
 const prisma = new PrismaClient({
   log: ["query", "error"],
 });
 export class CustomerService {
   private db;
-  private redisService = new RedisService(redisClient);
   private userService = new UserService(bookBusTicketsDB);
+  private userCacheService = new UserCacheService(redisClient);
+  private authCacheService = new AuthCacheService(redisClient);
   private otpService = new OtpService();
 
   constructor(db: any) {
@@ -54,7 +56,7 @@ export class CustomerService {
           });
         }
 
-        const checkPerson = await this.userService.checkUser(email);
+        const checkPerson = await this.userCacheService.getUserByEmail(email);
         if (checkPerson) {
           return resolve({
             status: "E1",
@@ -257,7 +259,7 @@ export class CustomerService {
     return new Promise(async (resolve, reject) => {
       try {
         let existingUser = null;
-        existingUser = await this.redisService.getCachedUserById(id);
+        existingUser = await this.userCacheService.getUserById(id);
 
         if (!existingUser) {
           existingUser = await prisma.user.findUnique({
@@ -270,7 +272,7 @@ export class CustomerService {
             });
           } else {
             console.log("postgresql");
-            await this.redisService.setCachedUser(existingUser, 60 * 60 * 24 * 7);
+            await this.userCacheService.cacheUser(existingUser);
             resolve(existingUser);
           }
         } else {
@@ -489,7 +491,7 @@ export class CustomerService {
         let existingUser = null;
 
         // A. Kiểm tra Redis bằng Email (Lookup Cache)
-        let cachedUserId = await this.redisService.getCachedUserIdByEmail(userEmail);
+        let cachedUserId = await this.userCacheService.getUserByEmail(userEmail);
 
         if (!cachedUserId) {
           // B. Cache Miss -> Truy vấn DB
@@ -499,10 +501,10 @@ export class CustomerService {
             // C. Cache Load (Tải lại Cache)
             // Lấy data từ DB (existingUser) và SET lại vào Redis
             // Hàm setCachedUser này phải tạo cả key Email và key ID hệ thống
-            await this.redisService.setCachedUser(existingUser, 60 * 60 * 24 * 7);
+            await this.userCacheService.cacheUser(existingUser);
           }
         } else {
-          existingUser = await this.redisService.getCachedUserById(cachedUserId);
+          existingUser = cachedUserId;
         }
 
         // --- BẮT ĐẦU LUỒNG XỬ LÝ CHÍNH (Đã có existingUser hoặc null) ---
@@ -514,8 +516,8 @@ export class CustomerService {
             refresh_token = generalRefreshToken({ id: existingUser.id, role: "customer" });
             expirationTime = Date.now() + 60 * 60 * 1000;
 
-            await this.redisService.setTokensInRedis(
-              { id: existingUser.id, role: "customer" },
+            await this.authCacheService.cacheTokens(
+              existingUser.id,
               access_token,
               refresh_token,
               60 * 60,
@@ -573,14 +575,14 @@ export class CustomerService {
 
           // Lưu thông tin người dùng mới vào Cả hai Redis cache ngay lập tức
           // Hàm này sẽ tự động tạo Cache Chính (dùng ID) và Cache Tham chiếu (dùng Email)
-          await this.redisService.setCachedUser(newUserRecord, 60 * 60 * 24 * 7);
+          await this.userCacheService.cacheUser(newUserRecord);
 
           access_token = generalAccessToken({ id: newUserId, role: "customer" });
           refresh_token = generalRefreshToken({ id: newUserId, role: "customer" });
           expirationTime = Date.now() + 60 * 60 * 1000;
 
-          await this.redisService.setTokensInRedis(
-            { id: newUserId, role: "customer" },
+          await this.authCacheService.cacheTokens(
+            newUserId,
             access_token,
             refresh_token,
             60 * 60,

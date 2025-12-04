@@ -7,206 +7,11 @@ import testEmail from "../utils/testEmail";
 import { redisClient } from "../config/redis";
 import { CloudinaryAsset, RequestWithUploadedImage } from "../@types/interface";
 import { UpdateUserMapper } from "../dto/user";
+import { AuthCacheService } from "@/services/cache/authCache.service";
 
 export class UserController {
   private userService = new UserService(bookBusTicketsDB);
-
-  loginByAdmin = async (req: Request, res: Response): Promise<any> => {
-    try {
-      const { email, password } = req.body;
-      const isCheckEmail = testEmail(email);
-
-      if (!email || !password) {
-        return errorResponse(res, "The input is required", 404);
-      }
-
-      if (!isCheckEmail) {
-        return errorResponse(res, "Email is not in correct format", 404);
-      }
-
-      const response = await this.userService.loginByAdmin(req.body);
-
-      if (
-        "access_token" in response &&
-        "refresh_token" in response &&
-        "expirationTime" in response
-      ) {
-        const { status, data, access_token, refresh_token, expirationTime } = response;
-        res.cookie("access_token", access_token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          maxAge: 60 * 60 * 1000,
-          path: "/",
-        });
-
-        res.cookie("refresh_token", refresh_token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          maxAge: 60 * 60 * 1000 * 24,
-          path: "/",
-        });
-        return successResponse(res, 200, { status, data, expirationTime: expirationTime });
-      } else {
-        if ("message" in response) {
-          return errorResponse(res, response.message, 400);
-        } else {
-          return errorResponse(res, "Unexpected error occurred", 400);
-        }
-      }
-    } catch (err) {
-      return errorResponse(res, "Controller.login err", 500);
-    }
-  };
-
-  loginByCustomer = async (req: Request, res: Response): Promise<any> => {
-    try {
-      const { email, password } = req.body;
-      const isCheckEmail = testEmail(email);
-
-      if (!email || !password) {
-        return errorResponse(res, "The input is required", 404);
-      }
-
-      if (!isCheckEmail) {
-        return errorResponse(res, "Email is not in correct format", 404);
-      }
-
-      const response = await this.userService.loginByCustomer(req.body);
-
-      if (
-        "access_token" in response &&
-        "refresh_token" in response &&
-        "expirationTime" in response
-      ) {
-        const { access_token, data, refresh_token, status, expirationTime } = response;
-
-        res.cookie("access_token", access_token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          maxAge: 60 * 60 * 1000,
-          path: "/",
-        });
-
-        res.cookie("refresh_token", refresh_token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          maxAge: 7 * 24 * 60 * 60 * 1000,
-          path: "/",
-        });
-        return successResponse(res, 200, { status, data, expirationTime: expirationTime });
-      } else {
-        if ("message" in response) {
-          return errorResponse(res, response.message, 200);
-        } else {
-          return errorResponse(res, "Unexpected error occurred", 400);
-        }
-      }
-    } catch (err) {
-      return errorResponse(res, "Controller.login err", 500);
-    }
-  };
-
-  loginByDriver = async (req: Request, res: Response): Promise<any> => {
-    try {
-      const { email, password } = req.body;
-      const isCheckEmail = testEmail(email);
-
-      if (!email || !password) {
-        return errorResponse(res, "The input is required", 404);
-      }
-
-      if (!isCheckEmail) {
-        return errorResponse(res, "Email is not in correct format", 404);
-      }
-
-      const response = await this.userService.loginByDriver(req.body);
-
-      if (
-        "access_token" in response &&
-        "refresh_token" in response &&
-        "expirationTime" in response
-      ) {
-        const { access_token, refresh_token, status, expirationTime } = response;
-        res.cookie("access_token", access_token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          maxAge: 60 * 60 * 1000,
-          path: "/",
-        });
-
-        res.cookie("access_token", access_token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          maxAge: 60 * 60 * 1000,
-          path: "/",
-        });
-        return successResponse(res, 200, { status, expirationTime: expirationTime });
-      } else {
-        if ("message" in response) {
-          return errorResponse(res, response.message, 400);
-        } else {
-          return errorResponse(res, "Unexpected error occurred", 400);
-        }
-      }
-    } catch (err) {
-      return errorResponse(res, "Controller.login err", 500);
-    }
-  };
-
-  loginByCoDriver = async (req: Request, res: Response): Promise<any> => {
-    try {
-      const { email, password } = req.body;
-      const isCheckEmail = testEmail(email);
-
-      if (!email || !password) {
-        return errorResponse(res, "The input is required", 404);
-      }
-
-      if (!isCheckEmail) {
-        return errorResponse(res, "Email is not in correct format", 404);
-      }
-
-      const response = await this.userService.loginByCoDriver(req.body);
-
-      if (
-        "access_token" in response &&
-        "refresh_token" in response &&
-        "expirationTime" in response
-      ) {
-        const { access_token, refresh_token, status, expirationTime } = response;
-        res.cookie("access_token", access_token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          maxAge: 60 * 60 * 1000,
-          path: "/",
-        });
-
-        res.cookie("refresh_token", refresh_token, {
-          httpOnly: true,
-          secure: true,
-          sameSite: "none",
-          maxAge: 7 * 24 * 60 * 60 * 1000,
-          path: "/",
-        });
-        return successResponse(res, 200, { status, expirationTime: expirationTime });
-      } else {
-        if ("message" in response) {
-          return errorResponse(res, response.message, 400);
-        } else {
-          return errorResponse(res, "Unexpected error occurred", 400);
-        }
-      }
-    } catch (err) {
-      return errorResponse(res, "Controller.login err", 500);
-    }
-  };
+  private authCacheService = new AuthCacheService(redisClient);
 
   refreshToken = async (req: Request, res: Response): Promise<any> => {
     try {
@@ -250,8 +55,7 @@ export class UserController {
 
   logout = async (req: Request, res: Response): Promise<any> => {
     try {
-      await redisClient.del(`session_${req.user?.id}`);
-      await redisClient.del(`refresh_${req.user?.id}`);
+      await this.authCacheService.deleteToken(req.user.id);
 
       res.clearCookie("access_token", {
         httpOnly: true,
@@ -270,20 +74,6 @@ export class UserController {
     } catch (error) {
       console.log("Controller", error);
       return errorResponse(res, "ERR Controller.logout", 500);
-    }
-  };
-
-  getUserDetail = async (req: Request, res: Response): Promise<any> => {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        return errorResponse(res, "User ID not found in request", 400);
-      }
-      const response = await this.userService.getCustomerByEmail(userId);
-      return successResponse(res, 200, response);
-    } catch (error) {
-      console.log("Controller", error);
-      return errorResponse(res, "ERR Controller.getUserDetail", 500);
     }
   };
 

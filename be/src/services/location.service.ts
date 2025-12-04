@@ -1,9 +1,12 @@
 import { ResultSetHeader } from "mysql2";
 import GeocodingService from "./geocoding.service";
+import { PrismaClient } from "@prisma/client";
+import { redisClient } from "@/config/redis";
 
 const geocodingService = new GeocodingService();
 export class LocationService {
   private db;
+  private prisma = new PrismaClient();
   constructor(db: any) {
     this.db = db;
   }
@@ -11,12 +14,29 @@ export class LocationService {
     try {
       if (!newLocation) throw { message: "Name location null!" };
       const { latitude, longitude } = await geocodingService.getCoordinates(newLocation);
-      await this.db.execute("call AddLocation(?, ?, ?)", [newLocation, latitude, longitude]);
+      const addLocation = await this.prisma.location.create({
+        data: {
+          name: newLocation,
+          latitude: latitude,
+          longitude: longitude,
+        },
+      });
+
+      if (addLocation.id) {
+        const locationKey = `location_${addLocation.id}`;
+        return {
+          status: "OK",
+          message: "Add new location success.",
+        };
+      } else {
+      }
+
       return {
         status: "OK",
         message: "Add new location success.",
       };
     } catch (error) {
+      console.log("error", error);
       throw error;
     }
   };
@@ -42,10 +62,30 @@ export class LocationService {
     }
   };
 
+  // Prisma
+
+  getLocations = async () => {
+    try {
+      return await this.prisma.location.findMany({
+        select: {
+          id: true,
+          name: true,
+          latitude: true,
+          longitude: true,
+        },
+      });
+    } catch (error) {
+      console.log("error", error);
+      throw "Error get locations from prisma";
+    }
+  };
+
   getAll = async () => {
     try {
       const [rows] = await this.db.execute("select id, name from location");
-      if (rows.length > 0) {
+      const locationList = await this.getLocations();
+
+      if (locationList) {
         return {
           status: "OK",
           data: rows,
@@ -58,6 +98,7 @@ export class LocationService {
       }
     } catch (error) {
       console.log("err", error);
+      return {};
     }
   };
 }

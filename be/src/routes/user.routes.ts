@@ -8,10 +8,6 @@ import { uploadImage } from "../middlewares/multerConfig";
 const router = express.Router();
 const userController = new UserController();
 
-router.post("/auth/admin/login", userController.loginByAdmin);
-router.post("/auth/customer/login", userController.loginByCustomer);
-router.post("/auth/driver/login", userController.loginByDriver);
-router.post("/auth/co-driver/login", userController.loginByCoDriver);
 router.put(
   "/:id",
   verifyAccessToken,
@@ -19,8 +15,6 @@ router.put(
   uploadImageToCloudinary,
   userController.updateUserByRole
 );
-// Lấy chi tiết người dùng hiện tại (ID từ token)
-router.get("/", verifyAccessToken, userController.getUserDetail);
 router.post("/auth/logout", userController.logout);
 router.get("/auth/refresh-token", userController.refreshToken);
 

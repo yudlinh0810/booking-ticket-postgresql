@@ -112,7 +112,7 @@ export const verifyRefreshToken = (
     const expirationTime = Date.now() + 60 * 60 * 1000;
 
     const sessionKey = `session_${decoded.id}`;
-    const a = await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
+    await redisClient.set(sessionKey, access_token, { EX: 60 * 60 });
 
     resolve({
       id: decoded.id,
