@@ -1,5 +1,5 @@
 import multer from "multer";
-import { validateFile } from "../utils/validateFile.util";
+import { validateFile } from "@/utils/validateFile.util";
 
 const storage = multer.memoryStorage();
 
