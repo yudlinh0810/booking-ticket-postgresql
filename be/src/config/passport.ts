@@ -1,7 +1,7 @@
+import { CustomerService } from "@/services/customer.service";
+import dotenv from "dotenv";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import dotenv from "dotenv";
-import { CustomerService } from "@/services/customer.service";
 
 dotenv.config();
 
