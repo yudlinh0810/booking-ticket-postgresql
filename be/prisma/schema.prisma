@@ -125,7 +125,7 @@ model Car {
   company_id            Int
   license_plate         String   @unique @db.VarChar(10)
   capacity              Int
-  type                  CarType? @default(xe_thuong)
+  type                  CarType? @default(normal)
   status                CarStatus? @default(available)
   is_deleted            Boolean? @default(false)
   create_at             DateTime? @default(now())
@@ -150,7 +150,7 @@ model Trip {
   start_time                DateTime
   arrival_location_id       Int
   end_time                  DateTime
-  status                    TripStatus? @default(san_sang)
+  status                    TripStatus? @default(ready)
   price                     Decimal @default(0.00) @db.Decimal(10, 2)
   is_deleted                Boolean? @default(false)
   create_at                 DateTime? @default(now())
@@ -351,12 +351,12 @@ enum Role {
   super_admin
   driver
   manager
-  co_driver @map("co-driver")
+  co_driver
 }
 
 enum CarType {
-  xe_thuong @map("xe thường")
-  xe_giuong_nam @map("xe giường nằm")
+  normal
+  sleeper
   all
 }
 
@@ -373,17 +373,17 @@ enum CouponType {
 }
 
 enum CouponStatus {
-  active   // Đang hoạt động
-  expired  // Đã hết hạn
-  inactive // Không hoạt động
+  active
+  expired
+  inactive
 }
 
 enum TripStatus {
-  san_sang @map("sẵn sàng")
-  sap_khoi_hanh @map("sắp khỏi hành")
-  dang_chay @map("đang chạy")
-  bao_tri @map("bảo trì")
-  hoan_thanh @map("hoàn thành")
+  ready
+  about_to_depart
+  running
+  maintenance
+  completed
 }
 
 enum SeatFloor {

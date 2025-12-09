@@ -10,8 +10,8 @@ import { UpdateUserMapper } from "../dto/user";
 import { AuthCacheService } from "@/services/cache/authCache.service";
 
 export class UserController {
-  private userService = new UserService(bookBusTicketsDB);
   private authCacheService = new AuthCacheService(redisClient);
+  private userService = new UserService();
 
   refreshToken = async (req: Request, res: Response): Promise<any> => {
     try {
@@ -47,7 +47,11 @@ export class UserController {
     const id = Number(req.params.id);
     try {
       const data = await this.userService.delete(id);
-      return successResponse(res, data, "Delete user success");
+      if (data === true) {
+        return successResponse(res, 400);
+      } else {
+        return errorResponse(res, "Delete failed", 404);
+      }
     } catch (error) {
       return errorResponse(res, "ERR Controller.deleteUser", 500);
     }
@@ -83,7 +87,7 @@ export class UserController {
       const id = Number(req.params.id),
         newAvatar = req.uploadedImage as CloudinaryAsset;
 
-      const result = await this.userService.updateUserByRole(
+      const result = await this.userService.updateByRole(
         id,
         updateData.role,
         updateData,
@@ -97,6 +101,16 @@ export class UserController {
     } catch (error) {
       console.log("Err Controller", error);
       return errorResponse(res, "ERR Controller.update", 500);
+    }
+  };
+
+  fetchUser = async (req: RequestWithUploadedImage, res: Response): Promise<any> => {
+    try {
+      const { id, role } = req.user;
+      const result = await this.userService.fetch(id, role);
+      return successResponse(res, 200, result);
+    } catch (error) {
+      return errorResponse(res, "ERR fetch (userController)", 500);
     }
   };
 }

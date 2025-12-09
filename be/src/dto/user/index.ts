@@ -1,4 +1,3 @@
-import { Role } from "@prisma/client";
 import { UpdateCustomerDTO } from "./customer.dto";
 import { UpdateDriverDTO } from "./driver.dto";
 import { UpdateManagerDTO } from "./manager.dto";

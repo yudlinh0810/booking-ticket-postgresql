@@ -9,9 +9,14 @@
     "paths": {
       "@/*": ["./*"]
     },
+
     "outDir": "./dist",
     "rootDir": "./src",
     "module": "commonjs",
+
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+
     "esModuleInterop": true,
     "typeRoots": ["./node_modules/@types", "./src/@types"]
   },

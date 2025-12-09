@@ -8,7 +8,7 @@ import { DataPaymentSuccess } from "../@types/payment";
 import { sendToUser } from "../sockets/utils/sendToUser";
 
 export class WebhookService {
-  private userService = new UserService(bookBusTicketsDB);
+  private userService = new UserService();
   private seatService = new SeatService(bookBusTicketsDB);
 
   public processWebhookEvent = async (orderCode: number, reference: string) => {

@@ -1,28 +1,55 @@
-import bcrypt from "bcrypt";
-import { generalAccessToken, generalRefreshToken } from "../services/auth.service";
 import { redisClient } from "../config/redis";
-import { PrismaClient, Provider, Role, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { UpdateUserMapper } from "../dto/user";
 import { CloudinaryAsset } from "../@types/interface";
 import deleteOldFile from "../utils/deleteOldFile.util";
 import { UserCacheService } from "./cache/userCache.service";
+import { Role } from "@/common/enums";
 
+const userBaseSelect = {
+  id: true,
+  email: true,
+  role: true,
+  status: true,
+  first_name: true,
+  last_name: true,
+  phone: true,
+  address: true,
+  url_img: true,
+  url_public_img: true,
+  date_birth: true,
+  sex: true,
+  created_at: true,
+};
+
+const coDriverSelect = {
+  ...userBaseSelect,
+  experience_years: true,
+  company_id: true,
+  current_location_id: true,
+};
+
+const driverSelect = {
+  ...coDriverSelect,
+  license_number: true,
+};
+
+const managerSelect = {
+  ...userBaseSelect,
+  company_id: true,
+};
 export class UserService {
-  private db;
   private prisma = new PrismaClient();
   private userCacheService = new UserCacheService(redisClient);
-  constructor(db: any) {
-    this.db = db;
-  }
 
-  async getTotalUser(): Promise<number> {
+  async getTotal(): Promise<number> {
     const count = await this.prisma.user.count({
       where: { is_deleted: false },
     });
     return count;
   }
 
-  async findUserByEmail(email: string, role: Role): Promise<User | null> {
+  async findByEmail(email: string, role: Role): Promise<object | null> {
     try {
       return this.prisma.user.findFirst({
         where: { email, role: role, is_deleted: false },
@@ -46,85 +73,118 @@ export class UserService {
     }
   }
 
-  async fetchUser(email: string, provider: Provider, role: Role): Promise<User> {
-    const detailUser = await this.prisma.user.findFirst({
-      where: { email, provider, role, is_deleted: false },
-    });
+  async fetch(id: number, role: Role): Promise<object | object> {
+    const existingInRedis = await this.userCacheService.getUserById(id);
+    if (existingInRedis) {
+      return existingInRedis;
+    }
+    let selectOptions: any = {};
+    switch (role) {
+      case "admin":
+      case "super_admin":
+        selectOptions = undefined;
+        break;
+      case "co_driver":
+        selectOptions = coDriverSelect;
+        break;
+      case "driver":
+        selectOptions = driverSelect;
+        break;
+      case "manager":
+        selectOptions = managerSelect;
+        break;
+      default:
+        selectOptions = userBaseSelect;
+    }
+    // Nếu là role khác, ta dùng select
+    const queryArgs: any = {
+      where: { id: id, is_deleted: false },
+    };
+
+    if (!selectOptions) {
+      // Super_Admin - Admin: Lấy hết trừ password
+      queryArgs.omit = { password: true };
+    } else {
+      queryArgs.select = selectOptions;
+    }
+
+    const detailUser = await this.prisma.user.findUnique(queryArgs);
+
     if (!detailUser) {
       throw new Error("User not found or deleted");
+    } else {
+      if (role === "admin" || role === "super_admin") {
+        return detailUser;
+      } else {
+        await this.userCacheService.cacheUser(detailUser);
+      }
     }
     return detailUser;
   }
 
-  delete(id: number): Promise<any> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        await this.prisma.user.delete({ where: { id: id } });
-        resolve({
-          status: "OK",
-        });
-      } catch (error) {
-        reject(error);
-      }
-    });
+  async delete(id: number): Promise<boolean> {
+    try {
+      await this.prisma.user.delete({ where: { id: id } });
+      return true;
+    } catch (error) {
+      throw "Error delete user.";
+    }
   }
 
-  updateUserByRole<T extends keyof UpdateUserMapper>(
+  async updateByRole<T extends keyof UpdateUserMapper>(
     id: number,
     role: T,
     data: UpdateUserMapper[T],
     newAvatar?: CloudinaryAsset
   ): Promise<any> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        const user = await this.findImageById(id);
+    try {
+      const user = await this.findImageById(id);
 
-        const hasOldImage = !!(user.url_public_img && user.url_public_img !== "");
-        const hasNewImage = !!(newAvatar?.secure_url && newAvatar?.secure_url !== user.url_img);
-        const shouldDeleteOldImage = hasOldImage && hasNewImage;
+      const hasOldImage = !!(user.url_public_img && user.url_public_img !== "");
+      const hasNewImage = !!(newAvatar?.secure_url && newAvatar?.secure_url !== user.url_img);
+      const shouldDeleteOldImage = hasOldImage && hasNewImage;
 
-        const updatedUser = await this.prisma.user.update({
-          where: { id },
-          data: {
-            ...data,
-            url_img: newAvatar?.secure_url || user.url_img,
-            url_public_img: newAvatar?.public_id || user.url_public_img,
-            date_birth: data.date_birth ? new Date(data.date_birth + "T00:00:00.000Z") : undefined,
-          },
-        });
+      const updatedUser = await this.prisma.user.update({
+        where: { id },
+        data: {
+          ...data,
+          url_img: newAvatar?.secure_url || user.url_img,
+          url_public_img: newAvatar?.public_id || user.url_public_img,
+          date_birth: data.date_birth ? new Date(data.date_birth + "T00:00:00.000Z") : undefined,
+        },
+      });
 
-        // Cập nhật Redis cache
-        await this.userCacheService.cacheUser(updatedUser);
+      // Cập nhật Redis cache
+      await this.userCacheService.cacheUser(updatedUser);
 
-        if (shouldDeleteOldImage) {
-          try {
-            await deleteOldFile(user.url_public_img, "image");
-          } catch (err) {
-            console.error("Failed to delete old image:", err);
-          }
+      if (shouldDeleteOldImage) {
+        try {
+          await deleteOldFile(user.url_public_img, "image");
+        } catch (err) {
+          console.error("Failed to delete old image:", err);
         }
-
-        resolve({ status: "OK", data: updatedUser });
-      } catch (error: any) {
-        if (data.url_public_img) {
-          let publicId: string | undefined;
-
-          if (typeof data.url_public_img === "string") {
-            publicId = data.url_public_img;
-          } else if ("set" in data.url_public_img && typeof data.url_public_img.set === "string") {
-            publicId = data.url_public_img.set;
-          }
-
-          if (publicId) {
-            await deleteOldFile(publicId, "image");
-          }
-        }
-
-        if (error.code === "P2025") {
-          reject("Không tìm thấy user để update!");
-        }
-        reject(error);
       }
-    });
+
+      return { status: "OK", data: updatedUser };
+    } catch (error: any) {
+      if (data.url_public_img) {
+        let publicId: string | undefined;
+
+        if (typeof data.url_public_img === "string") {
+          publicId = data.url_public_img;
+        } else if ("set" in data.url_public_img && typeof data.url_public_img.set === "string") {
+          publicId = data.url_public_img.set;
+        }
+
+        if (publicId) {
+          await deleteOldFile(publicId, "image");
+        }
+      }
+
+      if (error.code === "P2025") {
+        throw "Không tìm thấy user để update!";
+      }
+      throw error;
+    }
   }
 }

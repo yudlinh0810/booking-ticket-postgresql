@@ -15,7 +15,8 @@ router.put(
   uploadImageToCloudinary,
   userController.updateUserByRole
 );
-router.post("/auth/logout", userController.logout);
 router.get("/auth/refresh-token", userController.refreshToken);
+router.get("/auth/me", verifyAccessToken, userController.fetchUser);
+router.post("/auth/logout", userController.logout);
 
 export default router;
