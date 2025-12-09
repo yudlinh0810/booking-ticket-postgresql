@@ -13,7 +13,7 @@ const SocialAuth = () => {
     }
   }, []);
 
-  const googleLink = backendUrl ? `https://${backendUrl}.ngrok-free.app/auth/google` : "#";
+  const googleLink = backendUrl ? `${backendUrl}/auth/google` : "#";
 
   return (
     <div className={styled["btn-group"]}>

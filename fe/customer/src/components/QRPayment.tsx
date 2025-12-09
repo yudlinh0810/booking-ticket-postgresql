@@ -27,7 +27,7 @@ const QRPayment: React.FC<QRPaymentProps> = ({ valueIn, onPaymentSuccess }) => {
   useEffect(() => {
     if (!userId) return;
 
-    socket.current = io(`https://${import.meta.env.VITE_API_URL}.ngrok-free.app/payment`, {
+    socket.current = io(`${import.meta.env.VITE_API_URL}/payment`, {
       transports: ["websocket"],
       withCredentials: true,
     });

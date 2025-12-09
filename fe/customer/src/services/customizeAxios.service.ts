@@ -25,16 +25,18 @@ const processQueue = (error: unknown | null) => {
 
 // 1. Instance đặc biệt cho việc gọi API Refresh Token
 const refreshAPI = axios.create({
-  baseURL: `https://${import.meta.env.VITE_API_URL}.ngrok-free.app/api`,
+  // baseURL: `https://${import.meta.env.VITE_API_URL}.ngrok-free.app/api`,
+  baseURL: `${import.meta.env.VITE_API_URL}/api`,
   withCredentials: true,
-  headers: { "ngrok-skip-browser-warning": "true" },
+  // headers: { "ngrok-skip-browser-warning": "true" },
 });
 
 // 2. Instance chính cho các API cần xác thực
 export const bookTicketAPI = axios.create({
-  baseURL: `https://${import.meta.env.VITE_API_URL}.ngrok-free.app/api`,
+  // baseURL: `https://${import.meta.env.VITE_API_URL}.ngrok-free.app/api`,
+  baseURL: `${import.meta.env.VITE_API_URL}/api`,
   withCredentials: true,
-  headers: { "ngrok-skip-browser-warning": "true" },
+  // headers: { "ngrok-skip-browser-warning": "true" },
 });
 
 bookTicketAPI.interceptors.response.use(

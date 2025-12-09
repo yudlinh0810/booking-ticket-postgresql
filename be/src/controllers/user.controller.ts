@@ -59,6 +59,9 @@ export class UserController {
 
   logout = async (req: Request, res: Response): Promise<any> => {
     try {
+      if (!req.user) {
+        return errorResponse(res, "User not authenticated", 401);
+      }
       await this.authCacheService.deleteToken(req.user.id);
 
       res.clearCookie("access_token", {

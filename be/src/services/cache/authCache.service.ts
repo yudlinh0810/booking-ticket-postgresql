@@ -53,6 +53,7 @@ export class AuthCacheService extends BaseCacheService {
         refreshKey = `refresh_${userId}`;
       await Promise.all([this.deleteKey(sessionKey), this.deleteKey(refreshKey)]);
     } catch (error) {
+      console.error("err delete token", error);
       throw error;
     }
   }
