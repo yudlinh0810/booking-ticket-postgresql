@@ -14,5 +14,5 @@ export class UpdateUserByAdminDto {
   @IsOptional() @IsInt() company_id?: number; // Chuyển tài xế sang nhà xe khác
 
   @IsOptional() @IsString() license_number?: string;
-  @IsOptional() @IsDateString() experience_years?: string;
+  @IsOptional() @IsDateString() start_work_date?: string;
 }

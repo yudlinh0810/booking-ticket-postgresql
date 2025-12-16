@@ -14,7 +14,8 @@ import payOSRoute from "./payos.routes";
 import webhookPayOsRoute from "./webhook.routes";
 import statisticalRoute from "./statistical.route";
 import revenueRoute from "./revenue.route";
-import oAuth2 from "./oAuth2.route";
+// import oAuth2 from "./oAuth2.route";
+import authRoute from "./auth.route";
 
 const routes = (app: express.Application): void => {
   // Cấu hình routes
@@ -32,7 +33,8 @@ const routes = (app: express.Application): void => {
   app.use("/api/webhook", webhookPayOsRoute);
   app.use("/api/statisticals", statisticalRoute);
   app.use("/api/revenues", revenueRoute);
-  app.use("/auth", oAuth2);
+  // app.use("/auth", oAuth2); // Server-side Redirect Flow
+  app.use("/api/auth", authRoute); // Client-side Implicit Flow
 
   // Route cho các yêu cầu không tìm thấy
   app.use((req: Request, res: Response): void => {

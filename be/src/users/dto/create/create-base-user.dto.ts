@@ -1,7 +1,7 @@
 import { Sex } from "@/common/enums";
 import { IsDateString, IsEnum, IsOptional, IsString } from "class-validator";
 
-export class BaseUserDto {
+export class CreateBaseUserDto {
   @IsString()
   first_name: string;
 
@@ -27,4 +27,7 @@ export class BaseUserDto {
 
   @IsEnum(Sex)
   sex?: Sex;
+
+  @IsString()
+  password: string;
 }

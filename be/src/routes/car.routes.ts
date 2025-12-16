@@ -3,19 +3,20 @@ import {
   uploadImages,
   uploadImagesToCloudinary,
   uploadImageToCloudinary,
-} from "../middlewares/uploadHandler";
-import { uploadImage } from "../middlewares/multerConfig";
-import { verifyAccessToken } from "../services/auth.service";
-import { authorizeRoles } from "../middlewares/auth.middleware";
-import { CarController } from "../controllers/car.controller";
+} from "@/middlewares/uploadHandler";
+import { uploadImage } from "@/middlewares/multerConfig";
+import { AuthService } from "@/services/auth.service";
+import { authorizeRoles } from "@/middlewares/auth.middleware";
+import { CarController } from "@/controllers/car.controller";
 
 const carRouter = express.Router();
 const carController = new CarController();
+const authService = new AuthService();
 
 // Thêm xe mới
 carRouter.post(
   "/", // Thay vì /add
-  verifyAccessToken,
+  authService.verifyAccessToken,
   authorizeRoles("admin"),
   uploadImages,
   uploadImagesToCloudinary,
@@ -24,7 +25,7 @@ carRouter.post(
 // Cập nhật thông tin xe
 carRouter.put(
   "/:id", // Thay vì /update. Giả định bạn truyền ID qua body hoặc /:id
-  verifyAccessToken,
+  authService.verifyAccessToken,
   authorizeRoles("admin"),
   uploadImages,
   uploadImagesToCloudinary,
@@ -33,7 +34,7 @@ carRouter.put(
 // Thêm ảnh của xe
 carRouter.post(
   "/:id/image",
-  verifyAccessToken,
+  authService.verifyAccessToken,
   authorizeRoles("admin"),
   uploadImage,
   uploadImageToCloudinary,
@@ -42,7 +43,7 @@ carRouter.post(
 // Cập nhật ảnh của xe
 carRouter.put(
   "/:id/image",
-  verifyAccessToken,
+  authService.verifyAccessToken,
   authorizeRoles("admin"),
   uploadImage,
   uploadImageToCloudinary,
@@ -51,19 +52,24 @@ carRouter.put(
 // Xóa ảnh của xe
 carRouter.delete(
   "/:id/image",
-  verifyAccessToken,
+  authService.verifyAccessToken,
   authorizeRoles("admin"),
   carController.deleteImgCar
 );
 // Xóa xe
-carRouter.delete("/:id", verifyAccessToken, authorizeRoles("admin"), carController.deleteCar);
+carRouter.delete(
+  "/:id",
+  authService.verifyAccessToken,
+  authorizeRoles("admin"),
+  carController.deleteCar
+);
 // Lấy danh sách tất cả xe
-carRouter.get("/", verifyAccessToken, authorizeRoles("admin"), carController.getAllCar);
+carRouter.get("/", authService.verifyAccessToken, authorizeRoles("admin"), carController.getAllCar);
 
 // Lấy chi tiết theo biển số
 carRouter.get(
   "/license-plate/:licensePlate",
-  verifyAccessToken,
+  authService.verifyAccessToken,
   authorizeRoles("admin", "customer"),
   carController.getCarByLicensePlate
 );

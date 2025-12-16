@@ -3,11 +3,11 @@ import { BaseCacheService } from "./baseCache.service";
 export class AuthCacheService extends BaseCacheService {
   private OTP_TTL = 60 * 5;
 
-  private getSessionKey(userId: number): string {
+  public getSessionKey(userId: number | string): string {
     return `session:${userId}`;
   }
 
-  private getRefreshKey(userId: number): string {
+  public getRefreshKey(userId: number | string): string {
     return `refresh:${userId}`;
   }
 
@@ -25,7 +25,7 @@ export class AuthCacheService extends BaseCacheService {
     refreshExp: number
   ): Promise<void> {
     try {
-      await this.setKey(this.getSessionKey(userId), refreshToken, refreshExp);
+      await this.setKey(this.getRefreshKey(userId), refreshToken, refreshExp);
     } catch (error) {
       throw error;
     }
@@ -33,7 +33,7 @@ export class AuthCacheService extends BaseCacheService {
 
   // trường hợp login/register
   public async cacheTokens(
-    userId: number,
+    userId: number | string, // Cho phép string để tương thích với JWT payload
     accessToken: string,
     refreshToken: string,
     accessExp: number,
@@ -49,8 +49,8 @@ export class AuthCacheService extends BaseCacheService {
 
   public async deleteToken(userId: number): Promise<void> {
     try {
-      const sessionKey = `session_${userId}`,
-        refreshKey = `refresh_${userId}`;
+      const sessionKey = this.getSessionKey(userId);
+      const refreshKey = this.getRefreshKey(userId);
       await Promise.all([this.deleteKey(sessionKey), this.deleteKey(refreshKey)]);
     } catch (error) {
       console.error("err delete token", error);

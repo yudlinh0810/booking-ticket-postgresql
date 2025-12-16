@@ -1,27 +1,28 @@
 import express from "express";
-import { verifyAccessToken } from "../services/auth.service";
-import { authorizeRoles } from "../middlewares/auth.middleware";
-import revenueController from "../controllers/revenue.controller";
+import { authorizeRoles } from "@/middlewares/auth.middleware";
+import revenueController from "@/controllers/revenue.controller";
+import { AuthService } from "@/services/auth.service";
 
 const router = express.Router();
+const authService = new AuthService();
 
 router.get(
   "/hourly",
-  verifyAccessToken,
+  authService.verifyAccessToken,
   authorizeRoles("admin"),
   revenueController.getHourlyRevenue
 );
 
 router.get(
   "/monthly",
-  verifyAccessToken,
+  authService.verifyAccessToken,
   authorizeRoles("admin"),
   revenueController.getMonthlyRevenue
 );
 
 router.get(
   "/yearly",
-  verifyAccessToken,
+  authService.verifyAccessToken,
   authorizeRoles("admin"),
   revenueController.getYearlyRevenue
 );

@@ -1,7 +1,7 @@
 import { IsDateString, IsOptional, IsString } from "class-validator";
-import { BaseUserDto } from "./base-user.dto";
+import { UpdateBaseUserDto } from "./update-base-user.dto";
 
-export class UpdateDriverDto extends BaseUserDto {
+export class UpdateDriverDto extends UpdateBaseUserDto {
   @IsOptional() @IsString() license_number?: string;
-  @IsOptional() @IsDateString() experience_years?: string;
+  @IsOptional() @IsDateString() start_work_date?: string;
 }

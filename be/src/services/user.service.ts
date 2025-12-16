@@ -24,7 +24,7 @@ const userBaseSelect = {
 
 const coDriverSelect = {
   ...userBaseSelect,
-  experience_years: true,
+  start_work_date: true,
   company_id: true,
   current_location_id: true,
 };

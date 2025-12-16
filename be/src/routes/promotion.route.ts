@@ -1,30 +1,46 @@
 import express from "express";
-import { verifyAccessToken } from "../services/auth.service";
-import { authorizeRoles } from "../middlewares/auth.middleware";
-import PromotionController from "../controllers/promotion.controller";
+import { authorizeRoles } from "@/middlewares/auth.middleware";
+import PromotionController from "@/controllers/promotion.controller";
+import { AuthService } from "@/services/auth.service";
 
 const router = express.Router();
 const promotionController = new PromotionController();
+const authService = new AuthService();
 
 // Tạo mới
-router.post("/", verifyAccessToken, authorizeRoles("admin"), promotionController.create);
+router.post(
+  "/",
+  authService.verifyAccessToken,
+  authorizeRoles("admin"),
+  promotionController.create
+);
 // Cập nhật
-router.put("/:id", verifyAccessToken, authorizeRoles("admin"), promotionController.update);
+router.put(
+  "/:id",
+  authService.verifyAccessToken,
+  authorizeRoles("admin"),
+  promotionController.update
+);
 // Lấy danh sách tất cả
-router.get("/", verifyAccessToken, authorizeRoles("admin"), promotionController.getAll);
+router.get("/", authService.verifyAccessToken, authorizeRoles("admin"), promotionController.getAll);
 // Lấy chi tiết bằng mã (code)
 router.get(
   "/code/:code",
-  verifyAccessToken,
+  authService.verifyAccessToken,
   authorizeRoles("admin"),
   promotionController.fetchByCode
 );
 // Lấy chi tiết bằng ID
-router.get("/:id", verifyAccessToken, authorizeRoles("admin"), promotionController.fetchById);
+router.get(
+  "/:id",
+  authService.verifyAccessToken,
+  authorizeRoles("admin"),
+  promotionController.fetchById
+);
 // Xóa bằng mã (code)
 router.delete(
   "/code/:code",
-  verifyAccessToken,
+  authService.verifyAccessToken,
   authorizeRoles("admin"),
   promotionController.delete
 );

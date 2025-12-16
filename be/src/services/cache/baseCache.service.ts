@@ -7,7 +7,7 @@ export abstract class BaseCacheService {
     this.redisClient = client;
   }
 
-  protected async setKey(key: string, value: string, ttl?: number): Promise<void> {
+  async setKey(key: string, value: string, ttl?: number): Promise<void> {
     if (ttl) {
       await this.redisClient.set(key, value, { EX: ttl });
     } else {
@@ -15,13 +15,13 @@ export abstract class BaseCacheService {
     }
   }
 
-  protected async getKey(key: string): Promise<string | null> {
+  async getKey(key: string): Promise<string | null> {
     const data = await this.redisClient.get(key);
     if (Buffer.isBuffer(data)) return data.toString();
     return data;
   }
 
-  protected async deleteKey(key: string): Promise<void> {
+  async deleteKey(key: string): Promise<void> {
     await this.redisClient.del(key);
   }
 }

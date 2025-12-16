@@ -12,7 +12,7 @@ export type UpdateDriverDTO = Partial<
     | "url_img"
     | "url_public_img"
     | "license_number"
-    | "experience_years"
+    | "start_work_date"
     | "Location"
     | "BusCompany"
   >

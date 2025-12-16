@@ -1,7 +1,10 @@
-import { IsInt } from "class-validator";
-import { BaseUserDto } from "./base-user.dto";
+import { IsDateString, IsInt } from "class-validator";
+import { CreateBaseUserDto } from "./create-base-user.dto";
 
-export class CreateCoDriverDto extends BaseUserDto {
+export class CreateCoDriverDto extends CreateBaseUserDto {
   @IsInt()
   company_id?: number;
+
+  @IsDateString()
+  start_work_date?: string;
 }

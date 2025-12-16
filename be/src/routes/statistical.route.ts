@@ -1,13 +1,14 @@
 import express from "express";
-import { verifyAccessToken } from "../services/auth.service";
-import { authorizeRoles } from "../middlewares/auth.middleware";
-import statisticalController from "../controllers/statistical.controller";
+import { authorizeRoles } from "@/middlewares/auth.middleware";
+import statisticalController from "@/controllers/statistical.controller";
+import { AuthService } from "@/services/auth.service";
 
 const router = express.Router();
+const authService = new AuthService();
 
 router.get(
   "/",
-  verifyAccessToken,
+  authService.verifyAccessToken,
   authorizeRoles("admin"),
   statisticalController.getDashboardSummary
 );

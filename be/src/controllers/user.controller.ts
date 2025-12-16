@@ -1,17 +1,15 @@
 import { Request, Response } from "express";
-import { bookBusTicketsDB } from "../config/db";
 import { UserService } from "../services/user.service";
 import { errorResponse, successResponse } from "../utils/response.util";
-import { verifyRefreshToken } from "../services/auth.service";
-import testEmail from "../utils/testEmail";
 import { redisClient } from "../config/redis";
 import { CloudinaryAsset, RequestWithUploadedImage } from "../@types/interface";
-import { UpdateUserMapper } from "../dto/user";
 import { AuthCacheService } from "@/services/cache/authCache.service";
+import { AuthService } from "@/services/auth.service";
 
 export class UserController {
   private authCacheService = new AuthCacheService(redisClient);
   private userService = new UserService();
+  private authService = new AuthService();
 
   refreshToken = async (req: Request, res: Response): Promise<any> => {
     try {
@@ -19,7 +17,7 @@ export class UserController {
 
       if (!refreshToken) return errorResponse(res, "Refresh token is required", 400);
 
-      const response = await verifyRefreshToken(refreshToken);
+      const response = await this.authService.verifyRefreshToken(refreshToken);
 
       if ("access_token" in response && "expirationTime" in response) {
         const { access_token, expirationTime } = response;
