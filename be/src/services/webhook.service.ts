@@ -3,13 +3,13 @@ import { bookBusTicketsDB } from "../config/db";
 import { UserService } from "./user.service";
 import SeatService from "./seat.service";
 import { TicketType } from "../@types/ticket";
-import { sendTicketEmail } from "./email.service";
-import { DataPaymentSuccess } from "../@types/payment";
 import { sendToUser } from "../sockets/utils/sendToUser";
+import { EmailService } from "./email.service";
 
 export class WebhookService {
   private userService = new UserService();
   private seatService = new SeatService(bookBusTicketsDB);
+  private emailService = new EmailService();
 
   public processWebhookEvent = async (orderCode: number, reference: string) => {
     try {
@@ -38,7 +38,7 @@ export class WebhookService {
         // Get user info
         const userId = ticketInfo[0].customerId.toString();
 
-        await sendTicketEmail(ticketInfo);
+        await this.emailService.sendTicketEmail(ticketInfo);
         const socketSent = sendToUser("/payment", userId, "payment-status", {
           status: "success",
           message: `Thanh toán thành công đơn ${orderCode}`,
