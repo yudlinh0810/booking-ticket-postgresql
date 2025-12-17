@@ -176,7 +176,7 @@ export class EmailService {
 
   async sendLinkResetPassword(email: string, token: string): Promise<SentMessageInfo> {
     try {
-      const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
+      const resetLink = `${process.env.URL_FRONTEND_CLIENT}/reset-password?token=${token}`;
       const info = await this.transporter.sendMail({
         to: email,
         subject: "Yêu cầu đặt lại mật khẩu",
