@@ -1,3 +1,5 @@
+import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import dayjs from "dayjs";
 import moment from "moment";
 import { useCallback, useEffect, useState } from "react";
@@ -13,8 +15,6 @@ import { useUserStore } from "../store/userStore";
 import { useUiStore } from "../store/useUIStore";
 import styles from "../styles/pages/profilePage.module.scss";
 import { User } from "../types/user";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCloudArrowUp } from "@fortawesome/free-solid-svg-icons";
 
 const sexOptions = [
   { value: "male", label: "Nam" },
@@ -58,9 +58,8 @@ const ProfilePage = () => {
   const handleProfile = async () => {
     const detailUser = await fetchUserDetail();
     const formattedDate = moment(detailUser?.date_birth).format("YYYY-MM-DD");
-
-    if (detailUser?.url_img) {
-      console.log("Server URL:", detailUser.url_img);
+    if (detailUser.url_img) {
+      console.log("Server URL:", detailUser);
       setServerAvatarUrl(detailUser.url_img);
     }
 
@@ -72,6 +71,7 @@ const ProfilePage = () => {
       date_birth: formattedDate || dayjs().format("YYYY-MM-DD"),
       sex: detailUser?.sex || "male",
       address: detailUser?.address || "",
+      avatar: detailUser?.url_img || "",
     });
   };
 
@@ -156,6 +156,7 @@ const ProfilePage = () => {
                   <img
                     src={displayAvatar || "/default-avatar.png"}
                     className={styles["account__avatar-actions-img"]}
+                    crossOrigin="anonymous"
                     loading="lazy"
                   />
                   <input

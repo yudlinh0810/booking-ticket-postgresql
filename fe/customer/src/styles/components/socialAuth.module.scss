@@ -1,25 +1,4 @@
 .btn-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-
-  .btn-item {
-    flex: 1;
-
-    padding: 0.5rem;
-    border: 1px solid var(--bg-primary);
-    border-radius: 1rem;
-
-    color: var(--black);
-    text-align: center;
-
-    transition: all 0.3s;
-
-    &:hover {
-      border-color: var(--color-white-hex);
-
-      background-color: var(--bg-primary);
-      color: var(--color-white-hex);
-    }
-  }
+  display: grid;
+  align-items: center;
 }

@@ -2,6 +2,15 @@ import { message } from "antd";
 import { LoginPayLoad, RegisterPayLoad } from "../types";
 import { bookTicketAPI } from "./customizeAxios.service";
 
+export const loginWithGoogle = async (token: string) => {
+  try {
+    return await bookTicketAPI.post("/auth/google-login", { token }).then((res) => res.data);
+  } catch (err) {
+    message.error(err instanceof Error ? err.message : "Đăng nhập thất bại");
+    return null;
+  }
+};
+
 export const loginUser = async (data: LoginPayLoad) => {
   try {
     const response = await bookTicketAPI.post("/users/auth/customer/login", data);

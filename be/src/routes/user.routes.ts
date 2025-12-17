@@ -16,9 +16,9 @@ router.put(
   uploadImageToCloudinary,
   userController.updateUserByRole
 );
-router.get("/auth/refresh-token", userController.refreshToken);
-// router.get("/auth/me", authService.verifyAccessToken, userController.fetchUser);
-router.post("/auth/logout", authService.verifyAccessToken, userController.logout);
+router.get("/refresh-token", userController.refreshToken);
+router.get("/me", authService.verifyAccessToken, userController.fetchUser);
+router.post("/logout", authService.verifyAccessToken, userController.logout);
 // reset password
 router.post("/reset-password", userController.resetPassword);
 // confirm reset  password

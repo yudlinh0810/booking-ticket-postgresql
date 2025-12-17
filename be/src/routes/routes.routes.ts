@@ -19,7 +19,7 @@ import authRoute from "./auth.route";
 
 const routes = (app: express.Application): void => {
   // Cấu hình routes
-  app.use("/api/users", userRouter);
+  app.use("/api/users/auth", userRouter);
   app.use("/api/locations", locationRouter);
   app.use("/api/customers", customerRouter);
   app.use("/api/cars", busRouter);
