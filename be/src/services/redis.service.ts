@@ -15,7 +15,6 @@
 
 // export class RedisService {
 //   private redisClient: RedisClient;
-//   private prisma = new PrismaClient();
 
 //   constructor(client: RedisClient) {
 //     this.redisClient = client;

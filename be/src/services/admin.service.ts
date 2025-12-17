@@ -3,21 +3,20 @@ import { ArrangeType } from "@/@types/type";
 
 import { UserCacheService } from "./cache/userCache.service";
 import { redisClient } from "@/config/redis";
-import { PrismaClient } from "@prisma/client";
 import { CreateBaseUserDto } from "@/users/dto/create/create-base-user.dto";
 import { UpdateAdminDto } from "@/users/dto/update/update-admin.dto";
 import { generateRandomString } from "@/utils/generateRandomString";
 import { hashPassword } from "@/utils/hashPassword";
 import { EmailService } from "./email.service";
+import prisma from "@/config/prisma";
 
 export class AdminService {
   protected userCacheService = new UserCacheService(redisClient);
-  protected prisma = new PrismaClient();
   protected emailService = new EmailService();
 
   async total(): Promise<number> {
     try {
-      const result = await this.prisma.user.findMany({
+      const result = await prisma.user.findMany({
         where: {
           role: "admin",
           is_deleted: false,
@@ -48,7 +47,7 @@ export class AdminService {
     const totalCount = await this.total();
     const totalPage = Math.ceil(totalCount / limit);
 
-    const adminList = await this.prisma.user.findMany({
+    const adminList = await prisma.user.findMany({
       omit: onmitAdmin,
       where: { is_deleted: false },
 
@@ -72,7 +71,7 @@ export class AdminService {
   async add(data: CreateBaseUserDto) {
     try {
       const saltPassword = await hashPassword(data.password);
-      const newAdmin = await this.prisma.user.create({
+      const newAdmin = await prisma.user.create({
         data: {
           ...data,
           password: saltPassword,
@@ -95,7 +94,7 @@ export class AdminService {
   // Update Profile Admin
   async updateAdminDetails(id: number, data: UpdateAdminDto) {
     try {
-      const updateAdmin = await this.prisma.user.update({
+      const updateAdmin = await prisma.user.update({
         where: { id },
         data: {
           ...data,
@@ -118,7 +117,7 @@ export class AdminService {
 
   async updateAdminPassword(id: number, passwordOld: string, newPassword: string) {
     try {
-      const getPassword = await this.prisma.user.findUnique({
+      const getPassword = await prisma.user.findUnique({
         where: { id: id, is_deleted: false },
         select: { password: true },
       });
@@ -131,7 +130,7 @@ export class AdminService {
           throw new Error("Old password is incorrect");
         } else {
           const saltPassword = await hashPassword(newPassword, 10);
-          const updatePassword = await this.prisma.user.update({
+          const updatePassword = await prisma.user.update({
             where: { id: id },
             data: { password: saltPassword },
           });
@@ -151,7 +150,7 @@ export class AdminService {
 
   async resetAdminPassword(email: string) {
     try {
-      const checkAdmin = await this.prisma.user.findUnique({
+      const checkAdmin = await prisma.user.findUnique({
         where: { email: email, is_deleted: false },
       });
 
@@ -159,7 +158,7 @@ export class AdminService {
         throw new Error("Admin not found");
       } else {
         const linkReset = generateRandomString(50);
-        const updateResetLink = await this.prisma.passwordResetToken.create({
+        const updateResetLink = await prisma.passwordResetToken.create({
           data: {
             user_id: checkAdmin.id,
             token: linkReset,
@@ -188,7 +187,7 @@ export class AdminService {
 
   async confirmResetAdminPassword(token: string, newPassword: string) {
     try {
-      const resetTokenRecord = await this.prisma.passwordResetToken.findFirst({
+      const resetTokenRecord = await prisma.passwordResetToken.findFirst({
         where: {
           token: token,
           is_user: false,
@@ -204,20 +203,20 @@ export class AdminService {
 
       const now = new Date();
       if (resetTokenRecord.expires_at < now) {
-        await this.prisma.passwordResetToken.deleteMany({
+        await prisma.passwordResetToken.deleteMany({
           where: { id: resetTokenRecord.id },
         });
         throw new Error("Reset token has expired");
       }
 
       const saltPassword = await hashPassword(newPassword, 10);
-      const updatePassword = await this.prisma.user.update({
+      const updatePassword = await prisma.user.update({
         where: { id: resetTokenRecord.user_id },
         data: { password: saltPassword },
       });
 
       if (updatePassword) {
-        await this.prisma.passwordResetToken.deleteMany({
+        await prisma.passwordResetToken.deleteMany({
           where: { id: resetTokenRecord.id },
         });
         return {
