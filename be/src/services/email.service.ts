@@ -164,7 +164,9 @@ export class EmailService {
           <div style="font-family: sans-serif; padding: 1rem; border: 1px solid #2eb4fc;">
             <h3>Yêu cầu đặt lại mật khẩu</h3>
             <p>Vui lòng nhấp vào liên kết bên dưới để đặt lại mật khẩu của bạn:</p>
-            <a href="${resetLink}" style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Đặt lại mật khẩu</a>
+            <div style="display: flex; justify-content: center; margin: 1rem 0;">
+              <a href="${resetLink}" style="background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">Đặt lại mật khẩu</a>
+            </div>
             <p>Liên kết này sẽ hết hạn trong 15 phút.</p>
             <p>Nếu bạn không yêu cầu, vui lòng bỏ qua email này.</p>
           </div>
