@@ -115,7 +115,7 @@ export class UserController {
     }
   };
 
-  async resetPassword(req: Request, res: Response): Promise<any> {
+  resetPassword = async (req: Request, res: Response): Promise<any> => {
     try {
       const email = req.body.email;
 
@@ -132,9 +132,9 @@ export class UserController {
       console.log("Err Controller", error);
       return errorResponse(res, "ERR Controller.resetPassword", 500);
     }
-  }
+  };
 
-  async confirmResetPassword(req: Request, res: Response): Promise<any> {
+  confirmResetPassword = async (req: Request, res: Response): Promise<any> => {
     try {
       const { token, newPassword } = req.body;
 
@@ -152,5 +152,5 @@ export class UserController {
       console.log("Err Controller", error);
       return errorResponse(res, "ERR Controller.confirmResetPassword", 500);
     }
-  }
+  };
 }

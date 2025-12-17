@@ -6,7 +6,7 @@ import { AdminService } from "../services/admin.service";
 export class AdminController {
   private adminService = new AdminService();
 
-  async getAll(req: Request, res: Response): Promise<any> {
+  getAll = async (req: Request, res: Response): Promise<any> => {
     try {
       const page = Number(req.query.page);
       const limit = Number(req.query.limit) || 10;
@@ -24,9 +24,9 @@ export class AdminController {
       console.log("Err Controller", error);
       return errorResponse(res, "ERR Controller.getAll", 500);
     }
-  }
+  };
 
-  async create(req: Request, res: Response): Promise<any> {
+  create = async (req: Request, res: Response): Promise<any> => {
     try {
       const dataNewAdmin = req.body;
 
@@ -41,9 +41,9 @@ export class AdminController {
       console.log("Err Controller", error);
       return errorResponse(res, "ERR Controller.create", 500);
     }
-  }
+  };
 
-  async updateAdminDetails(req: Request, res: Response): Promise<any> {
+  updateAdminDetails = async (req: Request, res: Response): Promise<any> => {
     try {
       const id = req.user.id;
       const dataNewAdmin = req.body;
@@ -59,9 +59,9 @@ export class AdminController {
       console.log("Err Controller", error);
       return errorResponse(res, "ERR Controller.updateAdminDetails", 500);
     }
-  }
+  };
 
-  async updateAdminPassword(req: Request, res: Response): Promise<any> {
+  updateAdminPassword = async (req: Request, res: Response): Promise<any> => {
     try {
       const id = req.user.id;
       const { passwordOld, passwordNew } = req.body;
@@ -78,5 +78,5 @@ export class AdminController {
       console.log("Err Controller", error);
       return errorResponse(res, "ERR Controller.updateAdminPassword", 500);
     }
-  }
+  };
 }
