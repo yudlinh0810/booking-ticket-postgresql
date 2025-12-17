@@ -117,6 +117,7 @@ export class UserController {
 
   resetPassword = async (req: Request, res: Response): Promise<any> => {
     try {
+      console.log("body", req.body);
       const email = req.body.email;
 
       if (!email) return errorResponse(res, "Email is required", 400);

@@ -202,8 +202,13 @@ export class UserService {
         throw new Error("User not found");
       } else {
         const linkReset = generateRandomString(50);
-        const updateResetLink = await this.prisma.passwordResetToken.create({
-          data: {
+        const updateResetLink = await this.prisma.passwordResetToken.upsert({
+          where: { user_id: checkUser.id },
+          update: {
+            token: linkReset,
+            expires_at: new Date(Date.now() + 60 * 15 * 1000), // 15'
+          },
+          create: {
             user_id: checkUser.id,
             token: linkReset,
             expires_at: new Date(Date.now() + 60 * 15 * 1000), // 15'
