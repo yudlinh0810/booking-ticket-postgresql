@@ -9,12 +9,39 @@ const adminController = new AdminController();
 const userController = new UserController();
 const authService = new AuthService();
 
-// Tạo mới
+// create admin
 route.post("/", authService.verifyAccessToken, authorizeRoles("admin"), adminController.create);
-// Cập nhật
-// Lấy danh sách tất cả
+// get all admins with pagination
 route.get("/", authService.verifyAccessToken, authorizeRoles("admin"), adminController.getAll);
-// Lấy chi tiết
+// get admin by id
 route.get("/:id", authService.verifyAccessToken, authorizeRoles("admin"), userController.fetchUser);
+// update admin details
+route.put(
+  "/profile",
+  authService.verifyAccessToken,
+  authorizeRoles("admin"),
+  adminController.updateAdminDetails
+);
+// update admin password
+route.put(
+  "/password",
+  authService.verifyAccessToken,
+  authorizeRoles("admin"),
+  adminController.updateAdminPassword
+);
+// reset admin password
+route.post(
+  "/reset-password",
+  authService.verifyAccessToken,
+  authorizeRoles("admin"),
+  adminController.resetAdminPassword
+);
+// confirm reset admin password
+route.post(
+  "/confirm-reset-password",
+  authService.verifyAccessToken,
+  authorizeRoles("admin"),
+  adminController.confirmResetAdminPassword
+);
 
 export default route;

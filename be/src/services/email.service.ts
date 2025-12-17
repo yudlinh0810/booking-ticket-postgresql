@@ -181,10 +181,15 @@ export class EmailService {
         to: email,
         subject: "Yêu cầu đặt lại mật khẩu",
         html: `
-          <h3>Yêu cầu đặt lại mật khẩu</h3>
-          <p>Vui lòng nhấp vào liên kết bên dưới để đặt lại mật khẩu của bạn:</p>
-          <a href="${resetLink}">Đặt lại mật khẩu</a>
-          <p>Liên kết này sẽ hết hạn trong 1 giờ.</p>
+          <div styles="font-family: sans-serif; padding: 1rem; border: 1px solid #2eb4fc; display: flex; flex-direction: column; gap: 1rem;">
+            <h3>Yêu cầu đặt lại mật khẩu</h3>
+            <p>Vui lòng nhấp vào liên kết bên dưới để đặt lại mật khẩu của bạn:</p>
+            <a href="${resetLink}">Đặt lại mật khẩu</a>
+            <p>Liên kết này sẽ hết hạn trong 15 phút.</p>
+            <p>Nếu bạn không yêu cầu đặt lại mật khẩu, vui lòng bỏ qua email này.</p>
+            <div>Xin chân thành cảm ơn!</div>
+          </div>
+
         `,
       });
       return info;

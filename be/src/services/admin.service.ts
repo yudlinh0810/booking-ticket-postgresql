@@ -116,7 +116,7 @@ export class AdminService {
     }
   }
 
-  async updateAdminPassword(id: number, passwordOld: string, passwordNew: string) {
+  async updateAdminPassword(id: number, passwordOld: string, newPassword: string) {
     try {
       const getPassword = await this.prisma.user.findUnique({
         where: { id: id, is_deleted: false },
@@ -130,7 +130,7 @@ export class AdminService {
         if (!comparePassword) {
           throw new Error("Old password is incorrect");
         } else {
-          const saltPassword = await hashPassword(passwordNew, 10);
+          const saltPassword = await hashPassword(newPassword, 10);
           const updatePassword = await this.prisma.user.update({
             where: { id: id },
             data: { password: saltPassword },
@@ -149,10 +149,10 @@ export class AdminService {
     }
   }
 
-  async resetAdminPassword(id: number) {
+  async resetAdminPassword(email: string) {
     try {
       const checkAdmin = await this.prisma.user.findUnique({
-        where: { id: id, is_deleted: false },
+        where: { email: email, is_deleted: false },
       });
 
       if (!checkAdmin) {
@@ -161,7 +161,7 @@ export class AdminService {
         const linkReset = generateRandomString(50);
         const updateResetLink = await this.prisma.passwordResetToken.create({
           data: {
-            user_id: id,
+            user_id: checkAdmin.id,
             token: linkReset,
             expires_at: new Date(Date.now() + 60 * 15 * 1000), // 15'
           },
@@ -186,7 +186,7 @@ export class AdminService {
     }
   }
 
-  async confirmResetPassword(token: string, newPassword: string) {
+  async confirmResetAdminPassword(token: string, newPassword: string) {
     try {
       const resetTokenRecord = await this.prisma.passwordResetToken.findFirst({
         where: {
