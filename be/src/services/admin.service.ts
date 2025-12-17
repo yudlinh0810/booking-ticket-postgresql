@@ -1,14 +1,14 @@
-import bcrypt from "bcrypt";
 import { ArrangeType } from "@/@types/type";
+import bcrypt from "bcrypt";
 
-import { UserCacheService } from "./cache/userCache.service";
+import prisma from "@/config/prisma";
 import { redisClient } from "@/config/redis";
 import { CreateBaseUserDto } from "@/users/dto/create/create-base-user.dto";
 import { UpdateAdminDto } from "@/users/dto/update/update-admin.dto";
 import { generateRandomString } from "@/utils/generateRandomString";
 import { hashPassword } from "@/utils/hashPassword";
+import { UserCacheService } from "./cache/userCache.service";
 import { EmailService } from "./email.service";
-import prisma from "@/config/prisma";
 
 export class AdminService {
   protected userCacheService = new UserCacheService(redisClient);
