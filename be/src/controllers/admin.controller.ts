@@ -79,46 +79,4 @@ export class AdminController {
       return errorResponse(res, "ERR Controller.updateAdminPassword", 500);
     }
   }
-
-  async resetAdminPassword(req: Request, res: Response): Promise<any> {
-    try {
-      const email = req.body.email;
-
-      if (!email) return errorResponse(res, "Email is required", 400);
-
-      const resultResetPassword = await this.adminService.resetAdminPassword(email);
-
-      if (!resultResetPassword) {
-        return errorResponse(res, "Failed to reset password", 500);
-      } else {
-        return successResponse(res, 204);
-      }
-    } catch (error) {
-      console.log("Err Controller", error);
-      return errorResponse(res, "ERR Controller.updateAdminPassword", 500);
-    }
-  }
-
-  async confirmResetAdminPassword(req: Request, res: Response): Promise<any> {
-    try {
-      const { token, newPassword } = req.body;
-
-      if (!token || !newPassword) {
-        return errorResponse(res, "token and newPassword are required", 400);
-      }
-      const resultResetPassword = await this.adminService.confirmResetAdminPassword(
-        token,
-        newPassword
-      );
-
-      if (!resultResetPassword) {
-        return errorResponse(res, "Failed to reset password", 500);
-      }
-
-      return successResponse(res, 204);
-    } catch (error) {
-      console.log("Err Controller", error);
-      return errorResponse(res, "ERR Controller.updateAdminPassword", 500);
-    }
-  }
 }

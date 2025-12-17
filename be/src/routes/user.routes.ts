@@ -19,5 +19,9 @@ router.put(
 router.get("/auth/refresh-token", userController.refreshToken);
 // router.get("/auth/me", authService.verifyAccessToken, userController.fetchUser);
 router.post("/auth/logout", authService.verifyAccessToken, userController.logout);
+// reset password
+router.post("/reset-password", userController.resetPassword);
+// confirm reset  password
+router.post("/confirm-reset-password", userController.confirmResetPassword);
 
 export default router;

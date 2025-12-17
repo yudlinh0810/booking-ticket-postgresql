@@ -114,4 +114,43 @@ export class UserController {
       return errorResponse(res, "ERR fetch (userController)", 500);
     }
   };
+
+  async resetPassword(req: Request, res: Response): Promise<any> {
+    try {
+      const email = req.body.email;
+
+      if (!email) return errorResponse(res, "Email is required", 400);
+
+      const resultResetPassword = await this.userService.resetPassword(email);
+
+      if (!resultResetPassword) {
+        return errorResponse(res, "Failed to reset password", 500);
+      } else {
+        return successResponse(res, 204);
+      }
+    } catch (error) {
+      console.log("Err Controller", error);
+      return errorResponse(res, "ERR Controller.resetPassword", 500);
+    }
+  }
+
+  async confirmResetPassword(req: Request, res: Response): Promise<any> {
+    try {
+      const { token, newPassword } = req.body;
+
+      if (!token || !newPassword) {
+        return errorResponse(res, "token and newPassword are required", 400);
+      }
+      const resultResetPassword = await this.userService.confirmResetPassword(token, newPassword);
+
+      if (!resultResetPassword) {
+        return errorResponse(res, "Failed to reset password", 500);
+      }
+
+      return successResponse(res, 204);
+    } catch (error) {
+      console.log("Err Controller", error);
+      return errorResponse(res, "ERR Controller.confirmResetPassword", 500);
+    }
+  }
 }

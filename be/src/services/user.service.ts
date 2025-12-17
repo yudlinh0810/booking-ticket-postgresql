@@ -1,10 +1,13 @@
-import { redisClient } from "../config/redis";
+import { redisClient } from "@/config/redis";
 import { PrismaClient } from "@prisma/client";
-import { UpdateUserMapper } from "../dto/user";
-import { CloudinaryAsset } from "../@types/interface";
-import deleteOldFile from "../utils/deleteOldFile.util";
+import { UpdateUserMapper } from "@/dto/user";
+import { CloudinaryAsset } from "@/@types/interface";
+import deleteOldFile from "@/utils/deleteOldFile.util";
 import { UserCacheService } from "./cache/userCache.service";
 import { Role } from "@/common/enums";
+import { generateRandomString } from "@/utils/generateRandomString";
+import { EmailService } from "./email.service";
+import { hashPassword } from "@/utils/hashPassword";
 
 const userBaseSelect = {
   id: true,
@@ -41,6 +44,7 @@ const managerSelect = {
 export class UserService {
   private prisma = new PrismaClient();
   private userCacheService = new UserCacheService(redisClient);
+  private emailService = new EmailService();
 
   async getTotal(): Promise<number> {
     const count = await this.prisma.user.count({
@@ -184,6 +188,86 @@ export class UserService {
       if (error.code === "P2025") {
         throw "Không tìm thấy user để update!";
       }
+      throw error;
+    }
+  }
+
+  async resetPassword(email: string) {
+    try {
+      const checkUser = await this.prisma.user.findUnique({
+        where: { email: email, is_deleted: false },
+      });
+
+      if (!checkUser) {
+        throw new Error("User not found");
+      } else {
+        const linkReset = generateRandomString(50);
+        const updateResetLink = await this.prisma.passwordResetToken.create({
+          data: {
+            user_id: checkUser.id,
+            token: linkReset,
+            expires_at: new Date(Date.now() + 60 * 15 * 1000), // 15'
+          },
+        });
+        if (updateResetLink) {
+          const sendLinkResetPassword = await this.emailService.sendLinkResetPassword(
+            checkUser.email,
+            linkReset
+          );
+          if (!sendLinkResetPassword) {
+            throw new Error("Failed to send reset link email");
+          }
+          return {
+            message: "Reset link created successfully",
+          };
+        } else {
+          throw new Error("Reset link creation failed");
+        }
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async confirmResetPassword(token: string, newPassword: string) {
+    try {
+      const resetTokenRecord = await this.prisma.passwordResetToken.findFirst({
+        where: {
+          token: token,
+          is_user: false,
+          // expires_at: {
+          //   gte: new Date()
+          // }
+        },
+      });
+
+      if (!resetTokenRecord) {
+        throw new Error("Invalid or expired reset token");
+      }
+
+      const now = new Date();
+      if (resetTokenRecord.expires_at < now) {
+        await this.prisma.passwordResetToken.deleteMany({
+          where: { id: resetTokenRecord.id },
+        });
+        throw new Error("Reset token has expired");
+      }
+
+      const hashedPassword = await hashPassword(newPassword, 10);
+      await this.prisma.$transaction([
+        this.prisma.user.update({
+          where: { id: resetTokenRecord.user_id },
+          data: { password: hashedPassword },
+        }),
+        this.prisma.passwordResetToken.delete({
+          where: { id: resetTokenRecord.id },
+        }),
+      ]);
+
+      return {
+        message: "Password has been reset successfully",
+      };
+    } catch (error) {
       throw error;
     }
   }
