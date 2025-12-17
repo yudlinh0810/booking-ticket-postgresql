@@ -45,12 +45,7 @@ route.put(
   adminController.updateAdminPassword
 );
 // reset admin password
-route.post(
-  "/reset-password",
-  authService.verifyAccessToken,
-  authorizeRoles("admin", "super_admin"),
-  adminController.resetAdminPassword
-);
+route.post("/reset-password", adminController.resetAdminPassword);
 // confirm reset admin password
 route.post("/confirm-reset-password", adminController.confirmResetAdminPassword);
 
