@@ -21,7 +21,7 @@ router.get(
   "/",
   authService.verifyAccessToken,
   authorizeRoles("admin", "super_admin"),
-  adminController.getAll
+  adminController.getAdminsPagination
 );
 // get admin by id
 router.get(

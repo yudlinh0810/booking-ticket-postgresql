@@ -37,7 +37,7 @@ export class UserController {
         return errorResponse(res, response.message, 400);
       }
     } catch (error) {
-      return errorResponse(res, "ERR Controller.refreshToken", 500);
+      return errorResponse(res, "ERR CTL refreshToken", 500);
     }
   };
 
@@ -51,7 +51,7 @@ export class UserController {
         return errorResponse(res, "Delete failed", 404);
       }
     } catch (error) {
-      return errorResponse(res, "ERR Controller.deleteUser", 500);
+      return errorResponse(res, "ERR CTL deleteUser", 500);
     }
   };
 
@@ -78,7 +78,7 @@ export class UserController {
       return successResponse(res, 200, { status: "OK", message: "Logout success" });
     } catch (error) {
       console.log("Controller", error);
-      return errorResponse(res, "ERR Controller.logout", 500);
+      return errorResponse(res, "ERR CTL logout", 500);
     }
   };
 
@@ -101,7 +101,7 @@ export class UserController {
       }
     } catch (error) {
       console.log("Err Controller", error);
-      return errorResponse(res, "ERR Controller.update", 500);
+      return errorResponse(res, "ERR CTL update", 500);
     }
   };
 
@@ -131,7 +131,7 @@ export class UserController {
       }
     } catch (error) {
       console.log("Err Controller", error);
-      return errorResponse(res, "ERR Controller.resetPassword", 500);
+      return errorResponse(res, "ERR CTL resetPassword", 500);
     }
   };
 
@@ -151,7 +151,7 @@ export class UserController {
       return successResponse(res, 204);
     } catch (error) {
       console.log("Err Controller", error);
-      return errorResponse(res, "ERR Controller.confirmResetPassword", 500);
+      return errorResponse(res, "ERR CTL confirmResetPassword", 500);
     }
   };
 }

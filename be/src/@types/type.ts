@@ -1,4 +1,4 @@
-export type ArrangeType = "DESC" | "ASC";
+export type ArrangeType = "desc" | "asc";
 export interface UserLogin {
   email: string;
   password: string;

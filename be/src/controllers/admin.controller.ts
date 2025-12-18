@@ -6,18 +6,18 @@ import { AdminService } from "../services/admin.service";
 export class AdminController {
   private adminService = new AdminService();
 
-  getAll = async (req: Request, res: Response): Promise<any> => {
+  getAdminsPagination = async (req: Request, res: Response): Promise<any> => {
     try {
       const page = Number(req.query.page);
       const limit = Number(req.query.limit) || 10;
       const arrangeType =
-        (req.query.arrange_type as string)?.toUpperCase() === "ASC"
-          ? "ASC"
-          : ("DESC" as ArrangeType);
+        (req.query.arrange_type as string)?.toLowerCase() === "asc"
+          ? "asc"
+          : ("desc" as ArrangeType);
 
       if (limit < 0 || !page) return errorResponse(res, "limit must be greater than 0", 404);
 
-      const data = await this.adminService.getAllPagination(page, limit, arrangeType);
+      const data = await this.adminService.getAdminsPagination(page, limit, arrangeType);
 
       return successResponse(res, 200, data);
     } catch (error) {
@@ -34,7 +34,7 @@ export class AdminController {
         return errorResponse(res, "email, password and full_name are required", 400);
       }
 
-      const data = await this.adminService.add(dataNewAdmin);
+      const data = await this.adminService.create(dataNewAdmin);
 
       return successResponse(res, 200, data);
     } catch (error) {

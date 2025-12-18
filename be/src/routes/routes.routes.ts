@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express";
+import express, { Request, Response } from "express";
 import { errorHandler } from "../middlewares/error.middleware";
 import busRouter from "./car.routes";
 import customerRouter from "./customer.routes";
@@ -13,9 +13,9 @@ import ticketRoute from "./ticket.routes";
 import payOSRoute from "./payos.routes";
 import webhookPayOsRoute from "./webhook.routes";
 import statisticalRoute from "./statistical.route";
-import revenueRoute from "./revenue.route";
+import revenueRoute from "./revenue.routes";
 // import oAuth2 from "./oAuth2.route";
-import authRoute from "./auth.route";
+import authRoute from "./auth.routes";
 
 const routes = (app: express.Application): void => {
   // Cấu hình routes

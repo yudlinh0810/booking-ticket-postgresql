@@ -5,14 +5,11 @@ import prisma from "@/config/prisma";
 import { redisClient } from "@/config/redis";
 import { CreateBaseUserDto } from "@/users/dto/create/create-base-user.dto";
 import { UpdateAdminDto } from "@/users/dto/update/update-admin.dto";
-import { generateRandomString } from "@/utils/generateRandomString";
 import { hashPassword } from "@/utils/hashPassword";
 import { UserCacheService } from "./cache/userCache.service";
-import { EmailService } from "./email.service";
 
 export class AdminService {
   protected userCacheService = new UserCacheService(redisClient);
-  protected emailService = new EmailService();
 
   async total(): Promise<number> {
     try {
@@ -32,7 +29,7 @@ export class AdminService {
     return Math.ceil(total / limit);
   }
 
-  async getAllPagination(page: number = 1, limit: number = 10, arrangeType?: ArrangeType) {
+  async getAdminsPagination(page: number = 1, limit: number = 10, arrangeType?: ArrangeType) {
     const onmitAdmin = {
       company_id: true,
       current_location_id: true,
@@ -55,7 +52,7 @@ export class AdminService {
       skip: skip,
 
       orderBy: {
-        id: arrangeType === "DESC" ? "desc" : "asc",
+        id: arrangeType === "desc" ? "desc" : "asc",
       },
     });
 
@@ -68,7 +65,7 @@ export class AdminService {
     };
   }
 
-  async add(data: CreateBaseUserDto) {
+  async create(data: CreateBaseUserDto) {
     try {
       const saltPassword = await hashPassword(data.password);
       const newAdmin = await prisma.user.create({
@@ -142,88 +139,6 @@ export class AdminService {
             throw new Error("Update password failed");
           }
         }
-      }
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async resetAdminPassword(email: string) {
-    try {
-      const checkAdmin = await prisma.user.findUnique({
-        where: { email: email, is_deleted: false },
-      });
-
-      if (!checkAdmin) {
-        throw new Error("Admin not found");
-      } else {
-        const linkReset = generateRandomString(50);
-        const updateResetLink = await prisma.passwordResetToken.create({
-          data: {
-            user_id: checkAdmin.id,
-            token: linkReset,
-            expires_at: new Date(Date.now() + 60 * 15 * 1000), // 15'
-          },
-        });
-        if (updateResetLink) {
-          const sendLinkResetPassword = await this.emailService.sendLinkResetPassword(
-            checkAdmin.email,
-            linkReset
-          );
-          if (!sendLinkResetPassword) {
-            throw new Error("Failed to send reset link email");
-          }
-          return {
-            message: "Reset link created successfully",
-          };
-        } else {
-          throw new Error("Reset link creation failed");
-        }
-      }
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  async confirmResetAdminPassword(token: string, newPassword: string) {
-    try {
-      const resetTokenRecord = await prisma.passwordResetToken.findFirst({
-        where: {
-          token: token,
-          is_user: false,
-          // expires_at: {
-          //   gte: new Date()
-          // }
-        },
-      });
-
-      if (!resetTokenRecord) {
-        throw new Error("Invalid or expired reset token");
-      }
-
-      const now = new Date();
-      if (resetTokenRecord.expires_at < now) {
-        await prisma.passwordResetToken.deleteMany({
-          where: { id: resetTokenRecord.id },
-        });
-        throw new Error("Reset token has expired");
-      }
-
-      const saltPassword = await hashPassword(newPassword, 10);
-      const updatePassword = await prisma.user.update({
-        where: { id: resetTokenRecord.user_id },
-        data: { password: saltPassword },
-      });
-
-      if (updatePassword) {
-        await prisma.passwordResetToken.deleteMany({
-          where: { id: resetTokenRecord.id },
-        });
-        return {
-          message: "Password has been reset successfully",
-        };
-      } else {
-        throw new Error("Failed to reset password");
       }
     } catch (error) {
       throw error;

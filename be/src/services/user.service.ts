@@ -9,6 +9,7 @@ import { EmailService } from "./email.service";
 import { hashPassword } from "@/utils/hashPassword";
 import prisma from "@/config/prisma";
 import { executeWithRetry } from "@/utils/prismaRetry.util";
+import { ArrangeType } from "@/@types/type";
 
 const userBaseSelect = {
   id: true,
@@ -46,17 +47,15 @@ export class UserService {
   private userCacheService = new UserCacheService(redisClient);
   private emailService = new EmailService();
 
-  // Helper method để retry khi có connection error
-
-  async getTotal(): Promise<number> {
+  getTotal = async (): Promise<number> => {
     return executeWithRetry(async () => {
       return await prisma.user.count({
         where: { is_deleted: false },
       });
     });
-  }
+  };
 
-  async findByEmail(email: string, role: Role): Promise<object | null> {
+  findByEmail = async (email: string, role: Role): Promise<object | null> => {
     try {
       return await executeWithRetry(async () => {
         return await prisma.user.findFirst({
@@ -66,9 +65,9 @@ export class UserService {
     } catch {
       throw "Err find user by email";
     }
-  }
+  };
 
-  async findImageById(id: number) {
+  findImageById = async (id: number) => {
     try {
       return await executeWithRetry(async () => {
         return await prisma.user.findFirst({
@@ -82,9 +81,9 @@ export class UserService {
     } catch (error) {
       throw "Err find url_public_img by id";
     }
-  }
+  };
 
-  async fetch(id: number, role: Role): Promise<object | object> {
+  fetch = async (id: number, role: Role): Promise<object | object> => {
     const existingInRedis = await this.userCacheService.getUserById(id);
     if (existingInRedis) {
       return existingInRedis;
@@ -133,9 +132,9 @@ export class UserService {
       }
     }
     return detailUser;
-  }
+  };
 
-  async delete(id: number): Promise<boolean> {
+  delete = async (id: number): Promise<boolean> => {
     try {
       await executeWithRetry(async () => {
         await prisma.user.delete({ where: { id: id } });
@@ -144,14 +143,14 @@ export class UserService {
     } catch (error) {
       throw "Error delete user.";
     }
-  }
+  };
 
-  async updateByRole<T extends keyof UpdateUserMapper>(
+  updateByRole = async <T extends keyof UpdateUserMapper>(
     id: number,
     role: T,
     data: UpdateUserMapper[T],
     newAvatar?: CloudinaryAsset
-  ): Promise<any> {
+  ): Promise<any> => {
     try {
       const user = await this.findImageById(id);
 
@@ -202,9 +201,9 @@ export class UserService {
       }
       throw error;
     }
-  }
+  };
 
-  async resetPassword(email: string) {
+  resetPassword = async (email: string) => {
     return executeWithRetry(async () => {
       try {
         const checkUser = await prisma.user.findUnique({
@@ -245,15 +244,18 @@ export class UserService {
         throw error;
       }
     });
-  }
+  };
 
-  async confirmResetPassword(token: string, newPassword: string) {
+  confirmResetPassword = async (token: string, newPassword: string) => {
     return executeWithRetry(async () => {
       try {
         const resetTokenRecord = await prisma.passwordResetToken.findFirst({
           where: {
             token: token,
             is_user: false,
+            // expires_at: {
+            //   gte: new Date()
+            // }
           },
         });
 
@@ -287,5 +289,23 @@ export class UserService {
         throw error;
       }
     });
-  }
+  };
+
+  totalUserByRole = async (role: Role): Promise<number> => {
+    try {
+      const result = await prisma.user.findMany({
+        where: {
+          role: role,
+          is_deleted: false,
+        },
+      });
+      return result.length;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  totalPageUserByRole = (total: number, limit: number): number => {
+    return Math.ceil(total / limit);
+  };
 }
