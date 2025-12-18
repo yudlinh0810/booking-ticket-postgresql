@@ -2,7 +2,7 @@ import cloudinary from "../config/cloudinary";
 
 type DeleteOldFile = "image" | "video";
 
-const deleteOldFile = async (publicId: string, resourceType: DeleteOldFile = "image") => {
+export const deleteOldFile = async (publicId: string, resourceType: DeleteOldFile = "image") => {
   try {
     const result = await cloudinary.v2.uploader.destroy(publicId, {
       resource_type: resourceType,
@@ -14,5 +14,3 @@ const deleteOldFile = async (publicId: string, resourceType: DeleteOldFile = "im
     throw error;
   }
 };
-
-export default deleteOldFile;

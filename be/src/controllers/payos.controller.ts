@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { errorResponse, successResponse } from "../utils/response.util";
 import payosService from "../services/payos.service";
 
-class PayOSController {
+export class PayOSController {
   async createPayment(req: Request, res: Response): Promise<any> {
     try {
       const body = req.body;
@@ -51,5 +51,3 @@ class PayOSController {
     }
   }
 }
-
-export default new PayOSController();

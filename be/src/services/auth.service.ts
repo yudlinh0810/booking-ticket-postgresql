@@ -1,13 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import { AuthCacheService } from "./cache/authCache.service";
-import { redisClient } from "@/config/redis";
+import { authCacheService } from "./cache";
 dotenv.config();
 
 export class AuthService {
-  protected authCacheService = new AuthCacheService(redisClient);
-
   // Tạo Access Token
   generalAccessToken = ({ id, role }: { id: string | number; role: string }): string => {
     return jwt.sign({ id, role }, process.env.ACCESS_TOKEN, { expiresIn: "1h" });
@@ -46,8 +43,8 @@ export class AuthService {
       }
 
       // kiểm tra redis
-      const sessionKey = await this.authCacheService.getSessionKey(decode.id);
-      const storedAccessToken = await this.authCacheService.getKey(sessionKey);
+      const sessionKey = await authCacheService.getSessionKey(decode.id);
+      const storedAccessToken = await authCacheService.getKey(sessionKey);
       console.log("storedAccessToken", storedAccessToken);
 
       if (!storedAccessToken) {
@@ -79,8 +76,8 @@ export class AuthService {
     }
 
     // kiểm tra redis
-    const refreshKey = await this.authCacheService.getRefreshKey(decoded.id);
-    const storedRefreshToken = await this.authCacheService.getKey(refreshKey);
+    const refreshKey = await authCacheService.getRefreshKey(decoded.id);
+    const storedRefreshToken = await authCacheService.getKey(refreshKey);
 
     if (!storedRefreshToken) {
       return { status: "ERR", message: "Session expired" };
@@ -97,7 +94,7 @@ export class AuthService {
 
     const expirationTime = Date.now() + 60 * 60 * 1000;
 
-    await this.authCacheService.cacheTokens(
+    await authCacheService.cacheTokens(
       decoded.id,
       access_token, // Access Token MỚI
       token, // Refresh Token CŨ (giữ nguyên)

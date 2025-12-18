@@ -1,3 +1,8 @@
+import { config } from "@/config/config";
+import { connectRedis } from "@/config/redis";
+import { logger } from "@/middlewares";
+import routes from "@/routes/routes.routes";
+import { setupSocketServer } from "@/sockets/socket";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -5,12 +10,6 @@ import express from "express";
 import session from "express-session";
 import { createServer } from "http";
 import passport from "passport";
-import { config } from "./config/config";
-import "./config/passport";
-import { connectRedis } from "./config/redis";
-import routes from "./routes/routes.routes";
-import { setupSocketServer } from "./sockets/socket";
-import { logger } from "./middlewares/logger";
 
 dotenv.config();
 

@@ -1,29 +1,29 @@
-import express from "express";
+import { payOSController } from "@/controllers";
 import { authorizeRoles } from "@/middlewares/auth.middleware";
-import payosController from "@/controllers/payos.controller";
-import { AuthService } from "@/services/auth.service";
-const router = express.Router();
-const authService = new AuthService();
+import { authService } from "@/services";
+import express from "express";
+
+const payOSrouter = express.Router();
 
 // Tạo thanh toán
-router.post(
+payOSrouter.post(
   "/",
   authService.verifyAccessToken,
   authorizeRoles("admin", "customer"),
-  payosController.createPayment
+  payOSController.createPayment
 );
 // Lấy link thanh toán
-router.post(
+payOSrouter.post(
   "/link",
   authService.verifyAccessToken,
   authorizeRoles("admin", "customer"),
-  payosController.getPaymentLink
+  payOSController.getPaymentLink
 );
-router.put(
+payOSrouter.put(
   "/link/cancel",
   authService.verifyAccessToken,
   authorizeRoles("admin", "customer"),
-  payosController.cancelPayment
+  payOSController.cancelPayment
 );
 
-export default router;
+export default payOSrouter;

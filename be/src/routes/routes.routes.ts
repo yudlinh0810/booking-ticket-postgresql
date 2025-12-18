@@ -1,21 +1,20 @@
 import express, { Request, Response } from "express";
 import { errorHandler } from "../middlewares/error.middleware";
+import adminRouter from "./admin.routes";
+import authRouter from "./auth.routes";
 import busRouter from "./car.routes";
+import coDriverRouter from "./coDriver.route";
+import promotionRouter from "./coupon.route";
 import customerRouter from "./customer.routes";
+import driverRouter from "./driver.routes";
 import locationRouter from "./location.routes";
+import payOSRouter from "./payos.routes";
+import statisticalRouter from "./statistical.route";
+import ticketRouter from "./ticket.routes";
+import tripRouter from "./trip.routes";
 import userRouter from "./user.routes";
-import driverRoute from "./driver.routes";
-import coDriverRoute from "./coDriver.route";
-import adminRoute from "./admin.routes";
-import tripRoute from "./trip.routes";
-import promotionRoute from "./promotion.route";
-import ticketRoute from "./ticket.routes";
-import payOSRoute from "./payos.routes";
-import webhookPayOsRoute from "./webhook.routes";
-import statisticalRoute from "./statistical.route";
-import revenueRoute from "./revenue.routes";
+import webhookPayOsRouter from "./webhook.routes";
 // import oAuth2 from "./oAuth2.route";
-import authRoute from "./auth.routes";
 
 const routes = (app: express.Application): void => {
   // Cấu hình routes
@@ -23,18 +22,17 @@ const routes = (app: express.Application): void => {
   app.use("/api/locations", locationRouter);
   app.use("/api/customers", customerRouter);
   app.use("/api/cars", busRouter);
-  app.use("/api/drivers", driverRoute);
-  app.use("/api/co-drivers", coDriverRoute);
-  app.use("/api/admins", adminRoute);
-  app.use("/api/trips", tripRoute);
-  app.use("/api/promotions", promotionRoute);
-  app.use("/api/tickets", ticketRoute);
-  app.use("/api/payos", payOSRoute);
-  app.use("/api/webhook", webhookPayOsRoute);
-  app.use("/api/statisticals", statisticalRoute);
-  app.use("/api/revenues", revenueRoute);
+  app.use("/api/drivers", driverRouter);
+  app.use("/api/co-drivers", coDriverRouter);
+  app.use("/api/admins", adminRouter);
+  app.use("/api/trips", tripRouter);
+  app.use("/api/promotions", promotionRouter);
+  app.use("/api/tickets", ticketRouter);
+  app.use("/api/payos", payOSRouter);
+  app.use("/api/webhook", webhookPayOsRouter);
+  app.use("/api/statisticals", statisticalRouter);
   // app.use("/auth", oAuth2); // Server-side Redirect Flow
-  app.use("/api/auth", authRoute); // Client-side Implicit Flow
+  app.use("/api/auth", authRouter); // Client-side Implicit Flow
 
   // Route cho các yêu cầu không tìm thấy
   app.use((req: Request, res: Response): void => {

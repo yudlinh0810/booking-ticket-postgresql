@@ -1,4 +1,3 @@
-import { ResultSetHeader } from "mysql2";
 import GeocodingService from "./geocoding.service";
 import prisma from "@/config/prisma";
 

@@ -1,15 +1,10 @@
-import { redisClient } from "@/config/redis";
-import { UpdateUserMapper } from "@/dto/user";
 import { CloudinaryAsset } from "@/@types/interface";
-import deleteOldFile from "@/utils/deleteOldFile.util";
-import { UserCacheService } from "./cache/userCache.service";
 import { Role } from "@/common/enums";
-import { generateRandomString } from "@/utils/generateRandomString";
-import { EmailService } from "./email.service";
-import { hashPassword } from "@/utils/hashPassword";
 import prisma from "@/config/prisma";
-import { executeWithRetry } from "@/utils/prismaRetry.util";
-import { ArrangeType } from "@/@types/type";
+import { UpdateUserMapper } from "@/dto/user";
+import { deleteOldFile, executeWithRetry, generateRandomString, hashPassword } from "@/utils";
+import { UserCacheService } from "./cache/userCache.service";
+import { EmailService } from "./email.service";
 
 const userBaseSelect = {
   id: true,
@@ -44,8 +39,7 @@ const managerSelect = {
   company_id: true,
 };
 export class UserService {
-  private userCacheService = new UserCacheService(redisClient);
-  private emailService = new EmailService();
+  constructor(private userCacheService: UserCacheService, private emailService: EmailService) {}
 
   getTotal = async (): Promise<number> => {
     return executeWithRetry(async () => {

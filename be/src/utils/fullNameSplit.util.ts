@@ -2,7 +2,7 @@
  * @param {string} fullName
  * @returns {{firstName: string, lastName: string}}
  */
-export function splitFullName(fullName: string) {
+export const splitFullName = (fullName: string) => {
   const trimmedName = fullName.trim();
 
   const lastSpaceIndex = trimmedName.lastIndexOf(" ");
@@ -22,4 +22,4 @@ export function splitFullName(fullName: string) {
     firstName: firstName,
     lastName: lastName,
   };
-}
+};

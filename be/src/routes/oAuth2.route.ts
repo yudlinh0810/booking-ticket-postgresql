@@ -1,9 +1,9 @@
 import express from "express";
 import passport from "passport";
 
-const router = express.Router();
+const oAuth2Router = express.Router();
 
-router.get(
+oAuth2Router.get(
   "/google",
 
   passport.authenticate("google", {
@@ -13,7 +13,7 @@ router.get(
   })
 );
 
-router.get(
+oAuth2Router.get(
   "/google/callback",
 
   passport.authenticate("google", {
@@ -25,7 +25,7 @@ router.get(
   }
 );
 
-router.get("/success", (req, res) => {
+oAuth2Router.get("/success", (req, res) => {
   const accessToken = req.user?.access_token;
   const refreshToken = req.user?.refresh_token;
 
@@ -52,9 +52,9 @@ router.get("/success", (req, res) => {
   // res.redirect(`${process.env.URL_FRONTEND_CLIENT}/?login=success`);
 });
 
-router.get("/failure", (req, res) => {
+oAuth2Router.get("/failure", (req, res) => {
   res.redirect("http://localhost:5173/?login=failed&reason=oauth-failed");
   // res.redirect(`${process.env.URL_FRONTEND_CLIENT}/?login=failed&reason=oauth-failed`);
 });
 
-export default router;
+export default oAuth2Router;

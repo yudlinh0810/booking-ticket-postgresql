@@ -1,48 +1,44 @@
-import express from "express";
+import { adminController, userController } from "@/controllers";
 import { authorizeRoles } from "@/middlewares/auth.middleware";
-import { AdminController } from "@/controllers/admin.controller";
-import { UserController } from "@/controllers/user.controller";
-import { AuthService } from "@/services/auth.service";
+import { authService } from "@/services";
+import express from "express";
 
-const router = express.Router();
-const adminController = new AdminController();
-const userController = new UserController();
-const authService = new AuthService();
+const adminRouter = express.Router();
 
 // create admin
-router.post(
+adminRouter.post(
   "/",
   authService.verifyAccessToken,
   authorizeRoles("admin", "super_admin"),
   adminController.create
 );
 // get all admins with pagination
-router.get(
+adminRouter.get(
   "/",
   authService.verifyAccessToken,
   authorizeRoles("admin", "super_admin"),
   adminController.getAdminsPagination
 );
 // get admin by id
-router.get(
+adminRouter.get(
   "/:id",
   authService.verifyAccessToken,
   authorizeRoles("admin", "super_admin"),
   userController.fetchUser
 );
 // update admin details
-router.put(
+adminRouter.put(
   "/profile",
   authService.verifyAccessToken,
   authorizeRoles("admin", "super_admin"),
   adminController.updateAdminDetails
 );
 // update admin password
-router.put(
+adminRouter.put(
   "/password",
   authService.verifyAccessToken,
   authorizeRoles("admin", "super_admin"),
   adminController.updateAdminPassword
 );
 
-export default router;
+export default adminRouter;

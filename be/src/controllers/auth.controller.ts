@@ -1,12 +1,10 @@
 import { Request, Response } from "express";
 import { OAuth2Client } from "google-auth-library";
-import { CustomerService } from "@/services/customer.service";
 import { errorResponse, successResponse } from "@/utils/response.util";
+import { customerService } from "@/services";
 
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 export class AuthController {
-  protected client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-  protected customerService = new CustomerService();
-
   googleAuthHandler = async (req: Request, res: Response): Promise<any> => {
     try {
       const { token } = req.body;
@@ -16,7 +14,7 @@ export class AuthController {
       }
 
       // Verify Token với Google Server
-      const ticket = await this.client.verifyIdToken({
+      const ticket = await client.verifyIdToken({
         idToken: token,
         audience: process.env.GOOGLE_CLIENT_ID,
       });
@@ -28,7 +26,7 @@ export class AuthController {
       }
 
       const { status, message, action, user, tokenAuth } =
-        await this.customerService.loginOAuthWithGoogle(payload);
+        await customerService.loginOAuthWithGoogle(payload);
 
       if (status === "ERROR") {
         return errorResponse(res, message);

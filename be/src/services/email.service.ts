@@ -1,8 +1,7 @@
 import { Resend } from "resend";
 import { DataPaymentSuccess } from "@/@types/payment";
-import generateQRCodeBase64 from "@/utils/generateQRCodeBase64";
-import { formatDate } from "@/utils/formatDate";
-import formatCurrency from "@/utils/formatCurrency";
+import { formatCurrency, generateQRCodeBase64 } from "@/utils";
+import { formatDate } from "date-fns";
 
 // Khởi tạo Resend với API Key từ file .env
 const resend = new Resend(process.env.RESEND_API_KEY);

@@ -7,7 +7,7 @@ import crypto from "crypto";
  * @returns A random string
  */
 
-export function generateRandomString(length: number = 16, chars?: string): string {
+export const generateRandomString = (length: number = 16, chars?: string): string => {
   const defaultChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
   const characterSet = chars || defaultChars;
   const characterSetLength = characterSet.length;
@@ -26,4 +26,4 @@ export function generateRandomString(length: number = 16, chars?: string): strin
   }
 
   return result;
-}
+};

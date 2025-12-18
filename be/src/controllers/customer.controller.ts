@@ -1,16 +1,14 @@
-import { CustomerService } from "@/services/customer.service";
+import { customerService } from "@/services";
 import { errorResponse, successResponse } from "@/utils/response.util";
 import { Response, Request } from "express";
 
 export class CustomerController {
-  private customerService = new CustomerService();
-
   public getProfile = async (req: Request, res: Response): Promise<any> => {
     try {
       const id = req.user?.id;
       if (!id) return errorResponse(res, "Unauthorized", 401);
 
-      const result = await this.customerService.getProfile(id);
+      const result = await customerService.getProfile(id);
 
       if (result.status === "ERR") {
         return errorResponse(res, result.message, 404);

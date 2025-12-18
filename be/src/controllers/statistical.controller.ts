@@ -1,3 +1,1 @@
-class StatisticalController {}
-
-export default new StatisticalController();
+export class StatisticalController {}

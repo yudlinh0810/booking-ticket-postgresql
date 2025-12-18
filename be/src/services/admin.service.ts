@@ -1,16 +1,12 @@
 import { ArrangeType } from "@/@types/type";
-import bcrypt from "bcrypt";
-
+import { UserStatus } from "@/common/enums";
 import prisma from "@/config/prisma";
-import { redisClient } from "@/config/redis";
 import { CreateBaseUserDto } from "@/users/dto/create/create-base-user.dto";
 import { UpdateAdminDto } from "@/users/dto/update/update-admin.dto";
-import { hashPassword } from "@/utils/hashPassword";
-import { UserCacheService } from "./cache/userCache.service";
+import { hashPassword } from "@/utils";
+import bcrypt from "bcrypt";
 
 export class AdminService {
-  protected userCacheService = new UserCacheService(redisClient);
-
   async total(): Promise<number> {
     try {
       const result = await prisma.user.findMany({
@@ -29,40 +25,65 @@ export class AdminService {
     return Math.ceil(total / limit);
   }
 
-  async getAdminsPagination(page: number = 1, limit: number = 10, arrangeType?: ArrangeType) {
-    const onmitAdmin = {
-      company_id: true,
-      current_location_id: true,
-      start_work_date: true,
-      license_number: true,
-      password: true,
-    };
+  async getAdminsPagination(
+    filters: {
+      username?: string;
+      last_name?: string;
+      first_name?: string;
+      email?: string;
+      phone?: string;
+      status?: UserStatus;
+    },
+    page: number = 1,
+    limit: number = 10,
+    arrangeType?: ArrangeType
+  ) {
+    try {
+      const onmitAdmin = {
+        company_id: true,
+        current_location_id: true,
+        start_work_date: true,
+        license_number: true,
+        password: true,
+      };
 
-    // Tính số lượng bản ghi cần bỏ qua
-    const skip = (page - 1) * limit;
+      const whereCondition: any = {
+        is_deleted: false,
+        role: "admin",
+      };
 
-    const totalCount = await this.total();
-    const totalPage = Math.ceil(totalCount / limit);
+      if (filters.email) {
+        whereCondition.email = { contains: filters.email, mode: "insensitive" };
+      }
 
-    const adminList = await prisma.user.findMany({
-      omit: onmitAdmin,
-      where: { is_deleted: false },
+      // Tính số lượng bản ghi cần bỏ qua
+      const skip = (page - 1) * limit;
 
-      take: limit,
-      skip: skip,
+      const totalCount = await this.total();
+      const totalPage = Math.ceil(totalCount / limit);
 
-      orderBy: {
-        id: arrangeType === "desc" ? "desc" : "asc",
-      },
-    });
+      const adminList = await prisma.user.findMany({
+        omit: onmitAdmin,
+        where: {},
 
-    return {
-      total: totalCount,
-      totalPage,
-      currentPage: page,
-      limit,
-      data: adminList,
-    };
+        take: limit,
+        skip: skip,
+
+        orderBy: {
+          id: arrangeType === "desc" ? "desc" : "asc",
+        },
+      });
+
+      return {
+        total: totalCount,
+        totalPage,
+        currentPage: page,
+        limit,
+        data: adminList,
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 
   async create(data: CreateBaseUserDto) {

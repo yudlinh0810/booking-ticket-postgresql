@@ -1,9 +1,8 @@
-import { AuthController } from "@/controllers/auth.controller";
+import { authController } from "@/controllers";
 import express from "express";
 
-const router = express.Router();
-const authController = new AuthController();
+const authRouter = express.Router();
 
-router.post("/google-login", authController.googleAuthHandler);
+authRouter.post("/google-login", authController.googleAuthHandler);
 
-export default router;
+export default authRouter;

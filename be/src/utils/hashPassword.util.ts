@@ -8,8 +8,8 @@ import bcrypt from "bcrypt";
  * @returns {Promise<string>}
  */
 
-export async function hashPassword(password: string, saltRounds = 10): Promise<string> {
+export const hashPassword = async (password: string, saltRounds = 10): Promise<string> => {
   const salt = await bcrypt.genSalt(saltRounds);
   const hashedPassword = await bcrypt.hash(password, salt);
   return hashedPassword;
-}
+};

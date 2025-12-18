@@ -2,8 +2,7 @@
 
 import { Response, NextFunction } from "express";
 import { uploadToCloudinary } from "../utils/uploadToCloudinary.util";
-import { uploadImages, uploadVideo } from "./multerConfig";
-import deleteOldFile from "../utils/deleteOldFile.util";
+import { uploadImages, uploadVideo } from "./multerConfig.middleware";
 import { validateFile } from "../utils/validateFile.util";
 import { UploadApiResponse } from "cloudinary";
 import {
@@ -12,6 +11,7 @@ import {
   RequestWithProcessedFiles,
   RequestWithUploadedImage,
 } from "../@types/interface";
+import { deleteOldFile } from "@/utils";
 
 const uploadVideoToCloudinary = async (
   req: RequestWithFileMetadata,

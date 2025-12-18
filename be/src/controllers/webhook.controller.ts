@@ -1,3 +1,1 @@
-class WebhookController {}
-
-export default WebhookController;
+export class WebhookController {}

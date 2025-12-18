@@ -1,6 +1,6 @@
 import QRCode from "qrcode";
 
-const generateQRCodeBase64 = async (text: string): Promise<string> => {
+export const generateQRCodeBase64 = async (text: string): Promise<string> => {
   try {
     const base64 = await QRCode.toDataURL(text, {
       width: 150,
@@ -26,5 +26,3 @@ const generateQRCodeBase64 = async (text: string): Promise<string> => {
     return "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg=="; // 1x1 transparent fallback
   }
 };
-
-export default generateQRCodeBase64;

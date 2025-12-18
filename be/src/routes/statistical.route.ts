@@ -1,5 +1,5 @@
 import express from "express";
 
-const router = express.Router();
+const statisticalRouter = express.Router();
 
-export default router;
+export default statisticalRouter;

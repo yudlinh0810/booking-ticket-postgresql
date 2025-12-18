@@ -1,4 +1,4 @@
-export function convertTimestamp(timestamp: number): number {
+export const convertTimestamp = (timestamp: number): number => {
   console.log("timestamp", timestamp);
   const date = new Date(timestamp);
 
@@ -10,4 +10,4 @@ export function convertTimestamp(timestamp: number): number {
   const convertToTimestamp = localDate.getTime();
   console.log("convertToTimestamp", convertToTimestamp);
   return convertToTimestamp;
-}
+};

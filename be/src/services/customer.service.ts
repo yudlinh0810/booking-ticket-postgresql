@@ -1,27 +1,22 @@
-import { UserService } from "./user.service";
-import { redisClient } from "@/config/redis";
-import { PrismaClient } from "@prisma/client";
-import cloudinary from "@/config/cloudinary";
-import { splitFullName } from "@/utils/fullNameSplit.util";
-import { UserCacheService } from "./cache/userCache.service";
-import { AuthCacheService } from "./cache/authCache.service";
 import { Role } from "@/common/enums";
+import cloudinary from "@/config/cloudinary";
+import { splitFullName } from "@/utils";
+import { PrismaClient } from "@prisma/client";
 import { TokenPayload } from "google-auth-library";
+import { authCacheService, userCacheService } from "./cache";
 import { AuthService } from "./auth.service";
+import { UserService } from "./user.service";
 
 const prisma = new PrismaClient({
   log: ["query", "error"],
 });
 export class CustomerService {
-  private userService = new UserService();
-  private userCacheService = new UserCacheService(redisClient);
-  private authCacheService = new AuthCacheService(redisClient);
-  private authService = new AuthService();
+  constructor(private authService: AuthService, private userService: UserService) {}
 
   async getProfile(id: number): Promise<{ status: string; message: string; data?: object }> {
     try {
       let existingUser = null;
-      existingUser = await this.userCacheService.getUserById(id);
+      existingUser = await userCacheService.getUserById(id);
 
       if (!existingUser) {
         existingUser = await prisma.user.findUnique({
@@ -45,7 +40,7 @@ export class CustomerService {
             message: "Customer not found",
           };
         } else {
-          await this.userCacheService.cacheUser(existingUser);
+          await userCacheService.cacheUser(existingUser);
           return {
             status: "OK",
             message: "Fetch profile success",
@@ -112,14 +107,14 @@ export class CustomerService {
       let existingUser = null;
 
       // A. Kiểm tra Redis bằng Email (Giữ nguyên logic cũ của bạn)
-      let cachedUserId = await this.userCacheService.getUserByEmail(email);
+      let cachedUserId = await userCacheService.getUserByEmail(email);
 
       if (!cachedUserId) {
         // B. Cache Miss -> Truy vấn DB
         existingUser = await this.userService.findByEmail(email, Role.CUSTOMER);
         if (existingUser) {
           // C. Cache Load
-          await this.userCacheService.cacheUser(existingUser);
+          await userCacheService.cacheUser(existingUser);
         }
       } else {
         existingUser = cachedUserId;
@@ -137,7 +132,7 @@ export class CustomerService {
           });
           expirationTime = Date.now() + 60 * 60 * 1000;
 
-          await this.authCacheService.cacheTokens(
+          await authCacheService.cacheTokens(
             existingUser.id,
             access_token,
             refresh_token,
@@ -203,13 +198,13 @@ export class CustomerService {
         const newUserId = newUserRecord.id;
 
         // Lưu Cache
-        await this.userCacheService.cacheUser(newUserRecord);
+        await userCacheService.cacheUser(newUserRecord);
 
         access_token = this.authService.generalAccessToken({ id: newUserId, role: "customer" });
         refresh_token = this.authService.generalRefreshToken({ id: newUserId, role: "customer" });
         expirationTime = Date.now() + 60 * 60 * 1000;
 
-        await this.authCacheService.cacheTokens(
+        await authCacheService.cacheTokens(
           newUserId,
           access_token,
           refresh_token,

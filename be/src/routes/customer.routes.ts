@@ -1,11 +1,9 @@
-import { CustomerController } from "@/controllers/customer.controller";
-import { AuthService } from "@/services/auth.service";
+import { customerController } from "@/controllers";
+import { authService } from "@/services";
 import express from "express";
 
-const router = express.Router();
-const customerControlelr = new CustomerController();
-const authService = new AuthService();
+const customerRouter = express.Router();
 
-router.get("/auth/profile", authService.verifyAccessToken, customerControlelr.getProfile);
+customerRouter.get("/auth/profile", authService.verifyAccessToken, customerController.getProfile);
 
-export default router;
+export default customerRouter;

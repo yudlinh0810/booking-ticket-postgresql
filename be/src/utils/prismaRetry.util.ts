@@ -1,7 +1,10 @@
 import prisma from "@/config/prisma";
 import { Prisma } from "@prisma/client";
 
-export async function executeWithRetry<T>(operation: () => Promise<T>, maxRetries = 3): Promise<T> {
+export const executeWithRetry = async <T>(
+  operation: () => Promise<T>,
+  maxRetries = 3
+): Promise<T> => {
   for (let attempt = 0; attempt < maxRetries; attempt++) {
     try {
       if (attempt > 0) {
@@ -38,4 +41,4 @@ export async function executeWithRetry<T>(operation: () => Promise<T>, maxRetrie
     }
   }
   throw new Error("Max retries exceeded");
-}
+};

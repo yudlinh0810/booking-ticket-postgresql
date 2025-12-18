@@ -1,27 +1,23 @@
+import { userController } from "@/controllers";
+import { uploadImage, uploadImageToCloudinary } from "@/middlewares";
+import { authService } from "@/services";
 import express from "express";
 
-import { UserController } from "@/controllers/user.controller";
-import { uploadImageToCloudinary } from "@/middlewares/uploadHandler";
-import { uploadImage } from "@/middlewares/multerConfig";
-import { AuthService } from "@/services/auth.service";
+const userRouter = express.Router();
 
-const router = express.Router();
-const userController = new UserController();
-const authService = new AuthService();
-
-router.put(
+userRouter.put(
   "/:id",
   authService.verifyAccessToken,
   uploadImage,
   uploadImageToCloudinary,
   userController.updateUserByRole
 );
-router.get("/refresh-token", userController.refreshToken);
-router.get("/me", authService.verifyAccessToken, userController.fetchUser);
-router.post("/logout", authService.verifyAccessToken, userController.logout);
+userRouter.get("/refresh-token", userController.refreshToken);
+userRouter.get("/me", authService.verifyAccessToken, userController.fetchUser);
+userRouter.post("/logout", authService.verifyAccessToken, userController.logout);
 // reset password
-router.post("/reset-password", userController.resetPassword);
+userRouter.post("/reset-password", userController.resetPassword);
 // confirm reset  password
-router.post("/confirm-reset-password", userController.confirmResetPassword);
+userRouter.post("/confirm-reset-password", userController.confirmResetPassword);
 
-export default router;
+export default userRouter;

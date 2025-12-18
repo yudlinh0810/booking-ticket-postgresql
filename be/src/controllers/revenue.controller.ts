@@ -1,3 +1,1 @@
-class RevenueController {}
-
-export default new RevenueController();
+export class RevenueController {}
